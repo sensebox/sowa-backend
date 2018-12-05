@@ -17,6 +17,7 @@
     "sparql-client-2": "^0.6.3"
   },
   "devDependencies": {
+    "@angular-devkit/build-angular": "^0.11.1",
     "nodemon": "^1.18.6"
   }
 }
