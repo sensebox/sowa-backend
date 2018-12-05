@@ -1,0 +1,13 @@
+@import url("//hello.myfonts.net/count/2ef157");
+@font-face {font-family: 'BrixSlab-Bold';src: url('https://sensebox.de/css/webfonts/2EF157_0_0.eot');src: url('https://sensebox.de/css/webfonts/2EF157_0_0.eot?#iefix') format('embedded-opentype'),url('https://sensebox.de/css/webfonts/2EF157_0_0.woff2') format('woff2'),url('https://sensebox.de/css/webfonts/2EF157_0_0.woff') format('woff'),url('https://sensebox.de/css/webfonts/2EF157_0_0.ttf') format('truetype');}
+@font-face {font-family: 'BrixSlab-Regular';src: url('https://sensebox.de/css/webfonts/2EF157_1_0.eot');src: url('https://sensebox.de/css/webfonts/2EF157_1_0.eot?#iefix') format('embedded-opentype'),url('https://sensebox.de/css/webfonts/2EF157_1_0.woff2') format('woff2'),url('https://sensebox.de/css/webfonts/2EF157_1_0.woff') format('woff'),url('https://sensebox.de/css/webfonts/2EF157_1_0.ttf') format('truetype');}
+
+
+body {
+  padding: 50px;
+  font: BrixSlab-Regular;
+}
+
+a {
+  color: #00B7FF;
+}
