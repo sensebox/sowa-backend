@@ -13,11 +13,11 @@
     "express": "~4.16.0",
     "http-errors": "~1.6.2",
     "morgan": "~1.9.0",
-    "pug": "2.0.0-beta11",
+    "pug": "^2.0.3",
     "sparql-client-2": "^0.6.3"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^0.11.1",
+    "@angular-devkit/build-angular": "^0.13.6",
     "nodemon": "^1.18.6"
   }
 }

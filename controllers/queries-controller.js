@@ -116,7 +116,7 @@ module.exports.getSensors = function () {
                        ?sensor rdfs:label ?label 
                      }`)
     .execute({format: {resource: 'sensor'}})
-    .then(res => res)
+    .then(res => res.results.bindings)
     .catch(function (error) {
         console.log("Oh no, error!")
       });
@@ -218,7 +218,8 @@ module.exports.getDomains = function () {
                      SELECT ?label ?domain
                      WHERE {
                        ?domain rdf:type s:domain.
-                       ?domain rdfs:label ?label 
+                     OPTIONAL{
+                       ?domain rdfs:label ?label} 
                      }`)
     .execute({format: {resource: 'domain'}})
     .then(res => res.results.bindings)
