@@ -35,7 +35,7 @@ module.exports.getPhenomena = function () {
                      SELECT ?label ?phenomenon
                      WHERE {
                        ?phenomenon rdf:type s:phenomenon.
-                       ?phenomenon rdfs:label ?label 
+                       OPTIONAL {?phenomenon rdfs:label ?label.}
                      }`)
     .execute({format: {resource: 'phenomenon'}})
     .then(res => res.results.bindings)
