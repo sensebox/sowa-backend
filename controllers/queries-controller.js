@@ -113,7 +113,7 @@ module.exports.getSensors = function () {
                      SELECT ?label ?sensor
                      WHERE {
                        ?sensor rdf:type s:sensor.
-                       ?sensor rdfs:label ?label 
+                       OPTIONAL {?sensor rdfs:label ?label.}
                      }`)
     .execute({format: {resource: 'sensor'}})
     .then(res => res.results.bindings)
