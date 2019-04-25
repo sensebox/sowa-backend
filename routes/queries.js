@@ -21,6 +21,12 @@ router.get('/phenomenon/:iri',function(req,res){
     .then(data => res.json(data))
 });
 
+router.get('/phenomenonIRI/:iri',function(req,res){
+  console.log(req);
+    QueriesController.getPhenomenonIRI(req.params.iri)
+    .then(data => res.json(data))
+});
+
 router.post('/phenomenon/update/',function(req,res){
   console.dir(req.body);
   QueriesController.updatePhenomenon(req.body)
@@ -56,6 +62,12 @@ router.get('/sensors',function(req,res){
 router.get('/sensor/:iri',function(req,res){
   console.log(req);
     QueriesController.getSensor(req.params.iri)
+    .then(data => res.json(data))
+});
+
+router.get('/sensorIRI/:iri',function(req,res){
+  console.log(req);
+    QueriesController.getSensorIRI(req.params.iri)
     .then(data => res.json(data))
 });
 

@@ -85,6 +85,47 @@ module.exports.getPhenomenon = function (iri) {
       });
 }
 
+
+//get a single phenomenon identified by its iri @returns the phenomenon's labels, descriptions, units it is described by, domains, sensors it can be measured by  
+module.exports.getPhenomenonIRI = function (iri) {
+  //still missing: ?domains rdfs:label ?domainsLabel.
+  return client
+  .query(SPARQL`
+  Select Distinct ?iri ?label ?description ?sensors ?domains ?units 
+                   WHERE {   
+            {	
+                          ${{s: iri}}  rdfs:label ?label.
+                        ?iri ?rdf ?label
+                      }
+                      UNION 
+                      {   
+                          ${{s: iri}} rdfs:comment ?description.
+                      }
+                      UNION
+                      {	
+                          ${{s: iri}} s:describedBy ?units.
+                      }
+                      UNION
+                      {
+                          ${{s: iri}} s:hasDomain ?domains.
+                      } 
+                      UNION
+                      {
+                          ${{s: iri}} s:measurableBy ?selement.
+                        ?selement   s:isElementOf ?sensors.
+                      }            
+                   }
+              Group BY ?sensors  ?domains ?units ?iri  ?label ?description
+              ORDER BY ?sensors ?iri ?domain ?units
+        `)
+  .execute()
+  .then(res => res.results.bindings)
+  .catch(function (error) {
+      console.log("Oh no, error!")
+    });
+}
+
+
 //update/add a new phenomenon @inputs required: label +language, description + language, unit; optional: domain 
 module.exports.updatePhenomenon = function (phenomenon) {
     console.log(phenomenon);
@@ -182,9 +223,68 @@ module.exports.getSensor = function (iri) {
       });
 }
 
+
+//get a single sensor identified by its iri @returns the sensor's labels, descriptions, datasheet, image, lifeperiod, manufacturer, price, phenomena it can measueres and accuracy values, devices it is part of
+module.exports.getSensorIRI = function (iri) {
+  return client
+  .query(SPARQL`
+  Select Distinct ?iri ?label ?description ?datasheet ?image ?lifeperiod ?manufacturer ?price ?phenomena ?unit ?device
+                   WHERE {   
+            {	
+                          ${{s: iri}}  rdfs:label ?label.
+                        ?iri ?rdf ?label
+                      }
+                      UNION 
+                      {   
+                          ${{s: iri}} rdfs:comment ?description.
+                          ?irid ?rdf ?description
+                      }
+                      UNION
+                      {	
+                          ${{s: iri}} s:dataSheet ?datasheet.
+                      }
+                      UNION
+                      {
+                          ${{s: iri}} s:image ?image.
+                      } 
+                      UNION
+                      {
+                          ${{s: iri}} s:lifePeriod ?lifeperiod.
+                      } 
+                      UNION
+                      {
+                          ${{s: iri}} s:manufacturer ?manufacturer.
+                      }
+                      UNION
+                      {
+                          ${{s: iri}} s:priceInEuro ?price.
+                      }
+                      UNION
+                      {
+                          ${{s: iri}} s:hasElement ?selement.
+                        ?selement   s:canMeasure ?phenomena.
+                        ?selement s:hasAccuracyUnit ?unit
+                      }
+                      UNION
+                      {
+                          ${{s: iri}} s:isSensorOf ?devices.
+                      }  
+
+                   }
+              Group BY ?iri ?label ?description ?datasheet ?image ?lifeperiod ?manufacturer ?price ?phenomena ?unit ?device 
+              ORDER BY ?iri ?phenomena ?device
+        `)
+  .execute()
+  .then(res => res.results.bindings)
+  .catch(function (error) {
+      console.log("Oh no, error!")
+    });
+}
+
 //update/add a new sensor @inputs required: label +language, description + language, a phenomenon that is meaured with according accuracy value; optional: manufacturer, data sheet, price in Euro, life period (currently not available because of datatype issue) and an image  
 module.exports.updateSensor = function (sensor) {
-    console.log(sensor);
+  console.log("check");  
+  console.log(sensor);
     return client
     .query(SPARQL`INSERT DATA {
         ${{s: sensor.name.label}} rdf:type s:sensor;
@@ -192,13 +292,13 @@ module.exports.updateSensor = function (sensor) {
                     rdfs:comment  ${{value: sensor.description.comment, lang: sensor.description.lang}}.
         `+ (sensor.manufacturer ?`${{s: sensor.name.label}} s:manufacturer ${{value: sensor.manufacturer, type: 'string'}}.`:``) + `
         `+ (sensor.dataSheet ?`${{s: sensor.name.label}} s:dataSheet ${{value: sensor.datasheet, type: 'string'}}.`:``) + `
-        `+ (sensor.priceInEuro ?`${{s: sensor.name.label}} s:priceInEuro ${{value: sensor.price, type: 'float'}}.`:``) + `
-        `/*+ (sensor.lifePeriod ?`${{s: sensor.name.label}} s:lifePeriod ${{value: sensor.lifePeriod, type: 'string'}}.`:``)*/ + `
+        `+ (sensor.price ?`${{s: sensor.name.label}} s:priceInEuro ${{value: sensor.price, type: 'float'}}.`:``) + `
+        `+ (sensor.lifePeriod ?`${{s: sensor.name.label}} s:lifePeriod ${{value: sensor.lifePeriod, type: 'string'}}.`:``) + `
         `+ (sensor.image ?`${{s: sensor.name.label}} s:image ${{value: sensor.image, type: 'string'}}.`:``) + `
         `+ (sensor.device ?`${{s: sensor.name.label}} s:isSensorOf ${{s: sensor.device}}.`:``) + `
-        ${{s: sensor.name.label}} s:hasElement ${{s: sensor.phenomenon.iri+"_"+sensor.name.label}}.
-        ${{s: sensor.phenomenon.iri+"_"+sensor.name.label}} s:canMeasure ${{s: sensor.phenomenon.iri}}.
-        ${{s: sensor.phenomenon.iri+"_"+sensor.name.label}} s:hasAccuracyValue ${{value: sensor.phenomenon.value, type: 'float'}}.
+        ${{s: sensor.name.label}} s:hasElement ${{s: sensor.sensorElement.phenomenon+"_"+sensor.name.label}}.
+        ${{s: sensor.sensorElement[0].phenomenon+"_"+sensor.name.label}} s:canMeasure ${{s: sensor.sensorElement.phenomenon}}.
+        ${{s: sensor.sensorElement[0].phenomenon+"_"+sensor.name.label}} s:hasAccuracyValue ${{value: sensor.sensorElement[0].uoa, type: 'float'}}.
             }`)
     .execute()
     .then(Promise.resolve(console.log("everthing ok")))
