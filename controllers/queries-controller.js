@@ -128,15 +128,23 @@ module.exports.getPhenomenonIRI = function (iri) {
 
 //update/add a new phenomenon @inputs required: label +language, description + language, unit; optional: domain 
 module.exports.updatePhenomenon = function (phenomenon) {
-    console.log(phenomenon);
+    var senphurl = 'http://www.opensensemap.org/SENPH#';
+    var bindingsText = 'INSERT DATA {'        +
+    '?phenoname rdf:type      s:phenomenon. ' +
+    '?phenoname rdfs:label    ?phenolabel. '  +
+    '?phenoname rdfs:comment  ?desc. '        +
+    '?phenoname s:describedBy ?unit.'         +
+    (phenomenon.domain ? '?phenoname s:hasDomain ?domain.'  :'') +
+    '}';
     return client
-    .query(SPARQL`INSERT DATA {
-        ${{s: phenomenon.name.label}} rdf:type s:phenomenon;
-                    rdfs:label  ${{value: phenomenon.name.label, lang: phenomenon.name.lang}};
-                    rdfs:comment  ${{value: phenomenon.description.comment, lang: phenomenon.description.lang}};
-                    s:describedBy ${{uo: phenomenon.unit}}.
-                    `+ (phenomenon.domain ?`${{s: phenomenon.name.label}} s:hasDomain ${{s: domain}}.`:``) + `
-            }`)
+    .query(bindingsText)
+    .bind({
+              phenoname:  {value: senphurl + phenomenon.name.label, type: 'uri'},
+              phenolabel: {value: phenomenon.name.label, lang: phenomenon.name.lang},
+              desc:       {value: phenomenon.description.comment, lang: phenomenon.description.lang},
+              unit:       {value: phenomenon.unit, type: 'string'},
+              domain:     {value: phenomenon.domain, type: 'string'},
+              })
     .execute()
     .then(Promise.resolve(console.log("everthing ok")))
     .catch(function (error) {
@@ -203,8 +211,9 @@ module.exports.getSensor = function (iri) {
                         {
                             ${{s: iri}} s:hasElement ?selement.
                           ?selement   s:canMeasure ?phenomena.
-                          ?phenomena rdfs:label ?phenomenaLabel.
-                          ?selement s:hasAccuracyUnit ?unit
+                          OPTIONAL {?phenomena rdfs:label ?phenomenaLabel.}
+                          OPTIONAL { ?selement s:hasAccuracyUnit ?unit.}
+                         
                         }
                         UNION
                         {
@@ -262,8 +271,9 @@ module.exports.getSensorIRI = function (iri) {
                       UNION
                       {
                           ${{s: iri}} s:hasElement ?selement.
-                        ?selement   s:canMeasure ?phenomena.
-                        ?selement s:hasAccuracyUnit ?unit
+                          ?selement   s:canMeasure ?phenomena.
+                          OPTIONAL {?phenomena rdfs:label ?phenomenaLabel.}
+                          OPTIONAL { ?selement s:hasAccuracyUnit ?unit.}
                       }
                       UNION
                       {
@@ -283,26 +293,43 @@ module.exports.getSensorIRI = function (iri) {
 
 //update/add a new sensor @inputs required: label +language, description + language, a phenomenon that is meaured with according accuracy value; optional: manufacturer, data sheet, price in Euro, life period (currently not available because of datatype issue) and an image  
 module.exports.updateSensor = function (sensor) {
-  console.log("check");  
-  console.log(sensor);
+  var senphurl = 'http://www.opensensemap.org/SENPH#';
+  var sElem = sensor.sensorElement[0].phenomenon+"_"+sensor.name.label;
+  if(sensor.image == undefined){sensor.image = ""}
+    var bindingsText = 'INSERT DATA {'            +
+    '?sensorname rdf:type     s:sensor.'          +
+    '?sensorname rdfs:label   ?sensorshortname. ' +
+    '?sensorname rdfs:comment ?desc.'             +
+    (sensor.manufacturer ?  '?sensorname s:manufacturer ?manu.'     :'') +
+    (sensor.dataSheet ?     '?sensorname s:dataSheet    ?datasheet.':'') +
+    (sensor.price ?         '?sensorname s:priceInEuro  ?price.'    :'') +
+    (sensor.lifePeriod ?    '?sensorname s:lifePeriod   ?life.'     :'') +
+    (sensor.image ?         '?sensorname s:image        ?image.'    :'') +
+    (sensor.device ?        '?sensorname s:isSensorOf   ?device.'   :'') +
+    '?sensorname s:hasElement       ?elem.'       +
+    '?elem       s:canMeasure       ?phenomenon.' +
+    '?elem       s:hasAccuracyValue ?uoa.'        +
+    '}';
     return client
-    .query(SPARQL`INSERT DATA {
-        ${{s: sensor.name.label}} rdf:type s:sensor;
-                    rdfs:label  ${{value: sensor.name.label, lang: sensor.name.lang}};
-                    rdfs:comment  ${{value: sensor.description.comment, lang: sensor.description.lang}}.
-        `+ (sensor.manufacturer ?`${{s: sensor.name.label}} s:manufacturer ${{value: sensor.manufacturer, type: 'string'}}.`:``) + `
-        `+ (sensor.dataSheet ?`${{s: sensor.name.label}} s:dataSheet ${{value: sensor.datasheet, type: 'string'}}.`:``) + `
-        `+ (sensor.price ?`${{s: sensor.name.label}} s:priceInEuro ${{value: sensor.price, type: 'float'}}.`:``) + `
-        `+ (sensor.lifePeriod ?`${{s: sensor.name.label}} s:lifePeriod ${{value: sensor.lifePeriod, type: 'string'}}.`:``) + `
-        `+ (sensor.image ?`${{s: sensor.name.label}} s:image ${{value: sensor.image, type: 'string'}}.`:``) + `
-        `+ (sensor.device ?`${{s: sensor.name.label}} s:isSensorOf ${{s: sensor.device}}.`:``) + `
-        ${{s: sensor.name.label}} s:hasElement ${{s: sensor.sensorElement.phenomenon+"_"+sensor.name.label}}.
-        ${{s: sensor.sensorElement[0].phenomenon+"_"+sensor.name.label}} s:canMeasure ${{s: sensor.sensorElement.phenomenon}}.
-        ${{s: sensor.sensorElement[0].phenomenon+"_"+sensor.name.label}} s:hasAccuracyValue ${{value: sensor.sensorElement[0].uoa, type: 'float'}}.
-            }`)
+    .query(bindingsText)
+    .bind({
+      sensorname:       {value: senphurl + sensor.name.label, type: 'uri'},
+      sensorshortname:  {value: sensor.name.label, lang: sensor.name.lang},
+      desc:             {value: sensor.description.comment, lang: sensor.description.lang},
+      manu:             {value: sensor.manufacturer, type: 'string'},
+      datasheet:        {value: sensor.dataSheet, type: 'string'},
+      price:            {value: sensor.price, type: 'float'},
+      life:             {value: sensor.lifePeriod, type: 'string'},
+      image:            {value: sensor.image, type: 'string'},
+      device:           {value: senphurl + sensor.device, type: 'uri'},
+      elem:             {value: senphurl + sElem, type: 'uri'},
+      phenomenon:       {value: senphurl + sensor.sensorElement[0].phenomenon, type: 'uri'},
+      uoa:              {value: sensor.sensorElement[0].uoa, type: 'float'}
+    })
     .execute()
     .then(Promise.resolve(console.log("everthing ok")))
     .catch(function (error) {
+        console.log(error.httpStatus);
         console.log(error);
       });
 }
