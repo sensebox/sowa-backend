@@ -342,11 +342,13 @@ module.exports.updateSensor = function (sensor) {
 module.exports.getDomains = function () {
     return client
     .query(SPARQL`
-                     SELECT ?label ?domain
+                     SELECT ?label ?domain ?comment
                      WHERE {
                        ?domain rdf:type s:domain.
                      OPTIONAL{
-                       ?domain rdfs:label ?label} 
+                       ?domain rdfs:label ?label}
+                      OPTIONAL{
+                        ?domain rdfs:comment ?comment} 
                      }`)
     .execute({format: {resource: 'domain'}})
     .then(res => res.results.bindings)
@@ -392,12 +394,12 @@ module.exports.getDomain = function (iri) {
 //update/add a new domain @inputs required: label +language, description + language; optional: manufacturer, data sheet, price in Euro, life period (currently not available because of datatype issue) and image 
 module.exports.updateDomain = function (domain) {
     console.log(domain);
+    // `+ (domain.phenomenon ?`${{s: domain.name.label}} s:isDomainOf ${{s: domain.phenomenon}}.`:``) + `
     return client
     .query(SPARQL`INSERT DATA {
         ${{s: domain.name.label}} rdf:type s:domain;
                     rdfs:label  ${{value: domain.name.label, lang: domain.name.lang}};
                     rdfs:comment  ${{value: domain.description.comment, lang: domain.description.lang}}.
-        `+ (domain.phenomenon ?`${{s: domain.name.label}} s:isDomainOf ${{s: domain.phenomenon}}.`:``) + `
             }`)
     .execute()
     .then(Promise.resolve(console.log("everthing ok")))
