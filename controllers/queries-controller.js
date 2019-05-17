@@ -91,7 +91,7 @@ module.exports.getPhenomenonIRI = function (iri) {
   //still missing: ?domains rdfs:label ?domainsLabel.
   return client
   .query(SPARQL`
-  Select Distinct ?iri ?label ?description ?sensors ?domains ?units 
+  Select Distinct ?iri ?label ?description ?sensors ?domains ?units ?sensorlabel ?domainLabel
                    WHERE {   
             {	
                           ${{s: iri}}  rdfs:label ?label.
@@ -108,14 +108,19 @@ module.exports.getPhenomenonIRI = function (iri) {
                       UNION
                       {
                           ${{s: iri}} s:hasDomain ?domains.
+                      OPTIONAL
+                          {?domains rdfs:label ?domainLabel.}
                       } 
                       UNION
                       {
                           ${{s: iri}} s:measurableBy ?selement.
                         ?selement   s:isElementOf ?sensors.
+                        OPTIONAL {
+                          ?sensors rdfs:label ?sensorlabel.    
+                        }
                       }            
                    }
-              Group BY ?sensors  ?domains ?units ?iri  ?label ?description
+              Group BY ?sensors  ?domains ?units ?iri  ?label ?description ?sensorlabel ?domainLabel
               ORDER BY ?sensors ?iri ?domain ?units
         `)
   .execute()
@@ -246,7 +251,6 @@ module.exports.getSensorIRI = function (iri) {
                       UNION 
                       {   
                           ${{s: iri}} rdfs:comment ?description.
-                          ?irid ?rdf ?description
                       }
                       UNION
                       {	
@@ -342,18 +346,17 @@ module.exports.updateSensor = function (sensor) {
 module.exports.getDomains = function () {
     return client
     .query(SPARQL`
-                     SELECT ?label ?domain ?comment
-                     WHERE {
-                       ?domain rdf:type s:domain.
-                     OPTIONAL{
-                       ?domain rdfs:label ?label}
-                      OPTIONAL{
-                        ?domain rdfs:comment ?comment} 
-                     }`)
+                    SELECT ?label ?domain
+                    WHERE {
+                      ?domain rdf:type s:domain.
+                    OPTIONAL{
+                      ?domain rdfs:label ?label.}
+                      }`)
     .execute({format: {resource: 'domain'}})
     .then(res => res.results.bindings)
     .catch(function (error) {
         console.log("Oh no, error!")
+        console.log(error);
       });
 }
 
@@ -362,7 +365,7 @@ module.exports.getDomains = function () {
 module.exports.getDomain = function (iri) {
     return client
     .query(SPARQL`
-    Select Distinct ?iri ?irid ?label ?description ?phenomena ?phenomenaLabel 
+    Select Distinct ?iri ?label ?description ?phenomena ?phenomenaLabel 
                      WHERE {   
   						{	
                             ${{s: iri}}  rdfs:label ?label.
@@ -371,7 +374,6 @@ module.exports.getDomain = function (iri) {
                         UNION 
                         {   
                             ${{s: iri}} rdfs:comment ?description.
-                            ?irid ?rdf ?description
                         }
                         UNION
                         {
@@ -380,8 +382,8 @@ module.exports.getDomain = function (iri) {
                         }  
 
                      }
-                Group BY ?iri ?irid ?label ?description ?phenomena ?phenomenaLabel 
-                ORDER BY ?iri ?irid ?phenomena
+                Group BY ?iri ?label ?description ?phenomena ?phenomenaLabel 
+                ORDER BY ?iri ?phenomena
           `)
     .execute()
     .then(res => res.results.bindings)
