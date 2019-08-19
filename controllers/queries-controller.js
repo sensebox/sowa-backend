@@ -515,7 +515,7 @@ module.exports.updateDevice = function (device) {
 module.exports.editDevice = function (device) {
   var senphurl = 'http://www.opensensemap.org/SENPH#';
     console.log(device);
-    var bindingsText = 'DELETE {?deviceURI ?b ?c}' 
+    var bindingsText = 'DELETE {?a ?b ?c}' 
     +
     'INSERT {'                                    +
     '?deviceURI rdf:type     s:device.'           +
@@ -529,7 +529,7 @@ module.exports.editDevice = function (device) {
 
     console.log(bindingsText);
     device.sensor.forEach(element => {
-      var string = '?deviceURI s:hasSensor s:'+ element.sensorUri.slice(34)+'.';
+      var string = '?deviceURI s:hasSensor s:'+ element.sensorUri.slice(34)+'. ';
       bindingsText = bindingsText.concat(string)
     });
     bindingsText = bindingsText.concat('}')
@@ -540,7 +540,7 @@ module.exports.editDevice = function (device) {
     // , 'UNION {?deviceURI s:image ?image. }' 
     // , 'UNION {?deviceURI s:hasContact ?contact. }'   
     // , 'UNION {?deviceURI s:hasSensor ?sensors. ?sensors rdfs:label ?sensorsLabel.}}');
-    bindingsText = bindingsText.concat('WHERE {?deviceURI ?b ?c}'); 
+    bindingsText = bindingsText.concat('WHERE {?a ?b ?c. FILTER (?a = ?deviceURI || ?c = ?deviceURI)}'); 
     // , 'UNION {?deviceURI rdfs:label ?label }'
     // , 'UNION {?deviceURI rdfs:comment ?description }'
     // , 'UNION {?deviceURI s:website ?website. }'  
