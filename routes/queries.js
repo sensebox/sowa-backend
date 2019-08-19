@@ -88,12 +88,17 @@ router.get('/device/:iri',function(req,res){
     .then(data => res.json(data))
   });
   
-  router.post('/device/update/',function(req,res){
+router.post('/device/update/',function(req,res){
   console.dir(req.body);
   QueriesController.updateDevice(req.body)
   .then(res.end("END"))
-  });
+});
   
+router.post('/device/edit/',function(req,res){
+  console.dir(req.body);
+  QueriesController.editDevice(req.body)
+  .then(res.end("END"))
+});
 
 
 

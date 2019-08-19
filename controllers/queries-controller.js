@@ -439,8 +439,12 @@ module.exports.getDevice = function (iri) {
     Select Distinct ?iri ?label ?description ?website ?image ?contact ?sensors ?sensorsLabel 
                      WHERE {   
   						{	
-                            ${{s: iri}}  rdfs:label ?label.
-                          ?iri ?rdf ?label
+                            ${{s: iri}}  rdfs:label ?name.
+                          ?iri ?rdf ?name
+                        }
+                        UNION 
+                        {   
+                            ${{s: iri}} rdfs:label ?label
                         }
                         UNION 
                         {   
@@ -501,6 +505,62 @@ module.exports.updateDevice = function (device) {
     })        
     .execute()
     .then(Promise.resolve(console.log("everthing ok")))
+    .catch(function (error) {
+        console.log(error);
+      });
+}
+
+
+//get a single device identified by its iri @returns the device's labels, descriptions, website, image, contact and compatible sensors
+module.exports.editDevice = function (device) {
+  var senphurl = 'http://www.opensensemap.org/SENPH#';
+    console.log(device);
+    var bindingsText = 'DELETE {?deviceURI ?b ?c}' 
+    +
+    'INSERT {'                                    +
+    '?deviceURI rdf:type     s:device.'           +
+    '?deviceURI rdfs:label   ?deviceLabel. '      +
+    '?deviceURI rdfs:comment ?desc.'              +
+    (device.website ?       '?deviceURI s:website ?website.'    :'') + 
+    (device.image ?         '?deviceURI s:image ?image.'        :'') +
+    (device.contact ?       '?deviceURI s:hasContact ?contact.'    :'');
+    // '}'; 
+    // (device.sensor ?        '?deviceURI s:hasSensor ?sensor.'   :'');
+
+    console.log(bindingsText);
+    device.sensor.forEach(element => {
+      var string = '?deviceURI s:hasSensor s:'+ element.sensorUri.slice(34)+'.';
+      bindingsText = bindingsText.concat(string)
+    });
+    bindingsText = bindingsText.concat('}')
+    // bindingsText = bindingsText.concat('WHERE {	?deviceURI  rdfs:label ?name. ?iri ?rdf ?name }' 
+    // , 'UNION {?deviceURI rdfs:label ?label }'
+    // , 'UNION {?deviceURI rdfs:comment ?description }'
+    // , 'UNION {?deviceURI s:website ?website. }'  
+    // , 'UNION {?deviceURI s:image ?image. }' 
+    // , 'UNION {?deviceURI s:hasContact ?contact. }'   
+    // , 'UNION {?deviceURI s:hasSensor ?sensors. ?sensors rdfs:label ?sensorsLabel.}}');
+    bindingsText = bindingsText.concat('WHERE {?deviceURI ?b ?c}'); 
+    // , 'UNION {?deviceURI rdfs:label ?label }'
+    // , 'UNION {?deviceURI rdfs:comment ?description }'
+    // , 'UNION {?deviceURI s:website ?website. }'  
+    // , 'UNION {?deviceURI s:image ?image. }' 
+    // , 'UNION {?deviceURI s:hasContact ?contact. }'   
+    // , 'UNION {?deviceURI s:hasSensor ?sensors. ?sensors rdfs:label ?sensorsLabel.}}');
+    console.log(bindingsText);
+    return client
+    .query(bindingsText)
+    .bind({
+      deviceURI:        {value: senphurl + device.uri, type: 'uri'},
+      deviceLabel:      {value: device.name, lang: "en"},
+      desc:             {value: device.description, lang:"en"},
+      website:          {value: device.website, type:'string'},
+      image:            {value: device.image, type:'string'},
+      contact:          {value: device.contact, type:'string'},
+      // sensor:           {value: senphurl + device.sensor, type: 'uri'}
+    })        
+    .execute()
+    .then(Promise.resolve(console.log("evertyhing ok")))
     .catch(function (error) {
         console.log(error);
       });
