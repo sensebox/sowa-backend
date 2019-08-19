@@ -513,10 +513,11 @@ module.exports.updateDevice = function (device) {
 
 //get a single device identified by its iri @returns the device's labels, descriptions, website, image, contact and compatible sensors
 module.exports.editDevice = function (device) {
-  var senphurl = 'http://www.opensensemap.org/SENPH#';
+    var senphurl = 'http://www.opensensemap.org/SENPH#';
     console.log(device);
-    var bindingsText = 'DELETE {?a ?b ?c}' 
-    +
+    
+    // create SPARQL Query: 
+    var bindingsText = 'DELETE {?a ?b ?c}'        +
     'INSERT {'                                    +
     '?deviceURI rdf:type     s:device.'           +
     '?deviceURI rdfs:label   ?deviceLabel. '      +
@@ -524,40 +525,27 @@ module.exports.editDevice = function (device) {
     (device.website ?       '?deviceURI s:website ?website.'    :'') + 
     (device.image ?         '?deviceURI s:image ?image.'        :'') +
     (device.contact ?       '?deviceURI s:hasContact ?contact.'    :'');
-    // '}'; 
-    // (device.sensor ?        '?deviceURI s:hasSensor ?sensor.'   :'');
-
-    console.log(bindingsText);
+    // create insert ;line for each sensor 
     device.sensor.forEach(element => {
       var string = '?deviceURI s:hasSensor s:'+ element.sensorUri.slice(34)+'. ';
       bindingsText = bindingsText.concat(string)
     });
-    bindingsText = bindingsText.concat('}')
-    // bindingsText = bindingsText.concat('WHERE {	?deviceURI  rdfs:label ?name. ?iri ?rdf ?name }' 
-    // , 'UNION {?deviceURI rdfs:label ?label }'
-    // , 'UNION {?deviceURI rdfs:comment ?description }'
-    // , 'UNION {?deviceURI s:website ?website. }'  
-    // , 'UNION {?deviceURI s:image ?image. }' 
-    // , 'UNION {?deviceURI s:hasContact ?contact. }'   
-    // , 'UNION {?deviceURI s:hasSensor ?sensors. ?sensors rdfs:label ?sensorsLabel.}}');
-    bindingsText = bindingsText.concat('WHERE {?a ?b ?c. FILTER (?a = ?deviceURI || ?c = ?deviceURI)}'); 
-    // , 'UNION {?deviceURI rdfs:label ?label }'
-    // , 'UNION {?deviceURI rdfs:comment ?description }'
-    // , 'UNION {?deviceURI s:website ?website. }'  
-    // , 'UNION {?deviceURI s:image ?image. }' 
-    // , 'UNION {?deviceURI s:hasContact ?contact. }'   
-    // , 'UNION {?deviceURI s:hasSensor ?sensors. ?sensors rdfs:label ?sensorsLabel.}}');
+    // add WHERE statement 
+    bindingsText = bindingsText.concat('} WHERE {?a ?b ?c. FILTER (?a = ?deviceURI || ?c = ?deviceURI)}'); 
     console.log(bindingsText);
+
     return client
     .query(bindingsText)
+    // bind values to variable names
     .bind({
       deviceURI:        {value: senphurl + device.uri, type: 'uri'},
+      // +++ FIXME +++ language hardcoded, make it dynamic
       deviceLabel:      {value: device.name, lang: "en"},
+      // +++ FIXME +++ language hardcoded, make it dynamic
       desc:             {value: device.description, lang:"en"},
       website:          {value: device.website, type:'string'},
       image:            {value: device.image, type:'string'},
       contact:          {value: device.contact, type:'string'},
-      // sensor:           {value: senphurl + device.sensor, type: 'uri'}
     })        
     .execute()
     .then(Promise.resolve(console.log("evertyhing ok")))
