@@ -144,7 +144,7 @@ module.exports.updatePhenomenon = function (phenomenon) {
     return client
     .query(bindingsText)
     .bind({
-              phenoname:  {value: senphurl + phenomenon.name.label, type: 'uri'},
+              phenoname:  {value: senphurl + phenomenon.uri, type: 'uri'},
               phenolabel: {value: phenomenon.name.label, lang: phenomenon.name.lang},
               desc:       {value: phenomenon.description.comment, lang: phenomenon.description.lang},
               unit:       {value: phenomenon.unit, type: 'string'},
@@ -302,7 +302,7 @@ module.exports.updateSensor = function (sensor) {
   if(sensor.image == undefined){sensor.image = ""}
     var bindingsText = 'INSERT DATA {'            +
     '?sensorname rdf:type     s:sensor.'          +
-    '?sensorname rdfs:label   ?sensorshortname. ' +
+    '?sensorname rdfs:label   ?sensorlabel. ' +
     '?sensorname rdfs:comment ?desc.'             +
     (sensor.manufacturer ?  '?sensorname s:manufacturer ?manu.'     :'') +
     (sensor.dataSheet ?     '?sensorname s:dataSheet    ?datasheet.':'') +
@@ -317,8 +317,8 @@ module.exports.updateSensor = function (sensor) {
     return client
     .query(bindingsText)
     .bind({
-      sensorname:       {value: senphurl + sensor.name.label, type: 'uri'},
-      sensorshortname:  {value: sensor.name.label, lang: sensor.name.lang},
+      sensorname:       {value: senphurl + sensor.uri, type: 'uri'},
+      sensorlabel:      {value: sensor.name.label, lang: sensor.name.lang},
       desc:             {value: sensor.description.comment, lang: sensor.description.lang},
       manu:             {value: sensor.manufacturer, type: 'string'},
       datasheet:        {value: sensor.dataSheet, type: 'string'},
@@ -399,7 +399,7 @@ module.exports.updateDomain = function (domain) {
     // `+ (domain.phenomenon ?`${{s: domain.name.label}} s:isDomainOf ${{s: domain.phenomenon}}.`:``) + `
     return client
     .query(SPARQL`INSERT DATA {
-        ${{s: domain.name.label}} rdf:type s:domain;
+        ${{s: domain.uri}} rdf:type s:domain;
                     rdfs:label  ${{value: domain.name.label, lang: domain.name.lang}};
                     rdfs:comment  ${{value: domain.description.comment, lang: domain.description.lang}}.
             }`)
@@ -436,16 +436,19 @@ module.exports.getDevices = function () {
 module.exports.getDevice = function (iri) {
     return client
     .query(SPARQL`
-    Select Distinct ?iri ?irid ?label ?description ?website ?image ?contact ?sensors ?sensorsLabel 
+    Select Distinct ?iri ?label ?description ?website ?image ?contact ?sensors ?sensorsLabel 
                      WHERE {   
   						{	
-                            ${{s: iri}}  rdfs:label ?label.
-                          ?iri ?rdf ?label
+                            ${{s: iri}}  rdfs:label ?name.
+                          ?iri ?rdf ?name
                         }
                         UNION 
                         {   
-                            ${{s: iri}} rdfs:comment ?description.
-                            ?irid ?rdf ?description
+                            ${{s: iri}} rdfs:label ?label
+                        }
+                        UNION 
+                        {   
+                            ${{s: iri}} rdfs:comment ?description
                         }
                         UNION
                         {
@@ -465,8 +468,8 @@ module.exports.getDevice = function (iri) {
                             ?sensors rdfs:label ?sensorsLabel.
                         }   
                      }
-                Group BY ?iri ?irid ?label ?description ?website ?image ?contact ?sensors ?sensorsLabel 
-                ORDER BY ?iri ?irid ?sensors
+                Group BY ?iri ?label ?description ?website ?image ?contact ?sensors ?sensorsLabel 
+                ORDER BY ?iri ?sensors
           `)
     .execute()
     .then(res => res.results.bindings)
@@ -478,19 +481,74 @@ module.exports.getDevice = function (iri) {
 
 //update/add a new device @inputs required: label + language, description + language; optional: website, image, contact, compatible sensor
 module.exports.updateDevice = function (device) {
+    var senphurl = 'http://www.opensensemap.org/SENPH#';
     console.log(device);
+    var bindingsText = 'INSERT DATA {'            +
+    '?deviceURI rdf:type     s:device.'          +
+    '?deviceURI rdfs:label   ?deviceLabel. ' +
+    '?deviceURI rdfs:comment ?desc.'             +
+    (device.website ?       '?deviceURI s:website ?website.'    :'') + 
+    (device.image ?         '?deviceURI s:image ?image.'        :'') +
+    (device.contact ?       '?deviceURI s:hasContact ?contact.'    :'') + 
+    (device.sensor ?        '?deviceURI s:hasSensor ?sensor.'   :'') +
+    '}';
     return client
-    .query(SPARQL`INSERT DATA {
-        ${{s: device.name.label}} rdf:type s:device;
-                    rdfs:label  ${{value: device.name.label, lang: device.name.lang}};
-                    rdfs:comment  ${{value: device.description.comment, lang: device.description.lang}}.
-        `+ (device.website ?`${{s: device.name.label}} s:website ${{value: device.website, type:'string'}}.`:``) + `
-        `+ (device.image ?`${{s: device.name.label}} s:image ${{value: device.image, type:'string'}}.`:``) + `
-        `+ (device.contact ?`${{s: device.name.label}} s:contact ${{value: device.contact, type:'string'}}.`:``) + `
-        `+ (device.sensor ?`${{s: device.name.label}} s:hasSensor ${{s: device.sensor}}.`:``) + `
-            }`)
+    .query(bindingsText)
+    .bind({
+      deviceURI:        {value: senphurl + device.uri, type: 'uri'},
+      deviceLabel:      {value: device.name.label, lang: device.name.lang},
+      desc:             {value: device.description.comment, lang: device.description.lang},
+      website:          {value: device.website, type:'string'},
+      image:            {value: device.image, type:'string'},
+      contact:          {value: device.contact, type:'string'},
+      sensor:           {value: senphurl + device.sensor, type: 'uri'}
+    })        
     .execute()
     .then(Promise.resolve(console.log("everthing ok")))
+    .catch(function (error) {
+        console.log(error);
+      });
+}
+
+
+//get a single device identified by its iri @returns the device's labels, descriptions, website, image, contact and compatible sensors
+module.exports.editDevice = function (device) {
+    var senphurl = 'http://www.opensensemap.org/SENPH#';
+    console.log(device);
+    
+    // create SPARQL Query: 
+    var bindingsText = 'DELETE {?a ?b ?c}'        +
+    'INSERT {'                                    +
+    '?deviceURI rdf:type     s:device.'           +
+    '?deviceURI rdfs:label   ?deviceLabel. '      +
+    '?deviceURI rdfs:comment ?desc.'              +
+    (device.website ?       '?deviceURI s:website ?website.'    :'') + 
+    (device.image ?         '?deviceURI s:image ?image.'        :'') +
+    (device.contact ?       '?deviceURI s:hasContact ?contact.'    :'');
+    // create insert ;line for each sensor 
+    device.sensor.forEach(element => {
+      var string = '?deviceURI s:hasSensor s:'+ element.sensorUri.slice(34)+'. ';
+      bindingsText = bindingsText.concat(string)
+    });
+    // add WHERE statement 
+    bindingsText = bindingsText.concat('} WHERE {?a ?b ?c. FILTER (?a = ?deviceURI || ?c = ?deviceURI)}'); 
+    console.log(bindingsText);
+
+    return client
+    .query(bindingsText)
+    // bind values to variable names
+    .bind({
+      deviceURI:        {value: senphurl + device.uri, type: 'uri'},
+      // +++ FIXME +++ language hardcoded, make it dynamic
+      deviceLabel:      {value: device.name, lang: "en"},
+      // +++ FIXME +++ language hardcoded, make it dynamic
+      desc:             {value: device.description, lang:"en"},
+      website:          {value: device.website, type:'string'},
+      image:            {value: device.image, type:'string'},
+      contact:          {value: device.contact, type:'string'},
+    })        
+    .execute()
+    .then(Promise.resolve(console.log("evertyhing ok")))
     .catch(function (error) {
         console.log(error);
       });
