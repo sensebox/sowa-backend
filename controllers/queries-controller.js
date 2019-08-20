@@ -45,57 +45,61 @@ module.exports.getPhenomena = function () {
 }
 
 //get a single phenomenon identified by its iri @returns the phenomenon's labels, descriptions, units it is described by, domains, sensors it can be measured by  
-module.exports.getPhenomenon = function (iri) {
-    //still missing: ?domains rdfs:label ?domainsLabel.
-    return client
-    .query(SPARQL`
-    Select Distinct ?iri ?irid ?label ?description ?sensors ?sensorsLabel ?domains ?domainsLabel ?units 
-                     WHERE {   
-  						{	
-                            ${{s: iri}}  rdfs:label ?label.
-                          ?iri ?rdf ?label
-                        }
-                        UNION 
-                        {   
-                            ${{s: iri}} rdfs:comment ?description.
-                            ?irid ?rdf ?description
-                        }
-                        UNION
-                        {	
-                            ${{s: iri}} s:describedBy ?units.
-                        }
-                        UNION
-                        {
-                            ${{s: iri}} s:hasDomain ?domains.
-                          ?domains rdfs:label ?domainsLabel.
-                        } 
-                        UNION
-                        {
-                            ${{s: iri}} s:measurableBy ?selement.
-                          ?selement   s:isElementOf ?sensors.
-                          ?sensors rdfs:label ?sensorsLabel.}            
-                     }
-                Group BY ?sensors  ?domains ?units ?iri  ?label ?irid ?description  ?sensorsLabel ?domainsLabel
-                ORDER BY ?sensors ?iri ?irid ?domain ?units
-          `)
-    .execute()
-    .then(res => res.results.bindings)
-    .catch(function (error) {
-        console.log("Oh no, error!")
-      });
+module.exports.getPhenomenonDEPRECATED = function (iri) {
+    // //still missing: ?domains rdfs:label ?domainsLabel.
+    // return client
+    // .query(SPARQL`
+    // Select Distinct ?iri ?irid ?label ?description ?sensors ?sensorsLabel ?domains ?domainsLabel ?units 
+    //                  WHERE {   
+  	// 					{	
+    //                         ${{s: iri}}  rdfs:label ?label.
+    //                       ?iri ?rdf ?label
+    //                     }
+    //                     UNION 
+    //                     {   
+    //                         ${{s: iri}} rdfs:comment ?description.
+    //                         ?irid ?rdf ?description
+    //                     }
+    //                     UNION
+    //                     {	
+    //                         ${{s: iri}} s:describedBy ?units.
+    //                     }
+    //                     UNION
+    //                     {
+    //                         ${{s: iri}} s:hasDomain ?domains.
+    //                       ?domains rdfs:label ?domainsLabel.
+    //                     } 
+    //                     UNION
+    //                     {
+    //                         ${{s: iri}} s:measurableBy ?selement.
+    //                       ?selement   s:isElementOf ?sensors.
+    //                       ?sensors rdfs:label ?sensorsLabel.}            
+    //                  }
+    //             Group BY ?sensors  ?domains ?units ?iri  ?label ?irid ?description  ?sensorsLabel ?domainsLabel
+    //             ORDER BY ?sensors ?iri ?irid ?domain ?units
+    //       `)
+    // .execute()
+    // .then(res => res.results.bindings)
+    // .catch(function (error) {
+    //     console.log("Oh no, error!")
+    //   });
 }
 
 
 //get a single phenomenon identified by its iri @returns the phenomenon's labels, descriptions, units it is described by, domains, sensors it can be measured by  
-module.exports.getPhenomenonIRI = function (iri) {
+module.exports.getPhenomenon = function (iri) {
   //still missing: ?domains rdfs:label ?domainsLabel.
   return client
   .query(SPARQL`
-  Select Distinct ?iri ?label ?description ?sensors ?domains ?units ?sensorlabel ?domainLabel
+  Select Distinct ?iri ?label ?description ?sensors ?domain ?unit ?sensorlabel ?unitLabel ?domainLabel
                    WHERE {   
-            {	
-                          ${{s: iri}}  rdfs:label ?label.
-                        ?iri ?rdf ?label
+                      {	
+                          ${{s: iri}}  rdfs:label ?name.
+                          ?iri ?rdf ?name
+                      }
+                      UNION 
+                      {   
+                          ${{s: iri}} rdfs:label ?label
                       }
                       UNION 
                       {   
@@ -103,13 +107,15 @@ module.exports.getPhenomenonIRI = function (iri) {
                       }
                       UNION
                       {	
-                          ${{s: iri}} s:describedBy ?units.
+                          ${{s: iri}} s:describedBy ?unit.
+                        OPTIONAL
+                          {?unit rdfs:label ?unitLabel.} 
                       }
                       UNION
                       {
-                          ${{s: iri}} s:hasDomain ?domains.
-                      OPTIONAL
-                          {?domains rdfs:label ?domainLabel.}
+                          ${{s: iri}} s:hasDomain ?domain.
+                        OPTIONAL
+                          {?domain rdfs:label ?domainLabel.}
                       } 
                       UNION
                       {
@@ -120,13 +126,13 @@ module.exports.getPhenomenonIRI = function (iri) {
                         }
                       }            
                    }
-              Group BY ?sensors  ?domains ?units ?iri  ?label ?description ?sensorlabel ?domainLabel
-              ORDER BY ?sensors ?iri ?domain ?units
+              Group BY ?sensors  ?domain ?unit ?iri  ?label ?description ?sensorlabel ?domainLabel ?unitLabel
+              ORDER BY ?sensors ?iri ?domain ?unit
         `)
   .execute()
   .then(res => res.results.bindings)
   .catch(function (error) {
-      console.log("Oh no, error!")
+      console.log(error)
     });
 }
 

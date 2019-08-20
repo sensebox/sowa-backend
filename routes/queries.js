@@ -21,9 +21,9 @@ router.get('/phenomenon/:iri',function(req,res){
     .then(data => res.json(data))
 });
 
-router.get('/phenomenonIRI/:iri',function(req,res){
+router.get('/phenomenonDEPRECATED/:iri',function(req,res){
   console.log(req);
-    QueriesController.getPhenomenonIRI(req.params.iri)
+    QueriesController.getPhenomenonDEPRECATED(req.params.iri)
     .then(data => res.json(data))
 });
 
