@@ -163,6 +163,53 @@ module.exports.updatePhenomenon = function (phenomenon) {
       });
 }
 
+//get a single device identified by its iri @returns the device's labels, descriptions, website, image, contact and compatible sensors
+module.exports.editPhenomenon = function (phenomenon) {
+  var senphurl = 'http://www.opensensemap.org/SENPH#';
+  console.log(phenomenon);
+  
+  // create SPARQL Query: 
+  var bindingsText = 'DELETE {?a ?b ?c}'        +
+  'INSERT {'                                    +
+  '?phenomenonURI rdf:type     s:phenomenon.'           +
+  '?phenomenonURI rdfs:label   ?phenomenonLabel. '      +
+  '?phenomenonURI rdfs:comment ?desc.';
+  // create insert ;line for each unit 
+  phenomenon.units.forEach(element => {
+    console.log(element);
+    var string = '?phenomenonURI s:describedBy s:'+ element.unit.value +'. ';
+    bindingsText = bindingsText.concat(string)
+  });
+  // create insert ;line for each domain 
+  phenomenon.domains.forEach(element => {
+    console.log(element);
+    var string = '?phenomenonURI s:hasDomain s:'+ element.domain.value +'. ';
+    bindingsText = bindingsText.concat(string)
+  });
+  // add WHERE statement 
+  bindingsText = bindingsText.concat('} WHERE {?a ?b ?c. FILTER (?a = ?phenomenonURI && ?b = s:hasDomain || ?a = ?phenomenonURI && ?b = s:describedBy || ?a = ?phenomenonURI && ?b = rdfs:comment || ?a = ?phenomenonURI && ?b = rdfs:label || ?a = ?phenomenonURI && ?b = rdf:type || ?c = ?phenomenonURI && ?b = s:isDomainOf || ?c = ?phenomenonURI && ?b = s:isDescribedBy)}'); 
+  console.log(bindingsText);
+
+  return client
+  .query(bindingsText)
+  // bind values to variable names
+  .bind({
+    phenomenonURI:        {value: senphurl + phenomenon.uri, type: 'uri'},
+    // +++ FIXME +++ language hardcoded, make it dynamic
+    phenomenonLabel:      {value: phenomenon.name, lang: "en"},
+    // +++ FIXME +++ language hardcoded, make it dynamic
+    desc:             {value: phenomenon.description, lang:"en"},
+    website:          {value: phenomenon.website, type:'string'},
+    image:            {value: phenomenon.image, type:'string'},
+    contact:          {value: phenomenon.contact, type:'string'},
+  })        
+  .execute()
+  .then(Promise.resolve(console.log("evertyhing ok")))
+  .catch(function (error) {
+      console.log(error);
+    });
+}
+
 
 /* ---------- All sensor funtions: -----------------*/
 
