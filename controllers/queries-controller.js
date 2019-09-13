@@ -175,9 +175,15 @@ module.exports.editPhenomenon = function (phenomenon) {
   '?phenomenonURI rdfs:label   ?phenomenonLabel. '      +
   '?phenomenonURI rdfs:comment ?desc.';
   // create insert ;line for each unit 
+  phenomenon.labels.forEach(element => {
+    console.log(element);
+    var string = '?phenomenonURI rdfs:label' + element.label.value +'^^'+ element.label["xml:lang"] + '. ';
+    bindingsText = bindingsText.concat(string)
+  });
+  // create insert ;line for each unit 
   phenomenon.units.forEach(element => {
     console.log(element);
-    var string = '?phenomenonURI s:describedBy s:'+ element.unit.value +'. ';
+    var string = '?phenomenonURI s:describedBy '+ element.unit.value +'. ';
     bindingsText = bindingsText.concat(string)
   });
   // create insert ;line for each domain 
@@ -194,7 +200,7 @@ module.exports.editPhenomenon = function (phenomenon) {
   .query(bindingsText)
   // bind values to variable names
   .bind({
-    phenomenonURI:        {value: senphurl + phenomenon.uri, type: 'uri'},
+    phenomenonURI:        {value: senphurl + phenomenon.iri.vlaue, type: 'uri'},
     // +++ FIXME +++ language hardcoded, make it dynamic
     phenomenonLabel:      {value: phenomenon.name, lang: "en"},
     // +++ FIXME +++ language hardcoded, make it dynamic
