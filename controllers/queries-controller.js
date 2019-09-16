@@ -239,7 +239,7 @@ module.exports.getSensors = function () {
 module.exports.getSensor = function (iri) {
   return client
     .query(SPARQL`
-    Select Distinct ?iri  ?label ?description  ?manufacturer ?price ?datasheet  ?lifeperiod ?image ?device ?selement
+    Select Distinct ?iri  ?labels ?description  ?manufacturer ?price ?datasheet  ?lifeperiod ?image ?device ?selement
                      WHERE {   
   						          {	
                             ${{ s: iri }}  rdfs:label ?name.
@@ -247,7 +247,7 @@ module.exports.getSensor = function (iri) {
                         }
                         UNION 
                         {   
-                          ${{ s: iri }}  rdfs:label ?label.
+                          ${{ s: iri }}  rdfs:label ?labels.
                         }
                         UNION 
                         {   
@@ -282,7 +282,7 @@ module.exports.getSensor = function (iri) {
                             ${{ s: iri }} s:image ?image.
                         } 
                      }
-                Group BY ?iri ?label ?description ?datasheet ?image ?lifeperiod ?manufacturer ?price ?device ?selement
+                Group BY ?iri ?labels ?description ?datasheet ?image ?lifeperiod ?manufacturer ?price ?device ?selement
                 ORDER BY ?iri ?phenomena ?device ?selement
           `)
     .execute()
@@ -300,8 +300,9 @@ module.exports.getSensorElement = function (iri) {
     Select Distinct ?phenomena ?unit ?accVal
                      WHERE {   
                             ${{ s: iri }} s:canMeasure ?phenomena.
-                            OPTIONAL { ?selement s:hasAccuracyUnit ?unit.}
-                            OPTIONAL { ?selement s:accuracyValue ?accVal.}                         
+                            ?sensorElement s:canMeasure ?phenomena.
+                            OPTIONAL { ?sensorElement s:hasAccuracyUnit ?unit.}
+                            OPTIONAL { ?sensorElement s:accuracyValue ?accVal.}                         
                      }
                 Group BY ?phenomena ?unit ?accVal
                 ORDER BY ?phenomena
