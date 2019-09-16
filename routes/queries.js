@@ -31,6 +31,13 @@ router.post('/phenomenon/update/',function(req,res){
   QueriesController.updatePhenomenon(req.body)
   .then(res.end("END"))
 });
+  
+router.post('/phenomenon/edit/',function(req,res){
+  console.dir(req.body);
+  QueriesController.editPhenomenon(req.body)
+  .then(res.end("END"))
+});
+
 
 
 /* ---------- All domain funtions: -----------------*/
@@ -58,11 +65,23 @@ router.get('/sensors',function(req,res){
     .then(data => res.json(data))
 });
 
-router.get('/sensor/:iri',function(req,res){
-  console.log(req);
-    QueriesController.getSensor(req.params.iri)
-    .then(data => res.json(data))
+router.get('/sensor/:iri', async function(req,res){
+  // console.log(req);
+    elements = [];
+    var firstReq = await QueriesController.getSensor(req.params.iri);
+    console.log(firstReq);
+    firstReq.forEach(element => {
+      if (Object.getOwnPropertyNames(element)[0] = selement) {
+        var elem  = await QueriesController.getSensorElement(element.value);
+        elements.push(elem);
+      }
+    console.log(elements);
+    // res.json(firstReq);
+    });
+    
+    // .then(data => console.log(data))
 });
+
 
 router.get('/sensorIRI/:iri',function(req,res){
   console.log(req.params.iri);
@@ -100,6 +119,13 @@ router.post('/device/edit/',function(req,res){
   .then(res.end("END"))
 });
 
+/* --------------------Sensor element functions ------------------------*/
+
+router.get('/sensorElement/:iri',function(req,res){
+  console.log(req);
+    QueriesController.getSensorElement(req.params.iri)
+    .then(data => res.json(data))
+  });
 
 
 /** get all x for a given y */
