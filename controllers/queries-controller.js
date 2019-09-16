@@ -294,6 +294,7 @@ module.exports.getSensor = function (iri) {
 
 //get a single sensorelment identified by its iri @returns phenomena it can measueres and accuracy values
 module.exports.getSensorElement = function (iri) {
+  iri = iri.slice(34);
   return client
     .query(SPARQL`
     Select Distinct ?phenomena ?unit ?accVal
