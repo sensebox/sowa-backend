@@ -7,6 +7,10 @@ var bodyParser = require("body-parser");
 
 var indexRouter = require('./routes/index');
 var queriesRouter = require('./routes/queries');
+var sensorsRouter = require('./routes/sensors');
+var phenomenaRouter = require('./routes/phenomena');
+var devicesRouter = require('./routes/devices');
+var domainsRouter = require('./routes/domains');
 
 
 var app = express();
@@ -25,6 +29,10 @@ app.use(bodyParser.json());
 
 app.use('/', indexRouter);
 app.use('/queries', queriesRouter);
+app.use('/sensors', sensorsRouter);
+app.use('/phenomena', phenomenaRouter);
+app.use('/devices', devicesRouter);
+app.use('/domains', domainsRouter);
 app.use(express.static('owl'));
 
 // catch 404 and forward to error handler
