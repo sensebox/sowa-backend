@@ -22,7 +22,9 @@ const client = new SparqlClient(endpoint, {
     rdfs: 'http://www.w3.org/2000/01/rdf-schema#',
     s: 'http://www.opensensemap.org/SENPH#',
     uo: 'http://purl.obolibrary.org/obo/',
-    rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#'
+    rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+    xsd: 'http://www.w3.org/2001/XMLSchema#'
+
 
   })
 

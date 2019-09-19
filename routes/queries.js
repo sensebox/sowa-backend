@@ -111,6 +111,11 @@ router.post('/sensor/update/', function (req, res) {
     .then(res.end("END"))
 });
 
+router.post('/sensor/edit/', function (req, res) {
+  QueriesController.editSensor(req.body)
+    .then(res.end("END"))
+});
+
 
 /* ---------- All device funtions: -----------------*/
 router.get('/devices', function (req, res) {
