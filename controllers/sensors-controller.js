@@ -51,7 +51,7 @@ module.exports.getSensors = function () {
 module.exports.getSensor = function (iri) {
   return client
     .query(SPARQL`
-    Select Distinct ?iri  ?labels ?description  ?manufacturer ?price ?datasheet  ?lifeperiod ?image ?device ?selement
+    Select Distinct ?iri  ?labels ?description  ?manufacturer ?price ?datasheet  ?lifeperiod ?image ?devices ?selement
                      WHERE {   
   						          {	
                             ${{ s: iri }}  rdfs:label ?name.
@@ -94,8 +94,8 @@ module.exports.getSensor = function (iri) {
                             ${{ s: iri }} s:image ?image.
                         } 
                      }
-                Group BY ?iri ?labels ?description ?datasheet ?image ?lifeperiod ?manufacturer ?price ?device ?selement
-                ORDER BY ?iri ?phenomena ?device ?selement
+                Group BY ?iri ?labels ?description ?datasheet ?image ?lifeperiod ?manufacturer ?price ?devices ?selement
+                ORDER BY ?iri ?phenomena ?devices ?selement
           `)
     .execute()
     .then(res => res.results.bindings)
@@ -113,8 +113,8 @@ module.exports.getSensorElement = function (iri) {
                      WHERE {   
                             ${{ s: iri }} s:canMeasure ?phenomena.
                             ?sensorElement s:canMeasure ?phenomena.
-                            OPTIONAL { ?sensorElement s:hasAccuracyUnit ?unit.}
-                            OPTIONAL { ?sensorElement s:accuracyValue ?accVal.}                         
+                            ?sensorElement s:hasAccuracyUnit ?unit.
+                            ?sensorElement s:accuracyValue ?accVal.                         
                      }
                 Group BY ?phenomena ?unit ?accVal
                 ORDER BY ?phenomena
@@ -241,8 +241,8 @@ module.exports.editSensor = function (sensor) {
   console.log(sensor);
   var bindingsText = 'DELETE {?a ?b ?c}' +
     'INSERT {' +
-    '?sensorURI rdf:type     s:sensor.' +
-    '?sensorURI rdfs:comment ?desc.';
+    '?sensorURI rdf:type     s:sensor. ' +
+    '?sensorURI rdfs:comment ?desc. ';
   sensor.labels.forEach(element => {
     var string = '?sensorURI rdfs:label ' + '"' + element.value + '"' + '@' + element.lang + '. ';
     bindingsText = bindingsText.concat(string)
@@ -272,7 +272,7 @@ module.exports.editSensor = function (sensor) {
     bindingsText = bindingsText.concat(string)
   });
   sensor.sensorElements.forEach(element => {
-    var string = '?sensorUri s:hasElement s:' + element.uri + '. ' +
+    var string = '?sensorURI s:hasElement s:' + element.uri + '. ' +
       's:' + element.uri + ' s:canMeasure s:' + element.phenomenonUri.slice(34) + '. ' +
       's:' + element.uri + ' s:hasAccuracyUnit <' + element.unitOfAccuracy + '>. ' +
       's:' + element.uri + ' s:accuracyValue ' + '"' + element.accuracyValue + '"' + '^^xsd:float.';
@@ -284,7 +284,7 @@ module.exports.editSensor = function (sensor) {
       bindingsText = bindingsText.concat(string)
   });
   bindingsText = bindingsText.concat('} WHERE {?a ?b ?c. FILTER (',
-    ' (?a = ?sensorUri) && (?b = s:manufacturer ||',
+    ' (?a = ?sensorURI) && (?b = s:manufacturer ||',
     ' ?b = s:dataSheet ||',
     ' ?b = s:priceInEuro ||',
     ' ?b = s:lifePeriod ||',
@@ -300,7 +300,7 @@ module.exports.editSensor = function (sensor) {
     // ' ?a = s:' + element.uri + ' && ?b = s:accuracyValue ||',
 
     // ' ?c = s:' + element.uri + ' && ?b = s:measuredBy ||',
-    ' ?c = ?sensorUri && (?b = s:hasSensor ||',
+    ' ?c = ?sensorURI && (?b = s:hasSensor ||',
     '  ?b = s:isElementOf))}');
   // TODO: FINISH the bind part check whether all variables are fine!!!
   // TODO: Add dynamic description language tag!
@@ -308,8 +308,8 @@ module.exports.editSensor = function (sensor) {
   return client
     .query(bindingsText)
     .bind({
-      sensorUri: { value: senphurl + sensor.uri, type: 'uri' },
-      desc: { value: sensor.description, lang: 'en' },
+      sensorURI: { value: senphurl + sensor.uri, type: 'uri' },
+      desc: { value: sensor.description, lang: "en" },
       manu: { value: sensor.manufacturer, type: 'string' },
       datasheet: { value: sensor.datasheet, type: 'string' },
       price: { value: sensor.price, type: 'float' },
@@ -326,56 +326,56 @@ module.exports.editSensor = function (sensor) {
 
 
 
-//get a single device identified by its iri @returns the device's labels, descriptions, website, image, contact and compatible sensors
-module.exports.editPhenomenon = function (phenomenon) {
-  var senphurl = 'http://www.opensensemap.org/SENPH#';
-  console.log(phenomenon);
+// //get a single device identified by its iri @returns the device's labels, descriptions, website, image, contact and compatible sensors
+// module.exports.editPhenomenon = function (phenomenon) {
+//   var senphurl = 'http://www.opensensemap.org/SENPH#';
+//   console.log(phenomenon);
 
-  // create SPARQL Query: 
-  var bindingsText = 'DELETE {?a ?b ?c}' +
-    'INSERT {' +
-    '?sensorURI rdf:type     s:sensor.' +
-    '?sensorURI rdfs:comment ?desc.';
-  // create insert ;line for each unit 
-  phenomenon.label.forEach(element => {
-    console.log(element);
-    var string = '?phenomenonURI rdfs:label ' + '"' + element.value + '"' + '@' + element.lang + '. ';
-    bindingsText = bindingsText.concat(string)
-  });
-  // create insert ;line for each unit 
-  phenomenon.unit.forEach(element => {
-    console.log(element);
-    var string = '?phenomenonURI s:describedBy ' + '<' + element.unitUri + '>' + '.' +
-      '<' + element.unitUri + '> rdfs:label "' + element.unitLabel + '".';
+//   // create SPARQL Query: 
+//   var bindingsText = 'DELETE {?a ?b ?c}' +
+//     'INSERT {' +
+//     '?sensorURI rdf:type     s:sensor.' +
+//     '?sensorURI rdfs:comment ?desc.';
+//   // create insert ;line for each unit 
+//   phenomenon.label.forEach(element => {
+//     console.log(element);
+//     var string = '?phenomenonURI rdfs:label ' + '"' + element.value + '"' + '@' + element.lang + '. ';
+//     bindingsText = bindingsText.concat(string)
+//   });
+//   // create insert ;line for each unit 
+//   phenomenon.unit.forEach(element => {
+//     console.log(element);
+//     var string = '?phenomenonURI s:describedBy ' + '<' + element.unitUri + '>' + '.' +
+//       '<' + element.unitUri + '> rdfs:label "' + element.unitLabel + '".';
 
-    bindingsText = bindingsText.concat(string)
-  });
-  // create insert ;line for each domain 
-  phenomenon.domain.forEach(element => {
-    console.log(element);
-    var string = '?phenomenonURI s:hasDomain s:' + element.domainUri.slice(34) + '. ';
-    bindingsText = bindingsText.concat(string)
-  });
-  // add WHERE statement 
-  bindingsText = bindingsText.concat('} WHERE {?a ?b ?c. FILTER (?a = ?phenomenonURI && ?b = s:hasDomain || ?a = ?phenomenonURI && ?b = s:describedBy || ?a = ?phenomenonURI && ?b = rdfs:comment || ?a = ?phenomenonURI && ?b = rdfs:label || ?a = ?phenomenonURI && ?b = rdf:type || ?c = ?phenomenonURI && ?b = s:isDomainOf || ?c = ?phenomenonURI && ?b = s:isDescribedBy)}');
-  console.log(bindingsText);
+//     bindingsText = bindingsText.concat(string)
+//   });
+//   // create insert ;line for each domain 
+//   phenomenon.domain.forEach(element => {
+//     console.log(element);
+//     var string = '?phenomenonURI s:hasDomain s:' + element.domainUri.slice(34) + '. ';
+//     bindingsText = bindingsText.concat(string)
+//   });
+//   // add WHERE statement 
+//   bindingsText = bindingsText.concat('} WHERE {?a ?b ?c. FILTER (?a = ?phenomenonURI && ?b = s:hasDomain || ?a = ?phenomenonURI && ?b = s:describedBy || ?a = ?phenomenonURI && ?b = rdfs:comment || ?a = ?phenomenonURI && ?b = rdfs:label || ?a = ?phenomenonURI && ?b = rdf:type || ?c = ?phenomenonURI && ?b = s:isDomainOf || ?c = ?phenomenonURI && ?b = s:isDescribedBy)}');
+//   console.log(bindingsText);
 
-  return client
-    .query(bindingsText)
-    // bind values to variable names
-    .bind({
-      phenomenonURI: { value: senphurl + phenomenon.uri, type: 'uri' },
-      // +++ FIXME +++ language hardcoded, make it dynamic
-      // phenomenonLabel:      {value: phenomenon.name, lang: "en"},
-      // +++ FIXME +++ language hardcoded, make it dynamic
-      desc: { value: phenomenon.description, lang: "en" },
-    })
-    .execute()
-    .then(Promise.resolve(console.log("evertyhing ok")))
-    .catch(function (error) {
-      console.log(error);
-    });
-}
+//   return client
+//     .query(bindingsText)
+//     // bind values to variable names
+//     .bind({
+//       phenomenonURI: { value: senphurl + phenomenon.uri, type: 'uri' },
+//       // +++ FIXME +++ language hardcoded, make it dynamic
+//       // phenomenonLabel:      {value: phenomenon.name, lang: "en"},
+//       // +++ FIXME +++ language hardcoded, make it dynamic
+//       desc: { value: phenomenon.description, lang: "en" },
+//     })
+//     .execute()
+//     .then(Promise.resolve(console.log("evertyhing ok")))
+//     .catch(function (error) {
+//       console.log(error);
+//     });
+// }
 
 
 

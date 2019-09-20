@@ -169,4 +169,44 @@ module.exports.editDevice = function (device) {
     .catch(function (error) {
       console.log(error);
     });
+}    
+//get a single device identified by its iri @returns the device's labels, descriptions, website, image, contact and compatible sensors
+module.exports.addDevice = function (device) {
+  var senphurl = 'http://www.opensensemap.org/SENPH#';
+  console.log(device);
+
+  // create SPARQL Query: 
+    'INSERT {' +
+    '?deviceURI rdf:type     s:device.' +
+    '?deviceURI rdfs:label   ?deviceLabel. ' +
+    '?deviceURI rdfs:comment ?desc.' +
+    (device.website ? '?deviceURI s:website ?website.' : '') +
+    (device.image ? '?deviceURI s:image ?image.' : '') +
+    (device.contact ? '?deviceURI s:hasContact ?contact.' : '');
+  // create insert ;line for each sensor 
+  device.sensor.forEach(element => {
+    var string = '?deviceURI s:hasSensor s:' + element.sensorUri.slice(34) + '. ';
+    bindingsText = bindingsText.concat(string)
+  });
+  // add WHERE statement 
+  bindingsText = bindingsText.concat('}');
+  console.log(bindingsText);
+  return client
+    .query(bindingsText)
+    // bind values to variable names
+    .bind({
+      deviceURI: { value: senphurl + device.uri, type: 'uri' },
+      // +++ FIXME +++ language hardcoded, make it dynamic
+      deviceLabel: { value: device.name, lang: "en" },
+      // +++ FIXME +++ language hardcoded, make it dynamic
+      desc: { value: device.description, lang: "en" },
+      website: { value: device.website, type: 'string' },
+      image: { value: device.image, type: 'string' },
+      contact: { value: device.contact, type: 'string' },
+    })
+    .execute()
+    .then(Promise.resolve(console.log("evertyhing ok")))
+    .catch(function (error) {
+      console.log(error);
+    });
 }

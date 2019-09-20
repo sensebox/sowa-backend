@@ -38,6 +38,7 @@ router.get('/sensor/:iri', async function (req, res) {
     await asyncForEach(elements, async (selem) => {
       var elem = await SensorsController.getSensorElement(selem.selement.value);
       // elem[0][phenoShort] = elem[0].phenomena.value.slice(34);
+      console.log(elem);
       firstReq.push({sensorElements: elem[0]});
     });
     res.json(firstReq);

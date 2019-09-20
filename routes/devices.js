@@ -33,6 +33,12 @@ router.post('/device/edit/', function (req, res) {
     .then(res.end("END"))
 });
 
+router.post('/device/add/', function (req, res) {
+  console.dir(req.body);
+  DevicesController.addDevice(req.body)
+    .then(res.end("END"))
+});
+
 
 
 module.exports = router;
