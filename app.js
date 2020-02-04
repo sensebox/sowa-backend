@@ -27,6 +27,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+app.use('/*',function(req,res,next){
+  res.header('Access-Control-Allow-Origin', 'http://localhost:4200');
+  next();
+});
+
 app.use('/', indexRouter);
 app.use('/queries', queriesRouter);
 app.use('/sensors', sensorsRouter);
@@ -34,6 +39,7 @@ app.use('/phenomena', phenomenaRouter);
 app.use('/devices', devicesRouter);
 app.use('/domains', domainsRouter);
 app.use(express.static('owl'));
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
