@@ -137,7 +137,8 @@ module.exports.getPhenomenon = function (iri) {
               ORDER BY ?sensors ?iri ?domain ?unit
         `)
     .execute()
-    .then(res => res.results.bindings)
+    .then(res => { console.log(res);
+                    return res.results.bindings;})
     .catch(function (error) {
       console.log(error)
     });

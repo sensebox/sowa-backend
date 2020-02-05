@@ -51,7 +51,7 @@ module.exports.getSensors = function () {
 module.exports.getSensor = function (iri) {
   return client
     .query(SPARQL`
-    Select Distinct ?iri  ?labels ?description  ?manufacturer ?price ?datasheet  ?lifeperiod ?image ?devices ?selement
+    Select Distinct ?iri  ?label ?description  ?manufacturer ?price ?datasheet  ?lifeperiod ?image ?device ?deviceLabel ?sensorElement ?phenomenon ?phenomenonName ?unit ?accVal
                      WHERE {   
   						          {	
                             ${{ s: iri }}  rdfs:label ?name.
@@ -59,7 +59,7 @@ module.exports.getSensor = function (iri) {
                         }
                         UNION 
                         {   
-                          ${{ s: iri }}  rdfs:label ?labels.
+                          ${{ s: iri }}  rdfs:label ?label.
                         }
                         UNION 
                         {   
@@ -67,11 +67,17 @@ module.exports.getSensor = function (iri) {
                         }
                         UNION
                         {
-                            ${{ s: iri }} s:hasElement ?selement.
+                            ${{ s: iri }} s:hasElement ?sensorElement.
+                              ?sensorElement s:canMeasure ?phenomenon.
+                              ?phenomenon rdfs:label ?phenomenonName. 
+                              ?sensorElement s:hasAccuracyUnit ?unit.
+                              ?sensorElement s:accuracyValue ?accVal.
                         }
                         UNION
                         {
-                            ${{ s: iri }} s:isSensorOf ?devices.
+                            ${{ s: iri }} s:isSensorOf ?device.
+                            OPTIONAL
+                            { ?device rdfs:label ?deviceLabel.}
                         }  
                         UNION
                         {
@@ -94,12 +100,14 @@ module.exports.getSensor = function (iri) {
                             ${{ s: iri }} s:image ?image.
                         } 
                      }
-                Group BY ?iri ?labels ?description ?datasheet ?image ?lifeperiod ?manufacturer ?price ?devices ?selement
-                ORDER BY ?iri ?phenomena ?devices ?selement
+                Group BY ?iri ?label ?description ?datasheet ?image ?lifeperiod ?manufacturer ?price ?device ?deviceLabel ?sensorElement ?phenomenon ?phenomenonName ?unit ?accVal
+                ORDER BY ?iri ?phenomenon ?device ?sensorElement
           `)
     .execute()
-    .then(res => res.results.bindings)
+    .then(res => { console.log(res.results.bindings)
+                    return res.results.bindings})
     .catch(function (error) {
+      console.dir(arguments, {depth: null})
       console.log("Oh no, error!")
     });
 }
@@ -109,15 +117,15 @@ module.exports.getSensorElement = function (iri) {
   iri = iri.slice(34);
   return client
     .query(SPARQL`
-    Select Distinct ?phenomena ?unit ?accVal
+    Select Distinct ?sensorElement ?phenomenon ?unit ?accVal
                      WHERE {   
-                            ${{ s: iri }} s:canMeasure ?phenomena.
-                            ?sensorElement s:canMeasure ?phenomena.
+                            ${{ s: iri }} s:canMeasure ?phenomenon.
+                            ?sensorElement s:canMeasure ?phenomenon.
                             ?sensorElement s:hasAccuracyUnit ?unit.
                             ?sensorElement s:accuracyValue ?accVal.                         
                      }
-                Group BY ?phenomena ?unit ?accVal
-                ORDER BY ?phenomena
+                Group BY ?sensorElement ?phenomenon ?unit ?accVal
+                ORDER BY ?phenomenon
           `)
     .execute()
     .then(res => res.results.bindings)
@@ -276,12 +284,12 @@ module.exports.editSensor = function (sensor) {
       's:' + element.uri + ' s:canMeasure s:' + element.phenomenonUri.slice(34) + '. ' +
       's:' + element.uri + ' s:hasAccuracyUnit <' + element.unitOfAccuracy + '>. ' +
       's:' + element.uri + ' s:accuracyValue ' + '"' + element.accuracyValue + '"' + '^^xsd:float.';
-    var filterString = ' ?a = s:' + element.uri + ' && (?b = s:canMeasure ||'+
-    ' ?b = s:hasAccuracyUnit ||'+
-    ' ?b = s:accuracyValue) ||'+
-    ' ?c = s:' + element.uri + ' && ?b = s:measuredBy ||';
+    var filterString = ' ?a = s:' + element.uri + ' && (?b = s:canMeasure ||' +
+      ' ?b = s:hasAccuracyUnit ||' +
+      ' ?b = s:accuracyValue) ||' +
+      ' ?c = s:' + element.uri + ' && ?b = s:measuredBy ||';
     sElements = filterString;
-      bindingsText = bindingsText.concat(string)
+    bindingsText = bindingsText.concat(string)
   });
   bindingsText = bindingsText.concat('} WHERE {?a ?b ?c. FILTER (',
     ' (?a = ?sensorURI) && (?b = s:manufacturer ||',

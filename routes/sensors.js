@@ -21,34 +21,40 @@ async function asyncForEach(array, callback) {
   }
 }
 
-router.get('/sensor/:iri', async function (req, res) {
-  // console.log(req);
-  elements = [];
-  firstReq = await SensorsController.getSensor(req.params.iri);
-  console.log(firstReq);
-  firstReq.forEach(element => {
-    console.log(Object.getOwnPropertyNames(element)[0]);
-    if (Object.getOwnPropertyNames(element)[0] == 'selement') {
-      elements.push(element);
-    }
-  });
+// router.get('/sensor/:iri', async function (req, res) {
+//   // console.log(req);
+//   elements = [];
+//   firstReq = await SensorsController.getSensor(req.params.iri);
+//   console.log(firstReq);
+//   firstReq.forEach(element => {
+//     console.log(Object.getOwnPropertyNames(element)[0]);
+//     if (Object.getOwnPropertyNames(element)[0] == 'selement') {
+//       elements.push(element);
+//     }
+//   });
 
-  console.log('array looks like ###########################', elements);
-  const start = async () => {
-    await asyncForEach(elements, async (selem) => {
-      var elem = await SensorsController.getSensorElement(selem.selement.value);
-      // elem[0][phenoShort] = elem[0].phenomena.value.slice(34);
-      console.log(elem);
-      firstReq.push({sensorElements: elem[0]});
-    });
-    res.json(firstReq);
-  }
-  start();
-
-  // res.json(firstReq);
-
-  // .then(data => console.log(data))
+router.get('/sensor/:iri', function (req, res) {
+  console.log(req);
+  SensorsController.getSensor(req.params.iri)
+    .then(data => res.json(data))
 });
+
+//   console.log('array looks like ###########################', elements);
+//   const start = async () => {
+//     await asyncForEach(elements, async (selem) => {
+//       var elem = await SensorsController.getSensorElement(selem.selement.value);
+//       // elem[0][phenoShort] = elem[0].phenomena.value.slice(34);
+//       console.log(elem);
+//       firstReq.push({sensorElements: elem[0]});
+//     });
+//     res.json(firstReq);
+//   }
+//   start();
+
+//   // res.json(firstReq);
+
+//   // .then(data => console.log(data))
+// });
 
 
 router.get('/sensorIRI/:iri', function (req, res) {
