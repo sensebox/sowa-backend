@@ -51,7 +51,7 @@ module.exports.getSensors = function () {
 module.exports.getSensor = function (iri) {
   return client
     .query(SPARQL`
-    Select Distinct ?iri  ?label ?description  ?manufacturer ?price ?datasheet  ?lifeperiod ?image ?device ?deviceLabel ?sensorElement ?phenomenon ?phenomenonName ?unit ?accVal
+    Select Distinct ?iri  ?label ?description  ?manufacturer ?price ?datasheet  ?lifeperiod ?image ?device ?deviceLabel ?sensorElement ?phenomenon  ?unit ?accVal
                      WHERE {   
   						          {	
                             ${{ s: iri }}  rdfs:label ?name.
@@ -69,7 +69,6 @@ module.exports.getSensor = function (iri) {
                         {
                             ${{ s: iri }} s:hasElement ?sensorElement.
                               ?sensorElement s:canMeasure ?phenomenon.
-                              ?phenomenon rdfs:label ?phenomenonName. 
                               ?sensorElement s:hasAccuracyUnit ?unit.
                               ?sensorElement s:accuracyValue ?accVal.
                         }
@@ -100,7 +99,7 @@ module.exports.getSensor = function (iri) {
                             ${{ s: iri }} s:image ?image.
                         } 
                      }
-                Group BY ?iri ?label ?description ?datasheet ?image ?lifeperiod ?manufacturer ?price ?device ?deviceLabel ?sensorElement ?phenomenon ?phenomenonName ?unit ?accVal
+                Group BY ?iri ?label ?description ?datasheet ?image ?lifeperiod ?manufacturer ?price ?device ?deviceLabel ?sensorElement ?phenomenon  ?unit ?accVal
                 ORDER BY ?iri ?phenomenon ?device ?sensorElement
           `)
     .execute()
