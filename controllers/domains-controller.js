@@ -54,11 +54,15 @@ module.exports.getDomains = function () {
 module.exports.getDomain = function (iri) {
   return client
     .query(SPARQL`
-    Select Distinct ?iri ?label ?description ?phenomena ?phenomenaLabel 
+    Select Distinct ?iri ?label ?description ?phenomenon ?phenomenonLabel 
                      WHERE {   
   						{	
-                            ${{ s: iri }}  rdfs:label ?label.
-                          ?iri ?rdf ?label
+                            ${{ s: iri }}  rdfs:label ?name.
+                          ?iri ?rdf ?name
+                        }
+                        UNION 
+                        {   
+                            ${{ s: iri }} rdfs:label ?label
                         }
                         UNION 
                         {   
@@ -66,13 +70,13 @@ module.exports.getDomain = function (iri) {
                         }
                         UNION
                         {
-                            ${{ s: iri }} s:isDomainOf ?phenomena.
-                          ?phenomena  rdfs:label ?phenomenaLabel
+                            ${{ s: iri }} s:isDomainOf ?phenomenon.
+                          ?phenomenon  rdfs:label ?phenomenonLabel
                         }  
 
                      }
-                Group BY ?iri ?label ?description ?phenomena ?phenomenaLabel 
-                ORDER BY ?iri ?phenomena
+                Group BY ?iri ?label ?description ?phenomenon ?phenomenonLabel 
+                ORDER BY ?iri ?phenomenon
           `)
     .execute()
     .then(res => res.results.bindings)
