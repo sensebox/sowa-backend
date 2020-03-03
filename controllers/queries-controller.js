@@ -751,3 +751,22 @@ module.exports.getUnits = function (iri) {
     });
 }
 
+module.exports.getUnitLabel = function (iri) {
+  console.log(iri)
+  return unitClient
+    .query(SPARQL`
+    SELECT DISTINCT ?label
+    from <http://purl.obolibrary.org/obo/merged/UO>
+    WHERE
+      { 
+        ${{ uo: iri }} <http://www.geneontology.org/formats/oboInOwl#inSubset>  <http://purl.obolibrary.org/obo/uo#unit_slim>.
+        ${{ uo: iri }} rdfs:label ?label
+    }`)
+    .execute()
+    .then(res => res.results.bindings)
+    .catch(function (error) {
+      console.log(error.httpStatus);
+      console.log(error);
+    });
+}
+
