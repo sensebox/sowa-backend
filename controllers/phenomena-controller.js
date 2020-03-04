@@ -35,10 +35,10 @@ const client = new SparqlClient(endpoint, {
 module.exports.getPhenomena = function () {
   return client
     .query(SPARQL`
-                     SELECT ?label ?phenomenon
+                     SELECT ?phenomenonLabel ?phenomenon
                      WHERE {
                        ?phenomenon rdf:type s:phenomenon.
-                       OPTIONAL {?phenomenon rdfs:label ?label.}
+                       OPTIONAL {?phenomenon rdfs:label ?phenomenonLabel.}
                      }`)
     .execute({ format: { resource: 'phenomenon' } })
     .then(res => res.results.bindings)

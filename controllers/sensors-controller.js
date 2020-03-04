@@ -34,12 +34,12 @@ const client = new SparqlClient(endpoint, {
 module.exports.getSensors = function () {
   return client
     .query(SPARQL`
-                     SELECT ?label ?sensor
+                     SELECT ?sensorsLabel ?sensors
                      WHERE {
-                       ?sensor rdf:type s:sensor.
-                       OPTIONAL {?sensor rdfs:label ?label.}
+                       ?sensors rdf:type s:sensor.
+                       OPTIONAL {?sensors rdfs:label ?sensorsLabel.}
                      }`)
-    .execute({ format: { resource: 'sensor' } })
+    .execute({ format: { resource: 'sensors' } })
     .then(res => res.results.bindings)
     .catch(function (error) {
       console.log("Oh no, error!")
