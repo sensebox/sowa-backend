@@ -22,3 +22,9 @@ router.get('/unit/http://purl.obolibrary.org/obo/:iri', function (req, res) {
   .then(data => res.json(data))
 });
 
+router.get('/all', function (req, res) {
+  QueriesController.getAll()
+    .then(data => res.json(data))
+}); 
+
+

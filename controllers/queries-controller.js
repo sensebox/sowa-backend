@@ -770,3 +770,22 @@ module.exports.getUnitLabel = function (iri) {
     });
 }
 
+//get all sensors @returns iris and labels
+module.exports.getAll = function () {
+  return client
+    .query(SPARQL`
+                     SELECT ?label ?entity ?type
+                     WHERE {
+                      ?entity rdf:type ?type.
+                      ?entity rdfs:label ?label.
+                      FILTER (?type IN (s:sensor, s:phenomenon, s:domain, s:device ))
+                     }`)
+    .execute()
+    .then(res => res.results.bindings)
+    .catch(function (error) {
+      console.log("Oh no, error!")
+      console.log(error)
+    });
+}
+
+
