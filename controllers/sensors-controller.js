@@ -103,10 +103,12 @@ module.exports.getSensor = function (iri) {
                 ORDER BY ?iri ?phenomenon ?device ?sensorElement
           `)
     .execute()
-    .then(res => { console.log(res.results.bindings)
-                    return res.results.bindings})
+    .then(res => {
+      console.log(res.results.bindings)
+      return res.results.bindings
+    })
     .catch(function (error) {
-      console.dir(arguments, {depth: null})
+      console.dir(arguments, { depth: null })
       console.log("Oh no, error!")
     });
 }
@@ -240,96 +242,71 @@ module.exports.updateSensor = function (sensor) {
 
 module.exports.editSensor = function (sensor) {
   var senphurl = 'http://www.opensensemap.org/SENPH#';
-  var sElements = '';
-  console.log(sensor);
-  sensor.sensorElements.forEach(element => {
+  sensor.sensorElement.forEach(element => {
     element['uri'] = "sensorElement_" + sensor.uri + "_" + element.phenomenonUri.slice(34);
   })
-  console.log(sensor);
+
+  // DELETE {...} INSERT{...}
   var bindingsText = 'DELETE {?a ?b ?c}' +
     'INSERT {' +
-    '?sensorURI rdf:type     s:sensor. ' +
-    '?sensorURI rdfs:comment ?desc. ';
-  sensor.labels.forEach(element => {
-    var string = '?sensorURI rdfs:label ' + '"' + element.value + '"' + '@' + element.lang + '. ';
-    bindingsText = bindingsText.concat(string)
+    '?sensorURI rdf:type        s:sensor. ' +
+    '?sensorURI rdfs:comment    ?desc. ' +
+    '?sensorURI s:manufacturer  ?manu.' +
+    '?sensorURI s:dataSheet     ?datasheet.' +
+    '?sensorURI s:priceInEuro   ?price.' +
+    '?sensorURI s:lifePeriod    ?life.' +
+    '?sensorURI s:image         ?image.';
+
+  sensor.label.forEach(element => {
+    bindingsText = bindingsText.concat(
+      '?sensorURI rdfs:label ' + JSON.stringify(element.value) + '@' + element.lang + '. '
+    );
   });
-  if (sensor.manufacturer != '') {
-    var string = '?sensorURI s:manufacturer ?manu.'
-    bindingsText = bindingsText.concat(string)
-  }
-  if (sensor.datasheet != '') {
-    var string = '?sensorURI s:dataSheet ?datasheet.'
-    bindingsText = bindingsText.concat(string)
-  }
-  if (sensor.price != '') {
-    var string = '?sensorURI s:priceInEuro ?price.'
-    bindingsText = bindingsText.concat(string)
-  }
-  if (sensor.lifeperiod != '') {
-    var string = '?sensorURI s:lifePeriod ?life.'
-    bindingsText = bindingsText.concat(string)
-  }
-  if (sensor.image != '') {
-    var string = '?sensorURI s:image ?image.'
-    bindingsText = bindingsText.concat(string)
-  }
-  sensor.devices.forEach(element => {
-    var string = '?sensorURI s:isSensorOf s:' + element.deviceUri.slice(34) + '. ';
-    bindingsText = bindingsText.concat(string)
+
+  sensor.device.forEach(element => {
+    bindingsText = bindingsText.concat(
+      '?sensorURI s:isSensorOf s:' + element.deviceUri.slice(34) + '. '
+    );
   });
-  sensor.sensorElements.forEach(element => {
+
+  sensor.sensorElement.forEach(element => {
     var string = '?sensorURI s:hasElement s:' + element.uri + '. ' +
       's:' + element.uri + ' s:canMeasure s:' + element.phenomenonUri.slice(34) + '. ' +
       's:' + element.uri + ' s:hasAccuracyUnit <' + element.unitOfAccuracy + '>. ' +
-      's:' + element.uri + ' s:accuracyValue ' + '"' + element.accuracyValue + '"' + '^^xsd:float.';
-    var filterString = ' ?a = s:' + element.uri + ' && (?b = s:canMeasure ||' +
-      ' ?b = s:hasAccuracyUnit ||' +
-      ' ?b = s:accuracyValue) ||' +
-      ' ?c = s:' + element.uri + ' && ?b = s:measuredBy ||';
-    sElements = filterString;
+      's:' + element.uri + ' s:accuracyValue ' + JSON.stringify(element.accuracyValue) + '^^xsd:float.';
     bindingsText = bindingsText.concat(string)
   });
-  bindingsText = bindingsText.concat('} WHERE {?a ?b ?c. FILTER (',
-    ' (?a = ?sensorURI) && (?b = s:manufacturer ||',
-    ' ?b = s:dataSheet ||',
-    ' ?b = s:priceInEuro ||',
-    ' ?b = s:lifePeriod ||',
-    ' ?b = s:image ||',
-    ' ?b = s:hasElement ||',
-    ' ?b = s:isSensorOf ||',
-    ' ?b = rdfs:comment ||',
-    ' ?b = rdfs:label ||',
-    ' ?b = rdf:type) ||',
-    sElements,
-    // ' ?a = s:' + element.uri + ' && ?b = s:canMeasure ||',
-    // ' ?a = s:' + element.uri + ' && ?b = s:hasAccuracyUnit ||',
-    // ' ?a = s:' + element.uri + ' && ?b = s:accuracyValue ||',
 
-    // ' ?c = s:' + element.uri + ' && ?b = s:measuredBy ||',
-    ' ?c = ?sensorURI && (?b = s:hasSensor ||',
-    '  ?b = s:isElementOf))}');
-  // TODO: FINISH the bind part check whether all variables are fine!!!
+  // WHERE { ... FILTER{...}}
+  bindingsText = bindingsText.concat(
+    '} WHERE {?a ?b ?c. FILTER ('
+  );
+  
+  sensor.sensorElement.forEach(element => {
+    bindingsText = bindingsText.concat(
+      '?a = s:' + element.uri + ' || ?c = s:' + element.uri + ' || '
+    );
+  });
+
+  bindingsText = bindingsText.concat(' ?a = ?sensorURI || ?c = ?sensorURI )}');
+
   // TODO: Add dynamic description language tag!
+  // LOG and EXECTUE UPDATE 
   console.log(bindingsText)
   return client
     .query(bindingsText)
     .bind({
       sensorURI: { value: senphurl + sensor.uri, type: 'uri' },
       desc: { value: sensor.description, lang: "en" },
-      manu: { value: sensor.manufacturer, type: 'string' },
-      datasheet: { value: sensor.datasheet, type: 'string' },
-      price: { value: sensor.price, type: 'float' },
-      life: { value: sensor.lifeperiod, type: 'string' },
-      image: { value: sensor.image, type: 'string' }
+      manu: sensor.manufacturer,
+      datasheet: { value: sensor.datasheet, type: 'uri' },
+      price: { value: sensor.price, type: 'decimal' },
+      life: { value: sensor.lifeperiod, type: 'integer' },
+      image: { value: sensor.image, type: 'uri' }
     })
-    .execute()
-    .then(Promise.resolve(console.log("everthing ok")))
-    .catch(function (error) {
-      console.log(error.httpStatus);
-      console.log(error);
-    });
+    .execute();
 }
+
 
 
 

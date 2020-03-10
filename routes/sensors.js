@@ -65,12 +65,13 @@ router.get('/sensorIRI/:iri', function (req, res) {
 
 router.post('/sensor/update/', function (req, res) {
   SensorsController.updateSensor(req.body)
-    .then(res.end("END"))
+    .then(res.send("END"))
 });
 
 router.post('/sensor/edit/', function (req, res) {
+  console.log(req.body);
   SensorsController.editSensor(req.body)
-    .then(res.end("END"))
+    .then(res.json(req.body))
 });
 
 
