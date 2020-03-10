@@ -11,9 +11,20 @@ var sensorsRouter = require('./routes/sensors');
 var phenomenaRouter = require('./routes/phenomena');
 var devicesRouter = require('./routes/devices');
 var domainsRouter = require('./routes/domains');
-
+var cors = require('cors')
 
 var app = express();
+
+var whitelist = ['http://localhost:4200']
+var corsOptions = {
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  }
+}
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -27,8 +38,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.use('/*',function(req,res,next){
-  res.header('Access-Control-Allow-Origin', 'http://localhost:4200');
+app.use('/*', cors(corsOptions),  function(req,res,next){
   next();
 });
 
@@ -42,12 +52,12 @@ app.use(express.static('owl'));
 
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
