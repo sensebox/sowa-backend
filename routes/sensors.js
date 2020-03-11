@@ -34,8 +34,8 @@ async function asyncForEach(array, callback) {
 //   });
 
 router.get('/sensor/:iri', function (req, res) {
-  console.log(req);
-  SensorsController.getSensor(req.params.iri)
+  console.log(req.params.iri);
+  SensorsController.getSensorIRI(req.params.iri)
     .then(data => res.json(data))
 });
 
@@ -70,7 +70,8 @@ router.post('/sensor/update/', function (req, res) {
 
 router.post('/sensor/edit/', function (req, res) {
   console.log(req.body);
-  SensorsController.editSensor(req.body)
+  SensorsController.editSensor(req.body);
+  SensorsController.createHistorySensor(req.body)
     .then(res.json(req.body))
 });
 

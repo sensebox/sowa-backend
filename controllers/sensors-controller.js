@@ -2,6 +2,8 @@ const SparqlClient = require('sparql-client-2');
 const SPARQL = SparqlClient.SPARQL;
 const endpoint = 'http://localhost:3030/senph/sparql';
 const updatepoint = 'http://localhost:3030/senph/update';
+const history_endpoint = 'http://localhost:3030/senph-history/sparql';
+const history_updatepoint = 'http://localhost:3030/senph-history/update';
 // const unitpoint = 'http://localhost:3030/uo/sparql';
 
 
@@ -27,6 +29,19 @@ const client = new SparqlClient(endpoint, {
 
   })
 
+  const historyClient = new SparqlClient(history_endpoint, {
+    updateEndpoint: history_updatepoint
+  })
+    .register({
+      owl: 'http://www.w3.org/2002/07/owl#',
+      rdfs: 'http://www.w3.org/2000/01/rdf-schema#',
+      s: 'http://www.opensensemap.org/SENPH#',
+      uo: 'http://purl.obolibrary.org/obo/',
+      rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+      xsd: 'http://www.w3.org/2001/XMLSchema#'
+  
+    })
+  
 
 /* ---------- All sensor funtions: -----------------*/
 
@@ -49,6 +64,7 @@ module.exports.getSensors = function () {
 
 //get a single sensor identified by its iri @returns the sensor's labels, descriptions, datasheet, image, lifeperiod, manufacturer, price, phenomena it can measueres and accuracy values, devices it is part of
 module.exports.getSensor = function (iri) {
+  console.log(iri);
   return client
     .query(SPARQL`
     Select Distinct ?iri  ?label ?description  ?manufacturer ?price ?datasheet  ?lifeperiod ?image ?device ?deviceLabel ?sensorElement ?phenomenon  ?unit ?accVal
@@ -141,58 +157,76 @@ module.exports.getSensorElement = function (iri) {
 
 //get a single sensor identified by its iri @returns the sensor's labels, descriptions, datasheet, image, lifeperiod, manufacturer, price, phenomena it can measueres and accuracy values, devices it is part of
 module.exports.getSensorIRI = function (iri) {
-  return client
-    .query(SPARQL`
-  Select Distinct ?iri ?label ?description ?datasheet ?image ?lifeperiod ?manufacturer ?price ?phenomena ?unit ?device
-                   WHERE {   
-            {	
-                          ${{ s: iri }}  rdfs:label ?label.
-                        ?iri ?rdf ?label
-                      }
-                      UNION 
-                      {   
-                          ${{ s: iri }} rdfs:comment ?description.
-                      }
-                      UNION
-                      {	
-                          ${{ s: iri }} s:dataSheet ?datasheet.
-                      }
-                      UNION
-                      {
-                          ${{ s: iri }} s:image ?image.
-                      } 
-                      UNION
-                      {
-                          ${{ s: iri }} s:lifePeriod ?lifeperiod.
-                      } 
-                      UNION
-                      {
-                          ${{ s: iri }} s:manufacturer ?manufacturer.
-                      }
-                      UNION
-                      {
-                          ${{ s: iri }} s:priceInEuro ?price.
-                      }
-                      UNION
-                      {
-                          ${{ s: iri }} s:hasElement ?selement.
-                          ?selement   s:canMeasure ?phenomena.
-                          OPTIONAL {?phenomena rdfs:label ?phenomenaLabel.}
-                          OPTIONAL { ?selement s:hasAccuracyUnit ?unit.}
-                      }
-                      UNION
-                      {
-                          ${{ s: iri }} s:isSensorOf ?devices.
-                      }  
+  var senphurl = 'http://www.opensensemap.org/SENPH#';
 
-                   }
-              Group BY ?iri ?label ?description ?datasheet ?image ?lifeperiod ?manufacturer ?price ?phenomena ?unit ?device 
-              ORDER BY ?iri ?phenomena ?device
-        `)
+  var bindingsText = `Select Distinct ?label ?description  ?manufacturer ?price ?datasheet  ?lifeperiod ?image ?device ?deviceLabel ?sensorElement ?phenomenon  ?unit ?accVal
+  WHERE {   
+     {	
+         ?iri  rdfs:label ?name.
+     }
+     UNION 
+     {   
+       ?iri  rdfs:label ?label.
+     }
+     UNION 
+     {   
+         ?iri rdfs:comment ?description.
+     }
+     UNION
+     {
+         ?iri s:hasElement ?sensorElement.
+           ?sensorElement s:canMeasure ?phenomenon.
+           ?sensorElement s:hasAccuracyUnit ?unit.
+           ?sensorElement s:accuracyValue ?accVal.
+     }
+     UNION
+     {
+         ?iri s:isSensorOf ?device.
+         OPTIONAL
+         { ?device rdfs:label ?deviceLabel.}
+     }  
+     UNION
+     {
+         ?iri s:manufacturer ?manufacturer.
+     }
+     UNION
+     {
+         ?iri s:priceInEuro ?price.
+     }
+     UNION
+     {	
+         ?iri s:dataSheet ?datasheet.
+     }
+     UNION
+     {
+         ?iri s:lifePeriod ?lifeperiod.
+     } 
+     UNION
+     {
+         ?iri s:image ?image.
+     } 
+  }
+Group BY ?label ?description ?datasheet ?image ?lifeperiod ?manufacturer ?price ?device ?deviceLabel ?sensorElement ?phenomenon  ?unit ?accVal
+ORDER BY ?phenomenon ?device ?sensorElement`;
+  return client
+    .query(bindingsText)
+    .bind('iri', { s: iri })
     .execute()
-    .then(res => res.results.bindings)
+    .then(res => {
+      res.results.bindings.push({
+        'iri':
+        {
+          type: 'uri',
+          value: senphurl + iri
+        }
+      })
+      console.log(res.results.bindings)
+      return res.results.bindings
+    })
     .catch(function (error) {
+      console.dir(arguments, { depth: null })
       console.log("Oh no, error!")
+      console.log(error)
     });
 }
 
@@ -281,7 +315,7 @@ module.exports.editSensor = function (sensor) {
   bindingsText = bindingsText.concat(
     '} WHERE {?a ?b ?c. FILTER ('
   );
-  
+
   sensor.sensorElement.forEach(element => {
     bindingsText = bindingsText.concat(
       '?a = s:' + element.uri + ' || ?c = s:' + element.uri + ' || '
@@ -297,6 +331,62 @@ module.exports.editSensor = function (sensor) {
     .query(bindingsText)
     .bind({
       sensorURI: { value: senphurl + sensor.uri, type: 'uri' },
+      desc: { value: sensor.description, lang: "en" },
+      manu: sensor.manufacturer,
+      datasheet: { value: sensor.datasheet, type: 'uri' },
+      price: { value: sensor.price, type: 'decimal' },
+      life: { value: sensor.lifeperiod, type: 'integer' },
+      image: { value: sensor.image, type: 'uri' }
+    })
+    .execute();
+}
+
+module.exports.createHistorySensor = function (sensor) {
+  sensor['dateTime'] = Date.now();
+  console.log(sensor);
+  var senphurl = 'http://www.opensensemap.org/SENPH#';
+  sensor.sensorElement.forEach(element => {
+    element['uri'] = "sensorElement_" + sensor.uri + "_" + element.phenomenonUri.slice(34) + '_' + sensor.dateTime;
+  })
+
+  // DELETE {...} INSERT{...}
+  var bindingsText = 'INSERT DATA {' +
+    '?sensorURI rdf:type        s:sensor. ' +
+    '?sensorURI rdfs:comment    ?desc. ' +
+    '?sensorURI s:manufacturer  ?manu.' +
+    '?sensorURI s:dataSheet     ?datasheet.' +
+    '?sensorURI s:priceInEuro   ?price.' +
+    '?sensorURI s:lifePeriod    ?life.' +
+    '?sensorURI s:image         ?image.';
+
+  sensor.label.forEach(element => {
+    bindingsText = bindingsText.concat(
+      '?sensorURI rdfs:label ' + JSON.stringify(element.value) + '@' + element.lang + '. '
+    );
+  });
+
+  sensor.device.forEach(element => {
+    bindingsText = bindingsText.concat(
+      '?sensorURI s:isSensorOf s:' + element.deviceUri.slice(34) + '. '
+    );
+  });
+
+  sensor.sensorElement.forEach(element => {
+    var string = '?sensorURI s:hasElement s:' + element.uri + '. ' +
+      's:' + element.uri + ' s:canMeasure s:' + element.phenomenonUri.slice(34) + '. ' +
+      's:' + element.uri + ' s:hasAccuracyUnit <' + element.unitOfAccuracy + '>. ' +
+      's:' + element.uri + ' s:accuracyValue ' + JSON.stringify(element.accuracyValue) + '^^xsd:float.';
+    bindingsText = bindingsText.concat(string)
+  });
+
+  bindingsText = bindingsText.concat('}')
+  // TODO: Add dynamic description language tag!
+  // LOG and EXECTUE UPDATE 
+  console.log(bindingsText)
+  return historyClient
+    .query(bindingsText)
+    .bind({
+      sensorURI: { value: senphurl + sensor.uri + '_' + sensor.dateTime, type: 'uri' },
       desc: { value: sensor.description, lang: "en" },
       manu: sensor.manufacturer,
       datasheet: { value: sensor.datasheet, type: 'uri' },
