@@ -35,7 +35,20 @@ async function asyncForEach(array, callback) {
 
 router.get('/sensor/:iri', function (req, res) {
   console.log(req.params.iri);
-  SensorsController.getSensorIRI(req.params.iri)
+  SensorsController.getSensor(req.params.iri)
+    .then(data => res.json(data))
+});
+
+router.get('/historic-sensor/:iri', function (req, res) {
+  console.log(req.params.iri);
+  SensorsController.getHistoricSensor(req.params.iri)
+    .then(data => res.json(data))
+});
+
+
+router.get('/sensor-history/:iri', function (req, res) {
+  console.log(req.params.iri);
+  SensorsController.getSensorHistory(req.params.iri)
     .then(data => res.json(data))
 });
 
@@ -63,10 +76,18 @@ router.get('/sensorIRI/:iri', function (req, res) {
     .then(data => res.json(data))
 });
 
-router.post('/sensor/update/', function (req, res) {
-  SensorsController.updateSensor(req.body)
-    .then(res.send("END"))
+// router.post('/sensor/update/', function (req, res) {
+//   SensorsController.updateSensor(req.body)
+//     .then(res.send("END"))
+// });
+
+router.post('/sensor/create/', function (req, res) {
+  console.log(req.body);
+  SensorsController.createNewSensor(req.body)
+  SensorsController.createHistorySensor(req.body)
+    .then(res.json(req.body))
 });
+
 
 router.post('/sensor/edit/', function (req, res) {
   console.log(req.body);

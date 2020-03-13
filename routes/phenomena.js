@@ -16,26 +16,46 @@ router.get('/all', function (req, res) {
 });
 
 router.get('/phenomenon/:iri', function (req, res) {
-  console.log(req);
+  console.log(req.params.iri);
   PhenomenaController.getPhenomenon(req.params.iri)
     .then(data => res.json(data))
 });
 
-router.get('/phenomenonDEPRECATED/:iri', function (req, res) {
-  console.log(req);
-  PhenomenaController.getPhenomenonDEPRECATED(req.params.iri)
+// router.get('/phenomenonDEPRECATED/:iri', function (req, res) {
+//   console.log(req);
+//   PhenomenaController.getPhenomenonDEPRECATED(req.params.iri)
+//     .then(data => res.json(data))
+// });
+
+// router.post('/phenomenon/update/', function (req, res) {
+//   PhenomenaController.updatePhenomenon(req.body)
+//     .then(res.end("END"))
+// });
+
+router.get('/historic-phenomenon/:iri', function (req, res) {
+  console.log(req.params.iri);
+  PhenomenaController.getHistoricPhenomenon(req.params.iri)
     .then(data => res.json(data))
 });
 
-router.post('/phenomenon/update/', function (req, res) {
-  PhenomenaController.updatePhenomenon(req.body)
-    .then(res.end("END"))
+router.get('/phenomenon-history/:iri', function (req, res) {
+  console.log(req.params.iri);
+  PhenomenaController.getPhenomenonHistory(req.params.iri)
+    .then(data => res.json(data))
+});
+
+router.post('/phenomenon/create/', function (req, res) {
+  console.log(req.body);
+  PhenomenaController.createNewPhenomenon(req.body)
+  PhenomenaController.createHistoryPhenomenon(req.body)
+    .then(res.json(req.body))
 });
 
 router.post('/phenomenon/edit/', function (req, res) {
   console.dir(req.body);
   PhenomenaController.editPhenomenon(req.body)
-    .then(res.end("END"))
+  PhenomenaController.createHistoryPhenomenon(req.body)
+    .then(res.json(req.body))
 });
 
 
