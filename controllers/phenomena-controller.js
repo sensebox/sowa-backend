@@ -61,6 +61,22 @@ module.exports.getPhenomena = function () {
     });
 }
 
+//get all phenomena @returns iris and labels
+module.exports.getPhenomenaAllLabels = function () {
+  return client
+    .query(SPARQL`
+                     SELECT ?phenomenonLabel ?phenomenon
+                     WHERE {
+                       ?phenomenon rdf:type s:phenomenon.
+                       ?phenomenon rdfs:label ?phenomenonLabel.
+                     }`)
+    .execute()
+    .then(res => res.results.bindings)
+    .catch(function (error) {
+      console.log("Oh no, error!")
+    });
+}
+
 
 //get history of a phenomenon
 module.exports.getPhenomenonHistory = function (iri) {
@@ -147,8 +163,6 @@ module.exports.getPhenomenon = function (iri) {
                       UNION
                       {	
                           ?iri s:describedBy ?unit.
-                        OPTIONAL
-                          {?unit rdfs:label ?unitLabel.} 
                       }
                       UNION
                       {
