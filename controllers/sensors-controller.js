@@ -49,12 +49,12 @@ const historyClient = new SparqlClient(history_endpoint, {
 module.exports.getSensors = function () {
   return client
     .query(SPARQL`
-                     SELECT ?sensorsLabel ?sensors
+                     SELECT ?sensorLabel ?sensor
                      WHERE {
-                       ?sensors rdf:type s:sensor.
-                       OPTIONAL {?sensors rdfs:label ?sensorsLabel.}
+                       ?sensor rdf:type s:sensor.
+                       ?sensor rdfs:label ?sensorLabel.
                      }`)
-    .execute({ format: { resource: 'sensors' } })
+    .execute({ format: { resource: 'sensor' } })
     .then(res => res.results.bindings)
     .catch(function (error) {
       console.log("Oh no, error!")
@@ -186,10 +186,6 @@ module.exports.getSensor = function (iri) {
 
   var bindingsText = `Select Distinct ?label ?description  ?manufacturer ?price ?datasheet  ?lifeperiod ?image ?device ?deviceLabel ?sensorElement ?phenomenon  ?unit ?accVal
   WHERE {   
-     {	
-         ?iri  rdfs:label ?name.
-     }
-     UNION 
      {   
        ?iri  rdfs:label ?label.
      }
@@ -262,10 +258,6 @@ module.exports.getHistoricSensor = function (iri) {
 
   var bindingsText = `Select Distinct ?label ?description  ?manufacturer ?price ?datasheet  ?lifeperiod ?image ?device ?deviceLabel ?sensorElement ?phenomenon  ?unit ?accVal
   WHERE {   
-     {	
-         ?iri  rdfs:label ?name.
-     }
-     UNION 
      {   
        ?iri  rdfs:label ?label.
      }
