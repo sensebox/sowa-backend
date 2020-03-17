@@ -21,10 +21,30 @@ router.get('/domain/:iri', function (req, res) {
     .then(data => res.json(data))
 });
 
-router.post('/domain/update/', function (req, res) {
+router.get('/historic-domain/:iri', function (req, res) {
+  console.log(req.params.iri);
+  DomainsController.getHistoricDomain(req.params.iri)
+    .then(data => res.json(data))
+});
+
+router.get('/domain-history/:iri', function (req, res) {
+  console.log(req.params.iri);
+  DomainsController.getDomainHistory(req.params.iri)
+    .then(data => res.json(data))
+});
+
+router.post('/domain/create/', function (req, res) {
+  console.log(req.body);
+  DomainsController.createNewDomain(req.body)
+  DomainsController.createHistoryDomain(req.body)
+    .then(res.json(req.body))
+});
+
+router.post('/domain/edit/', function (req, res) {
   console.dir(req.body);
-  DomainsController.updateDomain(req.body)
-    .then(res.end("END"))
+  DomainsController.editDomain(req.body)
+  DomainsController.createHistoryDomain(req.body)
+  .then(res.json(req.body))
 });
 
 

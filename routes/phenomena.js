@@ -15,6 +15,11 @@ router.get('/all', function (req, res) {
     .then(data => res.json(data))
 });
 
+router.get('/all/labels', function (req, res) {
+  PhenomenaController.getPhenomenaAllLabels()
+    .then(data => res.json(data))
+});
+
 router.get('/phenomenon/:iri', function (req, res) {
   console.log(req.params.iri);
   PhenomenaController.getPhenomenon(req.params.iri)

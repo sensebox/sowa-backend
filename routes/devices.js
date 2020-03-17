@@ -21,23 +21,44 @@ router.get('/device/:iri', function (req, res) {
     .then(data => res.json(data))
 });
 
-router.post('/device/update/', function (req, res) {
-  console.dir(req.body);
-  DevicesController.updateDevice(req.body)
-    .then(res.end("END"))
+// router.post('/device/update/', function (req, res) {
+//   console.dir(req.body);
+//   DevicesController.updateDevice(req.body)
+//     .then(res.end("END"))
+// });
+
+router.get('/historic-device/:iri', function (req, res) {
+  console.log(req.params.iri);
+  DevicesController.getHistoricDevice(req.params.iri)
+    .then(data => res.json(data))
+});
+
+router.get('/device-history/:iri', function (req, res) {
+  console.log(req.params.iri);
+  DevicesController.getDeviceHistory(req.params.iri)
+    .then(data => res.json(data))
+});
+
+router.post('/device/create/', function (req, res) {
+  console.log(req.body);
+  DevicesController.createNewDevice(req.body)
+  DevicesController.createHistoryDevice(req.body)
+  .then(res.json(req.body))
 });
 
 router.post('/device/edit/', function (req, res) {
   console.dir(req.body);
   DevicesController.editDevice(req.body)
-    .then(res.end("END"))
+  DevicesController.createHistoryDevice(req.body)
+  .then(res.json(req.body))
 });
 
-router.post('/device/add/', function (req, res) {
-  console.dir(req.body);
-  DevicesController.addDevice(req.body)
-    .then(res.end("END"))
-});
+// router.post('/device/add/', function (req, res) {
+//   console.dir(req.body);
+//   DevicesController.addDevice(req.body)
+//   DevicesController.createHistoryDevice(req.body)
+//   .then(data => res.json(data))
+// });
 
 
 
