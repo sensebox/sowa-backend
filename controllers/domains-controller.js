@@ -2,6 +2,8 @@ const SparqlClient = require('sparql-client-2');
 const SPARQL = SparqlClient.SPARQL;
 const endpoint = 'http://localhost:3030/senph/sparql';
 const updatepoint = 'http://localhost:3030/senph/update';
+const history_endpoint = 'http://localhost:3030/senph-history/sparql';
+const history_updatepoint = 'http://localhost:3030/senph-history/update';
 // const unitpoint = 'http://localhost:3030/uo/sparql';
 
 
@@ -25,8 +27,21 @@ const client = new SparqlClient(endpoint, {
     rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
     xsd: 'http://www.w3.org/2001/XMLSchema#'
 
+  })
+
+const historyClient = new SparqlClient(history_endpoint, {
+  updateEndpoint: history_updatepoint
+})
+  .register({
+    owl: 'http://www.w3.org/2002/07/owl#',
+    rdfs: 'http://www.w3.org/2000/01/rdf-schema#',
+    s: 'http://www.opensensemap.org/SENPH#',
+    uo: 'http://purl.obolibrary.org/obo/',
+    rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+    xsd: 'http://www.w3.org/2001/XMLSchema#'
 
   })
+
 
 
 /* ---------- All domain funtions: -----------------*/
@@ -44,23 +59,91 @@ module.exports.getDomains = function () {
     .execute({ format: { resource: 'domain' } })
     .then(res => res.results.bindings)
     .catch(function (error) {
+      console.dir(arguments, { depth: null })
       console.log("Oh no, error!")
-      console.log(error);
+      console.log(error)
+    });
+}
+
+//get history of a domain
+module.exports.getDomainHistory = function (iri) {
+  var senphurl = 'http://www.opensensemap.org/SENPH#';
+  var bindingsText = `
+  SELECT ?domain
+                     WHERE {
+                       ?domain rdf:type s:domain.
+                       FILTER(regex(str(?domain), ?iri, "i" ))
+                     }`;
+  return historyClient
+    .query(bindingsText)
+    .bind('iri', senphurl + iri)
+    .execute()
+    .then(res => {
+      console.log(res.results.bindings)
+      return res.results.bindings
+    })
+    .catch(function (error) {
+      console.dir(arguments, { depth: null })
+      console.log("Oh no, error!")
+      console.log(error)
+    });
+}
+
+
+
+//get a single domain identified by its iri @returns the domain's labels, descriptions and phenomena it is domain of
+module.exports.getDomain = function (iri) {
+  var senphurl = 'http://www.opensensemap.org/SENPH#';
+
+  return client
+    .query(SPARQL`
+    Select Distinct ?label ?description ?phenomenon ?phenomenonLabel 
+                     WHERE {
+                        {   
+                            ${{ s: iri }} rdfs:label ?label.
+                        }
+                        UNION 
+                        {   
+                            ${{ s: iri }} rdfs:comment ?description.
+                        }
+                        UNION
+                        {
+                            ${{ s: iri }} s:isDomainOf ?phenomenon.
+                        }  
+
+                     }
+                Group BY ?label ?description ?phenomenon ?phenomenonLabel 
+                ORDER BY ?phenomenon
+          `)
+    .execute()
+    .then(res => {
+      console.log(res.results.bindings);
+      res.results.bindings.push({
+        'iri':
+        {
+          type: 'uri',
+          value: senphurl + iri
+        }
+      })
+      console.log(res.results.bindings);
+      return res.results.bindings;
+    })
+    .catch(function (error) {
+      console.dir(arguments, { depth: null })
+      console.log("Oh no, error!")
+      console.log(error)
     });
 }
 
 
 //get a single domain identified by its iri @returns the domain's labels, descriptions and phenomena it is domain of
-module.exports.getDomain = function (iri) {
-  return client
+module.exports.getHistoricDomain = function (iri) {
+  var senphurl = 'http://www.opensensemap.org/SENPH#';
+
+  return historyClient
     .query(SPARQL`
-    Select Distinct ?iri ?label ?description ?phenomenon ?phenomenonLabel 
-                     WHERE {   
-  						{	
-                            ${{ s: iri }}  rdfs:label ?name.
-                          ?iri ?rdf ?name
-                        }
-                        UNION 
+    Select Distinct ?label ?description ?phenomenon ?phenomenonLabel 
+                     WHERE {
                         {   
                             ${{ s: iri }} rdfs:label ?label
                         }
@@ -71,34 +154,174 @@ module.exports.getDomain = function (iri) {
                         UNION
                         {
                             ${{ s: iri }} s:isDomainOf ?phenomenon.
-                          ?phenomenon  rdfs:label ?phenomenonLabel
                         }  
 
                      }
-                Group BY ?iri ?label ?description ?phenomenon ?phenomenonLabel 
-                ORDER BY ?iri ?phenomenon
+                Group BY ?label ?description ?phenomenon ?phenomenonLabel 
+                ORDER BY ?phenomenon
           `)
     .execute()
-    .then(res => res.results.bindings)
+    .then(res => {
+      console.log(res);
+      res.results.bindings.push({
+        'iri':
+        {
+          type: 'uri',
+          value: senphurl + iri
+        }
+      })
+      console.log(res.results.bindings);
+      return res.results.bindings;
+    })
     .catch(function (error) {
+      console.dir(arguments, { depth: null })
       console.log("Oh no, error!")
+      console.log(error)
     });
 }
 
 
-//update/add a new domain @inputs required: label +language, description + language; optional: manufacturer, data sheet, price in Euro, life period (currently not available because of datatype issue) and image 
-module.exports.updateDomain = function (domain) {
+
+// //update/add a new domain @inputs required: label +language, description + language; optional: manufacturer, data sheet, price in Euro, life period (currently not available because of datatype issue) and image 
+// module.exports.updateDomain = function (domain) {
+//   console.log(domain);
+//   // `+ (domain.phenomenon ?`${{s: domain.name.label}} s:isDomainOf ${{s: domain.phenomenon}}.`:``) + `
+//   return client
+//     .query(SPARQL`INSERT DATA {
+//         ${{ s: domain.uri }} rdf:type s:domain;
+//                     rdfs:label  ${{ value: domain.name.label, lang: domain.name.lang }};
+//                     rdfs:comment  ${{ value: domain.description.comment, lang: domain.description.lang }}.
+//             }`)
+//     .execute()
+//     .then(Promise.resolve(console.log("everthing ok")))
+//     .catch(function (error) {
+//       console.log(error);
+//     });
+// }
+
+
+
+
+//edit a domain
+module.exports.editDomain = function (domain) {
+  var senphurl = 'http://www.opensensemap.org/SENPH#';
   console.log(domain);
-  // `+ (domain.phenomenon ?`${{s: domain.name.label}} s:isDomainOf ${{s: domain.phenomenon}}.`:``) + `
+
+  // create SPARQL Query: 
+  var bindingsText = 'DELETE {?a ?b ?c}' +
+    'INSERT {' +
+    '?domainURI rdf:type     s:domain.' +
+    '?domainURI rdfs:comment ?desc.';
+
+  // create insert ;line for each label 
+  domain.label.forEach(element => {
+    bindingsText = bindingsText.concat(
+      '?domainURI rdfs:label ' + JSON.stringify(element.value) + '@' + element.lang + '. '
+    );
+  });
+
+  // create insert ;line for each phenomenon 
+  domain.phenomenon.forEach(element => {
+    bindingsText = bindingsText.concat(
+      '?domainURI s:isDomainOf ' + '<' + element.phenomenonURI + '>' + '.'
+    );
+  });
+
+  // add WHERE statement 
+  bindingsText = bindingsText.concat('} WHERE {?a ?b ?c. FILTER (?a = ?domainURI || ?c = ?domainURI)}');
+  console.log(bindingsText);
+
   return client
-    .query(SPARQL`INSERT DATA {
-        ${{ s: domain.uri }} rdf:type s:domain;
-                    rdfs:label  ${{ value: domain.name.label, lang: domain.name.lang }};
-                    rdfs:comment  ${{ value: domain.description.comment, lang: domain.description.lang }}.
-            }`)
+    .query(bindingsText)
+    // bind values to variable names
+    .bind({
+      domainURI: { value: senphurl + domain.uri, type: 'uri' },
+      // +++ FIXME +++ language hardcoded, make it dynamic
+      desc: { value: domain.description, lang: "en" }
+    })
     .execute()
-    .then(Promise.resolve(console.log("everthing ok")))
-    .catch(function (error) {
-      console.log(error);
-    });
 }
+
+//create new version of a domain in history db 
+module.exports.createHistoryDomain = function (domain) {
+  domain['dateTime'] = Date.now();
+  console.log(domain);
+
+  var senphurl = 'http://www.opensensemap.org/SENPH#';
+
+  // create SPARQL Query: 
+  var bindingsText = 'INSERT DATA {' +
+    '?domainURI rdf:type     s:domain.' +
+    '?domainURI rdfs:comment ?desc.';
+
+  // create insert ;line for each label 
+  domain.label.forEach(element => {
+    bindingsText = bindingsText.concat(
+      '?domainURI rdfs:label ' + JSON.stringify(element.value) + '@' + element.lang + '. '
+    );
+  });
+
+  // create insert ;line for each phenomenon 
+  domain.phenomenon.forEach(element => {
+    bindingsText = bindingsText.concat(
+      '?domainURI s:isDomainOf ' + '<' + element.phenomenonURI + '>' + '.'
+    );
+  });
+
+  // add WHERE statement 
+  bindingsText = bindingsText.concat('}');
+  console.log(bindingsText);
+
+  return historyClient
+    .query(bindingsText)
+    // bind values to variable names
+    .bind({
+      domainURI: { value: senphurl + domain.uri + '_' + domain.dateTime, type: 'uri' },
+      // +++ FIXME +++ language hardcoded, make it dynamic
+      desc: { value: domain.description, lang: "en" }
+    })
+    .execute()
+}
+
+//create new domain 
+module.exports.createNewDomain = function (domain) {
+  console.log(domain);
+
+  var senphurl = 'http://www.opensensemap.org/SENPH#';
+
+  // create SPARQL Query: 
+  var bindingsText = 'INSERT DATA {' +
+    '?domainURI rdf:type     s:domain.' +
+    '?domainURI rdfs:comment ?desc.';
+
+  // create insert ;line for each label 
+  domain.label.forEach(element => {
+    bindingsText = bindingsText.concat(
+      '?domainURI rdfs:label ' + JSON.stringify(element.value) + '@' + element.lang + '. '
+    );
+  });
+
+  // create insert ;line for each phenomenon 
+  domain.phenomenon.forEach(element => {
+    bindingsText = bindingsText.concat(
+      '?domainURI s:isDomainOf ' + '<' + element.phenomenonURI + '>' + '.'
+    );
+  });
+  // add WHERE statement 
+  bindingsText = bindingsText.concat('}');
+  console.log(bindingsText);
+
+  return client
+    .query(bindingsText)
+    // bind values to variable names
+    .bind({
+      domainURI: { value: senphurl + domain.uri, type: 'uri' },
+      // +++ FIXME +++ language hardcoded, make it dynamic
+      desc: { value: domain.description, lang: "en" }
+    })
+    .execute()
+}
+
+
+
+
