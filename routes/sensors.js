@@ -15,11 +15,11 @@ router.get('/all', function (req, res) {
     .then(data => res.json(data))
 });
 
-async function asyncForEach(array, callback) {
-  for (let index = 0; index < array.length; index++) {
-    await callback(array[index], index, array);
-  }
-}
+// async function asyncForEach(array, callback) {
+//   for (let index = 0; index < array.length; index++) {
+//     await callback(array[index], index, array);
+//   }
+// }
 
 // router.get('/sensor/:iri', async function (req, res) {
 //   // console.log(req);
@@ -70,11 +70,11 @@ router.get('/sensor-history/:iri', function (req, res) {
 // });
 
 
-router.get('/sensorIRI/:iri', function (req, res) {
-  console.log(req.params.iri);
-  SensorsController.getSensorIRI(req.params.iri)
-    .then(data => res.json(data))
-});
+// router.get('/sensorIRI/:iri', function (req, res) {
+//   console.log(req.params.iri);
+//   SensorsController.getSensorIRI(req.params.iri)
+//     .then(data => res.json(data))
+// });
 
 // router.post('/sensor/update/', function (req, res) {
 //   SensorsController.updateSensor(req.body)

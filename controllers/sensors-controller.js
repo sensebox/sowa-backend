@@ -49,11 +49,14 @@ const historyClient = new SparqlClient(history_endpoint, {
 module.exports.getSensors = function () {
   return client
     .query(SPARQL`
-                     SELECT ?sensorLabel ?sensor
+                     SELECT ?sensorLabel ?sensor ?validation
                      WHERE {
                        ?sensor rdf:type s:sensor.
                        ?sensor rdfs:label ?sensorLabel.
-                     }`)
+                       OPTIONAL{
+                       ?sensor s:isValid ?validation.
+                       }
+                    }`)
     .execute({ format: { resource: 'sensor' } })
     .then(res => res.results.bindings)
     .catch(function (error) {
@@ -184,7 +187,7 @@ module.exports.getSensorElement = function (iri) {
 module.exports.getSensor = function (iri) {
   var senphurl = 'http://www.opensensemap.org/SENPH#';
 
-  var bindingsText = `Select Distinct ?label ?description  ?manufacturer ?price ?datasheet  ?lifeperiod ?image ?device ?deviceLabel ?sensorElement ?phenomenon  ?unit ?accVal
+  var bindingsText = `Select Distinct ?label ?description  ?manufacturer ?price ?datasheet  ?lifeperiod ?image ?device ?deviceLabel ?sensorElement ?phenomenon  ?unit ?accVal ?validation
   WHERE {   
      {   
        ?iri  rdfs:label ?label.
@@ -226,8 +229,12 @@ module.exports.getSensor = function (iri) {
      {
          ?iri s:image ?image.
      } 
+     UNION
+     {
+         ?iri s:isValid ?validation.
+     } 
   }
-Group BY ?label ?description ?datasheet ?image ?lifeperiod ?manufacturer ?price ?device ?deviceLabel ?sensorElement ?phenomenon  ?unit ?accVal
+Group BY ?label ?description ?datasheet ?image ?lifeperiod ?manufacturer ?price ?device ?deviceLabel ?sensorElement ?phenomenon  ?unit ?accVal ?validation
 ORDER BY ?phenomenon ?device ?sensorElement`;
   return client
     .query(bindingsText)
@@ -256,7 +263,7 @@ ORDER BY ?phenomenon ?device ?sensorElement`;
 module.exports.getHistoricSensor = function (iri) {
   var senphurl = 'http://www.opensensemap.org/SENPH#';
 
-  var bindingsText = `Select Distinct ?label ?description  ?manufacturer ?price ?datasheet  ?lifeperiod ?image ?device ?deviceLabel ?sensorElement ?phenomenon  ?unit ?accVal
+  var bindingsText = `Select Distinct ?label ?description  ?manufacturer ?price ?datasheet  ?lifeperiod ?image ?device ?deviceLabel ?sensorElement ?phenomenon  ?unit ?accVal ?validation
   WHERE {   
      {   
        ?iri  rdfs:label ?label.
@@ -296,9 +303,14 @@ module.exports.getHistoricSensor = function (iri) {
      UNION
      {
          ?iri s:image ?image.
+     }
+     UNION
+     {
+         ?iri s:isValid ?validation.
      } 
+
   }
-Group BY ?label ?description ?datasheet ?image ?lifeperiod ?manufacturer ?price ?device ?deviceLabel ?sensorElement ?phenomenon  ?unit ?accVal
+Group BY ?label ?description ?datasheet ?image ?lifeperiod ?manufacturer ?price ?device ?deviceLabel ?sensorElement ?phenomenon  ?unit ?accVal ?validation
 ORDER BY ?phenomenon ?device ?sensorElement`;
   return historyClient
     .query(bindingsText)
@@ -383,7 +395,9 @@ module.exports.editSensor = function (sensor) {
     '?sensorURI s:dataSheet     ?datasheet.' +
     '?sensorURI s:priceInEuro   ?price.' +
     '?sensorURI s:lifePeriod    ?life.' +
-    '?sensorURI s:image         ?image.';
+    '?sensorURI s:image         ?image.' +
+    '?sensorURI s:isValid       ?validation.';
+
 
   sensor.label.forEach(element => {
     bindingsText = bindingsText.concat(
@@ -430,7 +444,8 @@ module.exports.editSensor = function (sensor) {
       datasheet: { value: sensor.datasheet, type: 'uri' },
       price: { value: sensor.price, type: 'decimal' },
       life: { value: sensor.lifeperiod, type: 'integer' },
-      image: { value: sensor.image, type: 'uri' }
+      image: { value: sensor.image, type: 'uri' },
+      validation: { value: sensor.validation, type: 'boolean' }
     })
     .execute();
 }
@@ -451,7 +466,8 @@ module.exports.createHistorySensor = function (sensor) {
     '?sensorURI s:dataSheet     ?datasheet.' +
     '?sensorURI s:priceInEuro   ?price.' +
     '?sensorURI s:lifePeriod    ?life.' +
-    '?sensorURI s:image         ?image.';
+    '?sensorURI s:image         ?image.' +
+    '?sensorURI s:isValid       ?validation.';
 
   sensor.label.forEach(element => {
     bindingsText = bindingsText.concat(
@@ -486,7 +502,8 @@ module.exports.createHistorySensor = function (sensor) {
       datasheet: { value: sensor.datasheet, type: 'uri' },
       price: { value: sensor.price, type: 'decimal' },
       life: { value: sensor.lifeperiod, type: 'integer' },
-      image: { value: sensor.image, type: 'uri' }
+      image: { value: sensor.image, type: 'uri' },
+      validation: { value: sensor.validation, type: 'boolean' }
     })
     .execute();
 }
@@ -506,7 +523,8 @@ module.exports.createNewSensor = function (sensor) {
     '?sensorURI s:dataSheet     ?datasheet.' +
     '?sensorURI s:priceInEuro   ?price.' +
     '?sensorURI s:lifePeriod    ?life.' +
-    '?sensorURI s:image         ?image.';
+    '?sensorURI s:image         ?image.' +
+    '?sensorURI s:isValid       ?validation.';
 
   sensor.label.forEach(element => {
     bindingsText = bindingsText.concat(
@@ -541,7 +559,8 @@ module.exports.createNewSensor = function (sensor) {
       datasheet: { value: sensor.datasheet, type: 'uri' },
       price: { value: sensor.price, type: 'decimal' },
       life: { value: sensor.lifeperiod, type: 'integer' },
-      image: { value: sensor.image, type: 'uri' }
+      image: { value: sensor.image, type: 'uri' },
+      validation: { value: sensor.validation, type: 'boolean' }
     })
     .execute();
 }
