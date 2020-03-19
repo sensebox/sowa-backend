@@ -11,6 +11,7 @@ var sensorsRouter = require('./routes/sensors');
 var phenomenaRouter = require('./routes/phenomena');
 var devicesRouter = require('./routes/devices');
 var domainsRouter = require('./routes/domains');
+var authRouter = require('./routes/auth');
 var cors = require('cors')
 
 var app = express();
@@ -48,6 +49,7 @@ app.use('/sensors', sensorsRouter);
 app.use('/phenomena', phenomenaRouter);
 app.use('/devices', devicesRouter);
 app.use('/domains', domainsRouter);
+app.use('/users', authRouter);
 app.use(express.static('owl'));
 
 

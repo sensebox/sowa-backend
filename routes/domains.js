@@ -3,6 +3,7 @@ var router = express.Router();
 //var bodyParser = require("body-parser");
 
 const DomainsController = require('../controllers/domains-controller');
+const AuthController = require('../controllers/auth-controller');
 /* GET users listing. */
 router.get('/', function (req, res, next) {
   res.send('respond with a resource');
@@ -33,8 +34,9 @@ router.get('/domain-history/:iri', function (req, res) {
     .then(data => res.json(data))
 });
 
-router.post('/domain/create/', function (req, res) {
-  console.log(req.body);
+router.post('/domain/create/', AuthController.isAuthenticated, function (req, res) {
+  // LOCALS contains the user now including the role
+  console.log("LOCALS", res.locals.user.role);
   DomainsController.createNewDomain(req.body)
   DomainsController.createHistoryDomain(req.body)
     .then(res.json(req.body))
