@@ -49,11 +49,14 @@ const historyClient = new SparqlClient(history_endpoint, {
 module.exports.getPhenomena = function () {
   return client
     .query(SPARQL`
-                     SELECT ?phenomenonLabel ?phenomenon
+                     SELECT ?phenomenonLabel ?phenomenon ?validation
                      WHERE {
                        ?phenomenon rdf:type s:phenomenon.
-                       OPTIONAL {?phenomenon rdfs:label ?phenomenonLabel.}
-                     }`)
+                       ?phenomenon rdfs:label ?phenomenonLabel.
+                       OPTIONAL{
+                        ?phenomenon s:isValid ?validation.
+                        }
+                      }`)
     .execute({ format: { resource: 'phenomenon' } })
     .then(res => res.results.bindings)
     .catch(function (error) {
@@ -151,7 +154,7 @@ module.exports.getPhenomenon = function (iri) {
   var senphurl = 'http://www.opensensemap.org/SENPH#';
 
   var bindingsText = `
-  Select Distinct ?label ?description ?sensors ?domain ?unit ?sensorlabel ?unitLabel ?domainLabel
+  Select Distinct ?label ?description ?sensors ?domain ?unit ?sensorlabel ?unitLabel ?domainLabel ?validation
                    WHERE {   
                       {   
                           ?iri rdfs:label ?label
@@ -175,9 +178,13 @@ module.exports.getPhenomenon = function (iri) {
                           ?iri s:measurableBy ?selement.
                           ?selement   s:isElementOf ?sensors.
                           ?sensors rdfs:label ?sensorlabel.    
+                      }
+                      UNION 
+                      {   
+                          ?iri s:isValid ?validation.
                       }            
                    }
-              Group BY ?sensors  ?domain ?unit ?label ?description ?sensorlabel ?domainLabel ?unitLabel
+              Group BY ?sensors  ?domain ?unit ?label ?description ?sensorlabel ?domainLabel ?unitLabel ?validation
               ORDER BY ?sensors ?domain ?unit
         `;
         console.log(bindingsText)
@@ -211,7 +218,7 @@ module.exports.getHistoricPhenomenon = function (iri) {
   var senphurl = 'http://www.opensensemap.org/SENPH#';
 
   var bindingsText = `
-  Select Distinct ?label ?description ?sensors ?domain ?unit ?sensorlabel ?unitLabel ?domainLabel
+  Select Distinct ?label ?description ?sensors ?domain ?unit ?sensorlabel ?unitLabel ?domainLabel ?validation
                    WHERE {   
                       {	
                           ?iri  rdfs:label ?name.
@@ -240,9 +247,13 @@ module.exports.getHistoricPhenomenon = function (iri) {
                           ?iri s:measurableBy ?selement.
                           ?selement   s:isElementOf ?sensors.
                           ?sensors rdfs:label ?sensorlabel.    
-                      }            
+                      }  
+                      UNION 
+                      {   
+                          ?iri s:isValid ?validation.
+                      }          
                    }
-              Group BY ?sensors  ?domain ?unit ?label ?description ?sensorlabel ?domainLabel ?unitLabel
+              Group BY ?sensors  ?domain ?unit ?label ?description ?sensorlabel ?domainLabel ?unitLabel ?validation
               ORDER BY ?sensors ?domain ?unit
         `;
   return historyClient
@@ -308,7 +319,8 @@ module.exports.editPhenomenon = function (phenomenon) {
   var bindingsText = 'DELETE {?a ?b ?c}' +
     'INSERT {' +
     '?phenomenonURI rdf:type     s:phenomenon.' +
-    '?phenomenonURI rdfs:comment ?desc.';
+    '?phenomenonURI rdfs:comment ?desc.' +
+    '?phenomenonURI s:isValid ?validation.';
   // create insert ;line for each unit 
   phenomenon.label.forEach(element => {
     bindingsText = bindingsText.concat(
@@ -342,6 +354,7 @@ module.exports.editPhenomenon = function (phenomenon) {
       // phenomenonLabel:      {value: phenomenon.name, lang: "en"},
       // +++ FIXME +++ language hardcoded, make it dynamic
       desc: { value: phenomenon.description, lang: "en" },
+      validation: { value: phenomenon.validation, type: 'boolean' }
     })
     .execute();
 }
@@ -355,7 +368,8 @@ module.exports.createHistoryPhenomenon = function (phenomenon) {
   // DELETE {...} INSERT{...}
   var bindingsText = 'INSERT DATA {' +
     '?phenomenonURI rdf:type     s:phenomenon.' +
-    '?phenomenonURI rdfs:comment ?desc.';
+    '?phenomenonURI rdfs:comment ?desc.' +
+    '?phenomenonURI s:isValid ?validation.';
   // create insert ;line for each unit 
   phenomenon.label.forEach(element => {
     bindingsText = bindingsText.concat(
@@ -385,6 +399,7 @@ module.exports.createHistoryPhenomenon = function (phenomenon) {
       phenomenonURI: { value: senphurl + phenomenon.uri+ '_' + phenomenon.dateTime, type: 'uri' },
       // +++ FIXME +++ language hardcoded, make it dynamic
       desc: { value: phenomenon.description, lang: "en" },
+      validation: { value: phenomenon.validation, type: 'boolean' }
     })
     .execute();
 }
@@ -397,7 +412,8 @@ module.exports.createNewPhenomenon = function (phenomenon) {
   // DELETE {...} INSERT{...}
   var bindingsText = 'INSERT DATA {' +
     '?phenomenonURI rdf:type     s:phenomenon.' +
-    '?phenomenonURI rdfs:comment ?desc.';
+    '?phenomenonURI rdfs:comment ?desc.' +
+    '?phenomenonURI s:isValid ?validation.';
   // create insert ;line for each unit 
   phenomenon.label.forEach(element => {
     bindingsText = bindingsText.concat(
@@ -427,6 +443,7 @@ module.exports.createNewPhenomenon = function (phenomenon) {
       phenomenonURI: { value: senphurl + phenomenon.uri, type: 'uri' },
       // +++ FIXME +++ language hardcoded, make it dynamic
       desc: { value: phenomenon.description, lang: "en" },
+      validation: { value: phenomenon.validation, type: 'boolean' }
     })
     .execute();
 }

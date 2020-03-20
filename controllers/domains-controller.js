@@ -50,12 +50,14 @@ const historyClient = new SparqlClient(history_endpoint, {
 module.exports.getDomains = function () {
   return client
     .query(SPARQL`
-                    SELECT ?label ?domain
+                    SELECT ?label ?domain ?validation
                     WHERE {
                       ?domain rdf:type s:domain.
-                    OPTIONAL{
-                      ?domain rdfs:label ?label.}
-                      }`)
+                      ?domain rdfs:label ?label.
+                      OPTIONAL{
+                      ?domain s:isValid ?validation.
+                      }
+                    }`)
     .execute({ format: { resource: 'domain' } })
     .then(res => res.results.bindings)
     .catch(function (error) {
@@ -97,7 +99,7 @@ module.exports.getDomain = function (iri) {
 
   return client
     .query(SPARQL`
-    Select Distinct ?label ?description ?phenomenon ?phenomenonLabel 
+    Select Distinct ?label ?description ?phenomenon ?phenomenonLabel ?validation
                      WHERE {
                         {   
                             ${{ s: iri }} rdfs:label ?label.
@@ -110,9 +112,13 @@ module.exports.getDomain = function (iri) {
                         {
                             ${{ s: iri }} s:isDomainOf ?phenomenon.
                         }  
+                        UNION
+                        {
+                            ${{ s: iri }} s:isValid ?validation.
+                        }  
 
                      }
-                Group BY ?label ?description ?phenomenon ?phenomenonLabel 
+                Group BY ?label ?description ?phenomenon ?phenomenonLabel ?validation
                 ORDER BY ?phenomenon
           `)
     .execute()
@@ -142,7 +148,7 @@ module.exports.getHistoricDomain = function (iri) {
 
   return historyClient
     .query(SPARQL`
-    Select Distinct ?label ?description ?phenomenon ?phenomenonLabel 
+    Select Distinct ?label ?description ?phenomenon ?phenomenonLabel ?validation
                      WHERE {
                         {   
                             ${{ s: iri }} rdfs:label ?label
@@ -155,9 +161,13 @@ module.exports.getHistoricDomain = function (iri) {
                         {
                             ${{ s: iri }} s:isDomainOf ?phenomenon.
                         }  
+                        UNION
+                        {
+                            ${{ s: iri }} s:isValid ?validation.
+                        }  
 
                      }
-                Group BY ?label ?description ?phenomenon ?phenomenonLabel 
+                Group BY ?label ?description ?phenomenon ?phenomenonLabel ?validation
                 ORDER BY ?phenomenon
           `)
     .execute()
@@ -211,7 +221,8 @@ module.exports.editDomain = function (domain) {
   var bindingsText = 'DELETE {?a ?b ?c}' +
     'INSERT {' +
     '?domainURI rdf:type     s:domain.' +
-    '?domainURI rdfs:comment ?desc.';
+    '?domainURI rdfs:comment ?desc.' +
+    '?domainURI s:isValid ?validation.';
 
   // create insert ;line for each label 
   domain.label.forEach(element => {
@@ -237,7 +248,8 @@ module.exports.editDomain = function (domain) {
     .bind({
       domainURI: { value: senphurl + domain.uri, type: 'uri' },
       // +++ FIXME +++ language hardcoded, make it dynamic
-      desc: { value: domain.description, lang: "en" }
+      desc: { value: domain.description, lang: "en" },
+      validation: { value: domain.validation, type: 'boolean' }
     })
     .execute()
 }
@@ -252,7 +264,9 @@ module.exports.createHistoryDomain = function (domain) {
   // create SPARQL Query: 
   var bindingsText = 'INSERT DATA {' +
     '?domainURI rdf:type     s:domain.' +
-    '?domainURI rdfs:comment ?desc.';
+    '?domainURI rdfs:comment ?desc.' +
+    '?domainURI s:isValid ?validation.';
+
 
   // create insert ;line for each label 
   domain.label.forEach(element => {
@@ -278,7 +292,8 @@ module.exports.createHistoryDomain = function (domain) {
     .bind({
       domainURI: { value: senphurl + domain.uri + '_' + domain.dateTime, type: 'uri' },
       // +++ FIXME +++ language hardcoded, make it dynamic
-      desc: { value: domain.description, lang: "en" }
+      desc: { value: domain.description, lang: "en" },
+      validation: { value: domain.validation, type: 'boolean' }
     })
     .execute()
 }
@@ -292,7 +307,9 @@ module.exports.createNewDomain = function (domain) {
   // create SPARQL Query: 
   var bindingsText = 'INSERT DATA {' +
     '?domainURI rdf:type     s:domain.' +
-    '?domainURI rdfs:comment ?desc.';
+    '?domainURI rdfs:comment ?desc.' +
+    '?domainURI s:isValid ?validation.';
+
 
   // create insert ;line for each label 
   domain.label.forEach(element => {
@@ -317,7 +334,8 @@ module.exports.createNewDomain = function (domain) {
     .bind({
       domainURI: { value: senphurl + domain.uri, type: 'uri' },
       // +++ FIXME +++ language hardcoded, make it dynamic
-      desc: { value: domain.description, lang: "en" }
+      desc: { value: domain.description, lang: "en" },
+      validation: { value: domain.validation, type: 'boolean' }
     })
     .execute()
 }

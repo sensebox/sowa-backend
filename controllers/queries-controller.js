@@ -3,6 +3,8 @@ const SPARQL = SparqlClient.SPARQL;
 const endpoint = 'http://localhost:3030/senph/sparql';
 const updatepoint = 'http://localhost:3030/senph/update';
 const unitpoint = 'http://sparql.hegroup.org/sparql/';
+const localUnitpoint = 'http://localhost:3030/uo/sparql';
+
 
 
 
@@ -38,6 +40,16 @@ const client = new SparqlClient(endpoint, {
     xsd: 'http://www.w3.org/2001/XMLSchema#'
 
 
+  })
+
+  const localUnitClient = new SparqlClient(localUnitpoint)
+  .register({
+    owl: 'http://www.w3.org/2002/07/owl#',
+    rdfs: 'http://www.w3.org/2000/01/rdf-schema#',
+    s: 'http://www.opensensemap.org/SENPH#',
+    uo: 'http://purl.obolibrary.org/obo/',
+    rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+    xsd: 'http://www.w3.org/2001/XMLSchema#'
   })
 
 
@@ -735,10 +747,9 @@ module.exports.getUnitsForPhenomenon = function (iri) {
 }
 
 module.exports.getUnits = function (iri) {
-  return unitClient
+  return localUnitClient
     .query(SPARQL`
     SELECT DISTINCT ?y ?label
-    from <http://purl.obolibrary.org/obo/merged/UO>
     WHERE
     {
     ?y <http://www.geneontology.org/formats/oboInOwl#inSubset>  <http://purl.obolibrary.org/obo/uo#unit_slim>.
@@ -747,7 +758,9 @@ module.exports.getUnits = function (iri) {
     .execute()
     .then(res => res.results.bindings)
     .catch(function (error) {
+      console.dir(arguments, { depth: null })
       console.log("Oh no, error!")
+      console.log(error)
     });
 }
 
@@ -774,10 +787,11 @@ module.exports.getUnitLabel = function (iri) {
 module.exports.getAll = function () {
   return client
     .query(SPARQL`
-                     SELECT ?label ?entity ?type
+                     SELECT ?label ?entity ?type ?validation
                      WHERE {
                       ?entity rdf:type ?type.
                       ?entity rdfs:label ?label.
+                      ?entity s:isValid ?validation 
                       FILTER (?type IN (s:sensor, s:phenomenon, s:domain, s:device ))
                      }`)
     .execute()

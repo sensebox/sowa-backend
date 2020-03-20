@@ -50,12 +50,13 @@ const historyClient = new SparqlClient(history_endpoint, {
 module.exports.getDevices = function () {
   return client
     .query(SPARQL`
-                     SELECT ?label ?device
+                     SELECT ?label ?device ?validation
                      WHERE {
                         ?device rdf:type s:device.
+                        ?device rdfs:label ?label.
                         OPTIONAL{
-                          ?device rdfs:label ?label
-                        }
+                          ?device s:isValid ?validation.
+                          }
                     }`)
     .execute({ format: { resource: 'device' } })
     .then(res => res.results.bindings)
@@ -97,7 +98,7 @@ module.exports.getDevice = function (iri) {
 
   return client
     .query(SPARQL`
-    Select Distinct ?label ?description ?website ?image ?contact ?sensor ?sensorLabel 
+    Select Distinct ?label ?description ?website ?image ?contact ?sensor ?sensorLabel ?validation
                      WHERE {
                         {
                             ${{ s: iri }} rdfs:label ?label
@@ -121,9 +122,13 @@ module.exports.getDevice = function (iri) {
                         UNION
                         {
                             ${{ s: iri }} s:hasSensor ?sensor.
+                        }
+                        UNION
+                        {
+                            ${{ s: iri }} s:isValid ?validation.
                         }   
                      }
-                Group BY ?label ?description ?website ?image ?contact ?sensor ?sensorLabel 
+                Group BY ?label ?description ?website ?image ?contact ?sensor ?sensorLabel ?validation
                 ORDER BY ?sensor
           `)
     .execute()
@@ -154,7 +159,7 @@ module.exports.getHistoricDevice = function (iri) {
 
   return historyClient
     .query(SPARQL`
-    Select Distinct ?label ?description ?website ?image ?contact ?sensor ?sensorLabel 
+    Select Distinct ?label ?description ?website ?image ?contact ?sensor ?sensorLabel ?validation
                      WHERE {
                         {
                             ${{ s: iri }} rdfs:label ?label
@@ -179,8 +184,12 @@ module.exports.getHistoricDevice = function (iri) {
                         {
                             ${{ s: iri }} s:hasSensor ?sensor.
                         }   
+                        UNION
+                        {
+                            ${{ s: iri }} s:isValid ?validation.
+                        }  
                      }
-                Group BY ?label ?description ?website ?image ?contact ?sensor ?sensorLabel 
+                Group BY ?label ?description ?website ?image ?contact ?sensor ?sensorLabel ?validation
                 ORDER BY ?sensor
           `)
     .execute()
@@ -248,7 +257,9 @@ module.exports.editDevice = function (device) {
     '?deviceURI rdfs:comment ?desc.' +
     '?deviceURI s:website ?website.' +
     '?deviceURI s:image ?image.' +
-    '?deviceURI s:hasContact ?contact.';
+    '?deviceURI s:hasContact ?contact.'+
+    '?deviceURI s:isValid ?validation.';
+    
   // create insert ;line for each sensor 
   device.sensor.forEach(element => {
     var string = '?deviceURI s:hasSensor s:' + element.sensorUri.slice(34) + '. ';
@@ -273,6 +284,7 @@ module.exports.editDevice = function (device) {
       website: device.website,
       image: device.image,
       contact: device.contact,
+      validation: { value: device.validation, type: 'boolean' }
     })
     .execute()
 }
@@ -290,7 +302,9 @@ module.exports.createHistoryDevice = function (device) {
     '?deviceURI rdfs:comment ?desc.' +
     '?deviceURI s:website ?website.' +
     '?deviceURI s:image ?image.' +
-    '?deviceURI s:hasContact ?contact.';
+    '?deviceURI s:hasContact ?contact.'+
+    '?deviceURI s:isValid ?validation.';
+
   // create insert ;line for each sensor 
   device.sensor.forEach(element => {
     var string = '?deviceURI s:hasSensor s:' + element.sensorUri.slice(34) + '. ';
@@ -315,6 +329,7 @@ module.exports.createHistoryDevice = function (device) {
       website: device.website,
       image: device.image,
       contact: device.contact,
+      validation: { value: device.validation, type: 'boolean' }
     })
     .execute()
 }
@@ -332,7 +347,9 @@ module.exports.createNewDevice = function (device) {
     '?deviceURI rdfs:comment ?desc.' +
     '?deviceURI s:website ?website.' +
     '?deviceURI s:image ?image.' +
-    '?deviceURI s:hasContact ?contact.';
+    '?deviceURI s:hasContact ?contact.'+
+    '?deviceURI s:isValid ?validation.';
+
   // create insert ;line for each sensor 
   device.sensor.forEach(element => {
     var string = '?deviceURI s:hasSensor s:' + element.sensorUri.slice(34) + '. ';
@@ -357,6 +374,7 @@ module.exports.createNewDevice = function (device) {
       website: device.website,
       image: device.image,
       contact: device.contact,
+      validation: { value: device.validation, type: 'boolean' }
     })
     .execute()
 }
