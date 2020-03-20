@@ -49,7 +49,6 @@ app.use('/sensors', sensorsRouter);
 app.use('/phenomena', phenomenaRouter);
 app.use('/devices', devicesRouter);
 app.use('/domains', domainsRouter);
-app.use('/users', authRouter);
 app.use(express.static('owl'));
 
 
