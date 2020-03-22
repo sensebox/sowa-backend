@@ -216,7 +216,7 @@ module.exports.getHistoricDomain = function (iri) {
 module.exports.editDomain = function (domain, role) {
   var senphurl = 'http://www.opensensemap.org/SENPH#';
   console.log(domain);
-  if(role != ('experte' || 'admin')){
+  if(role != ('expert' || 'admin')){
     console.log("User has no verification rights!");
     domain.validation = false;
   }
@@ -261,7 +261,7 @@ module.exports.editDomain = function (domain, role) {
 module.exports.createHistoryDomain = function (domain, role) {
   domain['dateTime'] = Date.now();
   console.log(domain);
-  if(role != ('experte' || 'admin')){
+  if(role != ('expert' || 'admin')){
     console.log("User has no verification rights!");
     domain.validation = false;
   }
@@ -307,7 +307,7 @@ module.exports.createHistoryDomain = function (domain, role) {
 //create new domain 
 module.exports.createNewDomain = function (domain, role) {
   console.log(domain);
-  if(role != ('experte' || 'admin')){
+  if(role != ('expert' || 'admin')){
     console.log("User has no verification rights!");
     domain.validation = false;
   }

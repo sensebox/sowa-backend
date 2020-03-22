@@ -382,7 +382,7 @@ ORDER BY ?phenomenon ?device ?sensorElement`;
 
 module.exports.editSensor = function (sensor, role) {
   var senphurl = 'http://www.opensensemap.org/SENPH#';
-  if(role != ('experte' || 'admin')){
+  if(role != ('expert' || 'admin')){
     console.log("User has no verification rights!");
     sensor.validation = false;
   }
@@ -457,7 +457,7 @@ module.exports.editSensor = function (sensor, role) {
 module.exports.createHistorySensor = function (sensor, role) {
   sensor['dateTime'] = Date.now();
   console.log(sensor);
-  if(role != ('experte' || 'admin')){
+  if(role != ('expert' || 'admin')){
     console.log("User has no verification rights!");
     sensor.validation = false;
   }
@@ -518,7 +518,7 @@ module.exports.createHistorySensor = function (sensor, role) {
 
 module.exports.createNewSensor = function (sensor, role) {
   console.log(sensor);
-  if(role != ('experte' || 'admin')){
+  if(role != ('expert' || 'admin')){
     console.log("User has no verification rights!");
     sensor.validation = false;
   }

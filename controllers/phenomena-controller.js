@@ -314,7 +314,7 @@ module.exports.getHistoricPhenomenon = function (iri) {
 module.exports.editPhenomenon = function (phenomenon, role) {
   var senphurl = 'http://www.opensensemap.org/SENPH#';
   console.log(phenomenon);
-  if(role != ('experte' || 'admin')){
+  if(role != ('expert' || 'admin')){
     console.log("User has no verification rights!");
     phenomenon.validation = false;
   }
@@ -366,7 +366,7 @@ module.exports.editPhenomenon = function (phenomenon, role) {
 module.exports.createHistoryPhenomenon = function (phenomenon, role) {
   phenomenon['dateTime'] = Date.now();
   console.log(phenomenon);
-  if(role != ('experte' || 'admin')){
+  if(role != ('expert' || 'admin')){
     console.log("User has no verification rights!");
     phenomenon.validation = false;
   }
@@ -414,7 +414,7 @@ module.exports.createHistoryPhenomenon = function (phenomenon, role) {
 
 module.exports.createNewPhenomenon = function (phenomenon, role) {
   console.log(phenomenon);
-  if(role != ('experte' || 'admin')){
+  if(role != ('expert' || 'admin')){
     console.log("User has no verification rights!");
     phenomenon.validation = false;
   }

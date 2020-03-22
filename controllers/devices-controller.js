@@ -249,7 +249,7 @@ module.exports.getHistoricDevice = function (iri) {
 module.exports.editDevice = function (device, role) {
   var senphurl = 'http://www.opensensemap.org/SENPH#';
   console.log(device);
-  if(role != ('experte' || 'admin')){
+  if(role != ('expert' || 'admin')){
     console.log("User has no verification rights!");
     device.validation = false;
   }
@@ -297,7 +297,7 @@ module.exports.editDevice = function (device, role) {
 module.exports.createHistoryDevice = function (device, role) {
   device['dateTime'] = Date.now();
   console.log(device);
-  if(role != ('experte' || 'admin')){
+  if(role != ('expert' || 'admin')){
     console.log("User has no verification rights!");
     device.validation = false;
   }
@@ -345,7 +345,7 @@ module.exports.createHistoryDevice = function (device, role) {
 //create new device
 module.exports.createNewDevice = function (device, role) {
   console.log(device);
-  if(role != ('experte' || 'admin')){
+  if(role != ('expert' || 'admin')){
     console.log("User has no verification rights!");
     device.validation = false;
   }
