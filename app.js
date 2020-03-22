@@ -11,7 +11,7 @@ var sensorsRouter = require('./routes/sensors');
 var phenomenaRouter = require('./routes/phenomena');
 var devicesRouter = require('./routes/devices');
 var domainsRouter = require('./routes/domains');
-var authRouter = require('./routes/auth');
+var AuthController = require('./controllers/auth-controller');
 var cors = require('cors')
 
 var app = express();
@@ -39,10 +39,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.use('/*', cors(corsOptions),  function(req,res,next){
+app.use('/*', cors(corsOptions), function (req, res, next) {
   next();
 });
 
+app.post('*', AuthController.isAuthenticated, function (req, res, next) {
+  console.log("LOCALS", res.locals.user.role);
+  next();
+});
 app.use('/', indexRouter);
 app.use('/queries', queriesRouter);
 app.use('/sensors', sensorsRouter);

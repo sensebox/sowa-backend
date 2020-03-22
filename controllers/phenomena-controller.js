@@ -311,10 +311,13 @@ module.exports.getHistoricPhenomenon = function (iri) {
 
 
 //get a single device identified by its iri @returns the device's labels, descriptions, website, image, contact and compatible sensors
-module.exports.editPhenomenon = function (phenomenon) {
+module.exports.editPhenomenon = function (phenomenon, role) {
   var senphurl = 'http://www.opensensemap.org/SENPH#';
   console.log(phenomenon);
-
+  if(role != ('experte' || 'admin')){
+    console.log("User has no verification rights!");
+    phenomenon.validation = false;
+  }
   // create SPARQL Query: 
   var bindingsText = 'DELETE {?a ?b ?c}' +
     'INSERT {' +
@@ -360,9 +363,13 @@ module.exports.editPhenomenon = function (phenomenon) {
 }
 
 
-module.exports.createHistoryPhenomenon = function (phenomenon) {
+module.exports.createHistoryPhenomenon = function (phenomenon, role) {
   phenomenon['dateTime'] = Date.now();
   console.log(phenomenon);
+  if(role != ('experte' || 'admin')){
+    console.log("User has no verification rights!");
+    phenomenon.validation = false;
+  }
   var senphurl = 'http://www.opensensemap.org/SENPH#';
 
   // DELETE {...} INSERT{...}
@@ -405,8 +412,12 @@ module.exports.createHistoryPhenomenon = function (phenomenon) {
 }
 
 
-module.exports.createNewPhenomenon = function (phenomenon) {
+module.exports.createNewPhenomenon = function (phenomenon, role) {
   console.log(phenomenon);
+  if(role != ('experte' || 'admin')){
+    console.log("User has no verification rights!");
+    phenomenon.validation = false;
+  }
   var senphurl = 'http://www.opensensemap.org/SENPH#';
 
   // DELETE {...} INSERT{...}

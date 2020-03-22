@@ -213,10 +213,13 @@ module.exports.getHistoricDomain = function (iri) {
 
 
 //edit a domain
-module.exports.editDomain = function (domain) {
+module.exports.editDomain = function (domain, role) {
   var senphurl = 'http://www.opensensemap.org/SENPH#';
   console.log(domain);
-
+  if(role != ('experte' || 'admin')){
+    console.log("User has no verification rights!");
+    domain.validation = false;
+  }
   // create SPARQL Query: 
   var bindingsText = 'DELETE {?a ?b ?c}' +
     'INSERT {' +
@@ -255,10 +258,13 @@ module.exports.editDomain = function (domain) {
 }
 
 //create new version of a domain in history db 
-module.exports.createHistoryDomain = function (domain) {
+module.exports.createHistoryDomain = function (domain, role) {
   domain['dateTime'] = Date.now();
   console.log(domain);
-
+  if(role != ('experte' || 'admin')){
+    console.log("User has no verification rights!");
+    domain.validation = false;
+  }
   var senphurl = 'http://www.opensensemap.org/SENPH#';
 
   // create SPARQL Query: 
@@ -299,9 +305,12 @@ module.exports.createHistoryDomain = function (domain) {
 }
 
 //create new domain 
-module.exports.createNewDomain = function (domain) {
+module.exports.createNewDomain = function (domain, role) {
   console.log(domain);
-
+  if(role != ('experte' || 'admin')){
+    console.log("User has no verification rights!");
+    domain.validation = false;
+  }
   var senphurl = 'http://www.opensensemap.org/SENPH#';
 
   // create SPARQL Query: 

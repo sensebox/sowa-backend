@@ -246,10 +246,14 @@ module.exports.getHistoricDevice = function (iri) {
 
 
 //edit a device
-module.exports.editDevice = function (device) {
+module.exports.editDevice = function (device, role) {
   var senphurl = 'http://www.opensensemap.org/SENPH#';
   console.log(device);
-
+  if(role != ('experte' || 'admin')){
+    console.log("User has no verification rights!");
+    device.validation = false;
+  }
+  console.log(device);
   // create SPARQL Query: 
   var bindingsText = 'DELETE {?a ?b ?c}' +
     'INSERT {' +
@@ -290,10 +294,13 @@ module.exports.editDevice = function (device) {
 }
 
 //create new version of a device in history db 
-module.exports.createHistoryDevice = function (device) {
+module.exports.createHistoryDevice = function (device, role) {
   device['dateTime'] = Date.now();
   console.log(device);
-
+  if(role != ('experte' || 'admin')){
+    console.log("User has no verification rights!");
+    device.validation = false;
+  }
   var senphurl = 'http://www.opensensemap.org/SENPH#';
 
   // create SPARQL Query: 
@@ -336,9 +343,12 @@ module.exports.createHistoryDevice = function (device) {
 
 
 //create new device
-module.exports.createNewDevice = function (device) {
+module.exports.createNewDevice = function (device, role) {
   console.log(device);
-
+  if(role != ('experte' || 'admin')){
+    console.log("User has no verification rights!");
+    device.validation = false;
+  }
   var senphurl = 'http://www.opensensemap.org/SENPH#';
 
   // create SPARQL Query: 

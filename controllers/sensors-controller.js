@@ -380,8 +380,12 @@ ORDER BY ?phenomenon ?device ?sensorElement`;
 // }
 
 
-module.exports.editSensor = function (sensor) {
+module.exports.editSensor = function (sensor, role) {
   var senphurl = 'http://www.opensensemap.org/SENPH#';
+  if(role != ('experte' || 'admin')){
+    console.log("User has no verification rights!");
+    sensor.validation = false;
+  }
   sensor.sensorElement.forEach(element => {
     element['uri'] = "sensorElement_" + sensor.uri + "_" + element.phenomenonUri.slice(34);
   })
@@ -450,9 +454,13 @@ module.exports.editSensor = function (sensor) {
     .execute();
 }
 
-module.exports.createHistorySensor = function (sensor) {
+module.exports.createHistorySensor = function (sensor, role) {
   sensor['dateTime'] = Date.now();
   console.log(sensor);
+  if(role != ('experte' || 'admin')){
+    console.log("User has no verification rights!");
+    sensor.validation = false;
+  }
   var senphurl = 'http://www.opensensemap.org/SENPH#';
   sensor.sensorElement.forEach(element => {
     element['uri'] = "sensorElement_" + sensor.uri + "_" + element.phenomenonUri.slice(34) + '_' + sensor.dateTime;
@@ -508,8 +516,12 @@ module.exports.createHistorySensor = function (sensor) {
     .execute();
 }
 
-module.exports.createNewSensor = function (sensor) {
+module.exports.createNewSensor = function (sensor, role) {
   console.log(sensor);
+  if(role != ('experte' || 'admin')){
+    console.log("User has no verification rights!");
+    sensor.validation = false;
+  }
   var senphurl = 'http://www.opensensemap.org/SENPH#';
   sensor.sensorElement.forEach(element => {
     element['uri'] = "sensorElement_" + sensor.uri + "_" + element.phenomenonUri.slice(34);
