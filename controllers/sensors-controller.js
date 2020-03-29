@@ -382,7 +382,7 @@ ORDER BY ?phenomenon ?device ?sensorElement`;
 
 module.exports.editSensor = function (sensor, role) {
   var senphurl = 'http://www.opensensemap.org/SENPH#';
-  if(role != ('expert' || 'admin')){
+  if (role != ('expert' || 'admin')) {
     console.log("User has no verification rights!");
     sensor.validation = false;
   }
@@ -419,7 +419,7 @@ module.exports.editSensor = function (sensor, role) {
     var string = '?sensorURI s:hasElement s:' + element.uri + '. ' +
       's:' + element.uri + ' s:canMeasure s:' + element.phenomenonUri.slice(34) + '. ' +
       's:' + element.uri + ' s:hasAccuracyUnit <' + element.unitOfAccuracy + '>. ' +
-      's:' + element.uri + ' s:accuracyValue ' + JSON.stringify(element.accuracyValue) + '^^xsd:float.';
+      's:' + element.uri + ' s:accuracyValue ' + JSON.stringify(element.accuracyValue) + '.';
     bindingsText = bindingsText.concat(string)
   });
 
@@ -457,7 +457,7 @@ module.exports.editSensor = function (sensor, role) {
 module.exports.createHistorySensor = function (sensor, role) {
   sensor['dateTime'] = Date.now();
   console.log(sensor);
-  if(role != ('expert' || 'admin')){
+  if (role != ('expert' || 'admin')) {
     console.log("User has no verification rights!");
     sensor.validation = false;
   }
@@ -518,7 +518,7 @@ module.exports.createHistorySensor = function (sensor, role) {
 
 module.exports.createNewSensor = function (sensor, role) {
   console.log(sensor);
-  if(role != ('expert' || 'admin')){
+  if (role != ('expert' || 'admin')) {
     console.log("User has no verification rights!");
     sensor.validation = false;
   }
@@ -664,4 +664,3 @@ module.exports.getSensorsForPhenomenon = function (iri) {
       console.log("Oh no, error!")
     });
 }
-
