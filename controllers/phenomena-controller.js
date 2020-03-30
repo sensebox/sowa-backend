@@ -85,9 +85,15 @@ module.exports.getPhenomenaAllLabels = function () {
 module.exports.getPhenomenonHistory = function (iri) {
   var senphurl = 'http://www.opensensemap.org/SENPH#';
   var bindingsText = `
-  SELECT ?phenomenon
+  SELECT ?phenomenon ?dateTime ?user
                      WHERE {
                        ?phenomenon rdf:type s:phenomenon.
+                       OPTIONAL{
+                        ?phenomenon s:editDate ?dateTime
+                      }
+                      OPTIONAL{
+                        ?phenomenon s:editBy ?user
+                      }   
                        FILTER(regex(str(?phenomenon), ?iri, "i" ))
                      }`;
   return historyClient
@@ -363,10 +369,12 @@ module.exports.editPhenomenon = function (phenomenon, role) {
 }
 
 
-module.exports.createHistoryPhenomenon = function (phenomenon, role) {
-  phenomenon['dateTime'] = Date.now();
+module.exports.createHistoryPhenomenon = function (phenomenon, user) {
+  var date = Date.now();
+  var isoDate =  new Date(date).toISOString();
+  phenomenon['dateTime'] = date;
   console.log(phenomenon);
-  if(role != ('expert' || 'admin')){
+  if(user.role != ('expert' || 'admin')){
     console.log("User has no verification rights!");
     phenomenon.validation = false;
   }
@@ -374,9 +382,13 @@ module.exports.createHistoryPhenomenon = function (phenomenon, role) {
 
   // DELETE {...} INSERT{...}
   var bindingsText = 'INSERT DATA {' +
-    '?phenomenonURI rdf:type     s:phenomenon.' +
-    '?phenomenonURI rdfs:comment ?desc.' +
-    '?phenomenonURI s:isValid ?validation.';
+    '?phenomenonURI rdf:type      s:phenomenon.' +
+    '?phenomenonURI rdfs:comment  ?desc.' +
+    '?phenomenonURI s:isValid     ?validation.' +
+    '?phenomenonURI s:editDate    ?dateTime.' +
+    '?phenomenonURI s:editBy      ?userName.';
+
+
   // create insert ;line for each unit 
   phenomenon.label.forEach(element => {
     bindingsText = bindingsText.concat(
@@ -406,7 +418,9 @@ module.exports.createHistoryPhenomenon = function (phenomenon, role) {
       phenomenonURI: { value: senphurl + phenomenon.uri+ '_' + phenomenon.dateTime, type: 'uri' },
       // +++ FIXME +++ language hardcoded, make it dynamic
       desc: { value: phenomenon.description, lang: "en" },
-      validation: { value: phenomenon.validation, type: 'boolean' }
+      validation: { value: phenomenon.validation, type: 'boolean' },
+      dateTime: {value: isoDate,  type: 'http://www.w3.org/2001/XMLSchema#dateTime'},
+      userName: user.name
     })
     .execute();
 }

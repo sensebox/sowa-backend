@@ -69,11 +69,17 @@ module.exports.getSensors = function () {
 module.exports.getSensorHistory = function (iri) {
   var senphurl = 'http://www.opensensemap.org/SENPH#';
   var bindingsText = `
-  SELECT ?sensor
-                     WHERE {
-                       ?sensor rdf:type s:sensor.
-                       FILTER(regex(str(?sensor), ?iri, "i" ))
-                     }`;
+  SELECT ?sensor ?dateTime ?user
+                      WHERE {
+                        ?sensor rdf:type s:sensor.
+                        OPTIONAL{
+                          ?sensor s:editDate ?dateTime
+                        }
+                        OPTIONAL{
+                          ?sensor s:editBy ?user
+                        }   
+                        FILTER(regex(str(?sensor), ?iri, "i" ))
+                      }`;
   return historyClient
     .query(bindingsText)
     .bind('iri', senphurl + iri)
@@ -454,10 +460,12 @@ module.exports.editSensor = function (sensor, role) {
     .execute();
 }
 
-module.exports.createHistorySensor = function (sensor, role) {
-  sensor['dateTime'] = Date.now();
+module.exports.createHistorySensor = function (sensor, user) {
+  var date = Date.now();
+  var isoDate =  new Date(date).toISOString();
+  sensor['dateTime'] = date;
   console.log(sensor);
-  if (role != ('expert' || 'admin')) {
+  if (user.role != ('expert' || 'admin')) {
     console.log("User has no verification rights!");
     sensor.validation = false;
   }
@@ -475,7 +483,10 @@ module.exports.createHistorySensor = function (sensor, role) {
     '?sensorURI s:priceInEuro   ?price.' +
     '?sensorURI s:lifePeriod    ?life.' +
     '?sensorURI s:image         ?image.' +
-    '?sensorURI s:isValid       ?validation.';
+    '?sensorURI s:isValid       ?validation.' +
+    '?sensorURI s:editDate      ?dateTime.' +
+    '?sensorURI s:editBy        ?userName.';
+
 
   sensor.label.forEach(element => {
     bindingsText = bindingsText.concat(
@@ -511,7 +522,9 @@ module.exports.createHistorySensor = function (sensor, role) {
       price: { value: sensor.price, type: 'decimal' },
       life: { value: sensor.lifeperiod, type: 'integer' },
       image: { value: sensor.image, type: 'uri' },
-      validation: { value: sensor.validation, type: 'boolean' }
+      validation: { value: sensor.validation, type: 'boolean' },
+      dateTime: {value: isoDate,  type: 'http://www.w3.org/2001/XMLSchema#dateTime'},
+      userName: user.name
     })
     .execute();
 }

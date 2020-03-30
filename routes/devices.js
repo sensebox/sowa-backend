@@ -42,14 +42,14 @@ router.get('/device-history/:iri', function (req, res) {
 router.post('/device/create/', function (req, res) {
   console.log(req.body);
   DevicesController.createNewDevice(req.body, res.locals.user.role)
-  DevicesController.createHistoryDevice(req.body, res.locals.user.role)
+  DevicesController.createHistoryDevice(req.body, res.locals.user)
   .then(res.json(req.body))
 });
 
 router.post('/device/edit/', function (req, res) {
   console.dir(req.body);
   DevicesController.editDevice(req.body, res.locals.user.role)
-  DevicesController.createHistoryDevice(req.body, res.locals.user.role)
+  DevicesController.createHistoryDevice(req.body, res.locals.user)
   .then(res.json(req.body))
 });
 

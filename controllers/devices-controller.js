@@ -71,11 +71,17 @@ module.exports.getDevices = function () {
 module.exports.getDeviceHistory = function (iri) {
   var senphurl = 'http://www.opensensemap.org/SENPH#';
   var bindingsText = `
-  SELECT ?device
-                     WHERE {
-                       ?device rdf:type s:device.
-                       FILTER(regex(str(?device), ?iri, "i" ))
-                     }`;
+  SELECT ?device ?dateTime ?user
+                    WHERE {
+                      ?device rdf:type s:device.
+                      OPTIONAL{
+                        ?device s:editDate ?dateTime
+                      }
+                      OPTIONAL{
+                        ?device s:editBy ?user
+                      }   
+                      FILTER(regex(str(?device), ?iri, "i" ))
+                    }`;
   return historyClient
     .query(bindingsText)
     .bind('iri', senphurl + iri)
@@ -249,7 +255,7 @@ module.exports.getHistoricDevice = function (iri) {
 module.exports.editDevice = function (device, role) {
   var senphurl = 'http://www.opensensemap.org/SENPH#';
   console.log(device);
-  if(role != ('expert' || 'admin')){
+  if (role != ('expert' || 'admin')) {
     console.log("User has no verification rights!");
     device.validation = false;
   }
@@ -261,9 +267,9 @@ module.exports.editDevice = function (device, role) {
     '?deviceURI rdfs:comment ?desc.' +
     '?deviceURI s:website ?website.' +
     '?deviceURI s:image ?image.' +
-    '?deviceURI s:hasContact ?contact.'+
+    '?deviceURI s:hasContact ?contact.' +
     '?deviceURI s:isValid ?validation.';
-    
+
   // create insert ;line for each sensor 
   device.sensor.forEach(element => {
     var string = '?deviceURI s:hasSensor s:' + element.sensorUri.slice(34) + '. ';
@@ -294,10 +300,13 @@ module.exports.editDevice = function (device, role) {
 }
 
 //create new version of a device in history db 
-module.exports.createHistoryDevice = function (device, role) {
-  device['dateTime'] = Date.now();
-  console.log(device);
-  if(role != ('expert' || 'admin')){
+module.exports.createHistoryDevice = function (device, user) {
+  var date = Date.now();
+  device['dateTime'] = date;
+  var isoDate = new Date(date).toISOString();
+  // console.log(device);
+  // console.log(isoDate);
+  if (user.role != ('expert' || 'admin')) {
     console.log("User has no verification rights!");
     device.validation = false;
   }
@@ -309,8 +318,11 @@ module.exports.createHistoryDevice = function (device, role) {
     '?deviceURI rdfs:comment ?desc.' +
     '?deviceURI s:website ?website.' +
     '?deviceURI s:image ?image.' +
-    '?deviceURI s:hasContact ?contact.'+
-    '?deviceURI s:isValid ?validation.';
+    '?deviceURI s:hasContact ?contact.' +
+    '?deviceURI s:isValid ?validation.' +
+    '?deviceURI s:editDate ?dateTime.' +
+    '?deviceURI s:editBy ?userName.';
+
 
   // create insert ;line for each sensor 
   device.sensor.forEach(element => {
@@ -336,7 +348,9 @@ module.exports.createHistoryDevice = function (device, role) {
       website: device.website,
       image: device.image,
       contact: device.contact,
-      validation: { value: device.validation, type: 'boolean' }
+      validation: { value: device.validation, type: 'boolean' },
+      dateTime: { value: isoDate, type: 'http://www.w3.org/2001/XMLSchema#dateTime' },
+      userName: user.name
     })
     .execute()
 }
@@ -345,7 +359,7 @@ module.exports.createHistoryDevice = function (device, role) {
 //create new device
 module.exports.createNewDevice = function (device, role) {
   console.log(device);
-  if(role != ('expert' || 'admin')){
+  if (role != ('expert' || 'admin')) {
     console.log("User has no verification rights!");
     device.validation = false;
   }
@@ -357,7 +371,7 @@ module.exports.createNewDevice = function (device, role) {
     '?deviceURI rdfs:comment ?desc.' +
     '?deviceURI s:website ?website.' +
     '?deviceURI s:image ?image.' +
-    '?deviceURI s:hasContact ?contact.'+
+    '?deviceURI s:hasContact ?contact.' +
     '?deviceURI s:isValid ?validation.';
 
   // create insert ;line for each sensor 

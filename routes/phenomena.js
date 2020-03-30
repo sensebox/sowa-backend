@@ -52,14 +52,14 @@ router.get('/phenomenon-history/:iri', function (req, res) {
 router.post('/phenomenon/create/', function (req, res) {
   console.log(req.body);
   PhenomenaController.createNewPhenomenon(req.body, res.locals.user.role)
-  PhenomenaController.createHistoryPhenomenon(req.body, res.locals.user.role)
+  PhenomenaController.createHistoryPhenomenon(req.body, res.locals.user)
     .then(res.json(req.body))
 });
 
 router.post('/phenomenon/edit/', function (req, res) {
   console.dir(req.body);
   PhenomenaController.editPhenomenon(req.body, res.locals.user.role)
-  PhenomenaController.createHistoryPhenomenon(req.body, res.locals.user.role)
+  PhenomenaController.createHistoryPhenomenon(req.body, res.locals.user)
     .then(res.json(req.body))
 });
 
