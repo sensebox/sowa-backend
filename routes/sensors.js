@@ -83,16 +83,16 @@ router.get('/sensor-history/:iri', function (req, res) {
 
 router.post('/sensor/create/', function (req, res) {
   console.log(req.body);
-  SensorsController.createNewSensor(req.body)
-  SensorsController.createHistorySensor(req.body)
+  SensorsController.createNewSensor(req.body, res.locals.user.role)
+  SensorsController.createHistorySensor(req.body, res.locals.user)
     .then(res.json(req.body))
 });
 
 
 router.post('/sensor/edit/', function (req, res) {
   console.log(req.body);
-  SensorsController.editSensor(req.body);
-  SensorsController.createHistorySensor(req.body)
+  SensorsController.editSensor(req.body, res.locals.user.role)
+  SensorsController.createHistorySensor(req.body, res.locals.user)
     .then(res.json(req.body))
 });
 

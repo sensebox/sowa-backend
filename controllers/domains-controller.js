@@ -71,9 +71,15 @@ module.exports.getDomains = function () {
 module.exports.getDomainHistory = function (iri) {
   var senphurl = 'http://www.opensensemap.org/SENPH#';
   var bindingsText = `
-  SELECT ?domain
+  SELECT ?domain ?dateTime ?user
                      WHERE {
                        ?domain rdf:type s:domain.
+                       OPTIONAL{
+                        ?domain s:editDate ?dateTime
+                      }
+                      OPTIONAL{
+                        ?domain s:editBy ?user
+                      }   
                        FILTER(regex(str(?domain), ?iri, "i" ))
                      }`;
   return historyClient
@@ -213,10 +219,13 @@ module.exports.getHistoricDomain = function (iri) {
 
 
 //edit a domain
-module.exports.editDomain = function (domain) {
+module.exports.editDomain = function (domain, role) {
   var senphurl = 'http://www.opensensemap.org/SENPH#';
   console.log(domain);
-
+  if(role != ('expert' || 'admin')){
+    console.log("User has no verification rights!");
+    domain.validation = false;
+  }
   // create SPARQL Query: 
   var bindingsText = 'DELETE {?a ?b ?c}' +
     'INSERT {' +
@@ -255,18 +264,24 @@ module.exports.editDomain = function (domain) {
 }
 
 //create new version of a domain in history db 
-module.exports.createHistoryDomain = function (domain) {
-  domain['dateTime'] = Date.now();
+module.exports.createHistoryDomain = function (domain, user) {
+  var date = Date.now();
+  var isoDate =  new Date(date).toISOString();
+  domain['dateTime'] = date;
   console.log(domain);
-
+  if(user.role != ('expert' || 'admin')){
+    console.log("User has no verification rights!");
+    domain.validation = false;
+  }
   var senphurl = 'http://www.opensensemap.org/SENPH#';
 
   // create SPARQL Query: 
   var bindingsText = 'INSERT DATA {' +
-    '?domainURI rdf:type     s:domain.' +
-    '?domainURI rdfs:comment ?desc.' +
-    '?domainURI s:isValid ?validation.';
-
+    '?domainURI rdf:type      s:domain.' +
+    '?domainURI rdfs:comment  ?desc.' +
+    '?domainURI s:isValid     ?validation.' +
+    '?domainURI s:editDate    ?dateTime.' +
+    '?domainURI s:editBy ?userName.';
 
   // create insert ;line for each label 
   domain.label.forEach(element => {
@@ -293,22 +308,27 @@ module.exports.createHistoryDomain = function (domain) {
       domainURI: { value: senphurl + domain.uri + '_' + domain.dateTime, type: 'uri' },
       // +++ FIXME +++ language hardcoded, make it dynamic
       desc: { value: domain.description, lang: "en" },
-      validation: { value: domain.validation, type: 'boolean' }
+      validation: { value: domain.validation, type: 'boolean' },
+      dateTime: {value: isoDate,  type: 'http://www.w3.org/2001/XMLSchema#dateTime'},
+      userName: user.name
     })
     .execute()
 }
 
 //create new domain 
-module.exports.createNewDomain = function (domain) {
+module.exports.createNewDomain = function (domain, role) {
   console.log(domain);
-
+  if(role != ('expert' || 'admin')){
+    console.log("User has no verification rights!");
+    domain.validation = false;
+  }
   var senphurl = 'http://www.opensensemap.org/SENPH#';
 
   // create SPARQL Query: 
   var bindingsText = 'INSERT DATA {' +
     '?domainURI rdf:type     s:domain.' +
     '?domainURI rdfs:comment ?desc.' +
-    '?domainURI s:isValid ?validation.';
+    '?domainURI s:isValid    ?validation.';
 
 
   // create insert ;line for each label 

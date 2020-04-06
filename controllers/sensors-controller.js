@@ -69,11 +69,17 @@ module.exports.getSensors = function () {
 module.exports.getSensorHistory = function (iri) {
   var senphurl = 'http://www.opensensemap.org/SENPH#';
   var bindingsText = `
-  SELECT ?sensor
-                     WHERE {
-                       ?sensor rdf:type s:sensor.
-                       FILTER(regex(str(?sensor), ?iri, "i" ))
-                     }`;
+  SELECT ?sensor ?dateTime ?user
+                      WHERE {
+                        ?sensor rdf:type s:sensor.
+                        OPTIONAL{
+                          ?sensor s:editDate ?dateTime
+                        }
+                        OPTIONAL{
+                          ?sensor s:editBy ?user
+                        }   
+                        FILTER(regex(str(?sensor), ?iri, "i" ))
+                      }`;
   return historyClient
     .query(bindingsText)
     .bind('iri', senphurl + iri)
@@ -380,8 +386,12 @@ ORDER BY ?phenomenon ?device ?sensorElement`;
 // }
 
 
-module.exports.editSensor = function (sensor) {
+module.exports.editSensor = function (sensor, role) {
   var senphurl = 'http://www.opensensemap.org/SENPH#';
+  if (role != ('expert' || 'admin')) {
+    console.log("User has no verification rights!");
+    sensor.validation = false;
+  }
   sensor.sensorElement.forEach(element => {
     element['uri'] = "sensorElement_" + sensor.uri + "_" + element.phenomenonUri.slice(34);
   })
@@ -415,7 +425,7 @@ module.exports.editSensor = function (sensor) {
     var string = '?sensorURI s:hasElement s:' + element.uri + '. ' +
       's:' + element.uri + ' s:canMeasure s:' + element.phenomenonUri.slice(34) + '. ' +
       's:' + element.uri + ' s:hasAccuracyUnit <' + element.unitOfAccuracy + '>. ' +
-      's:' + element.uri + ' s:accuracyValue ' + JSON.stringify(element.accuracyValue) + '^^xsd:float.';
+      's:' + element.uri + ' s:accuracyValue ' + JSON.stringify(element.accuracyValue) + '.';
     bindingsText = bindingsText.concat(string)
   });
 
@@ -450,9 +460,15 @@ module.exports.editSensor = function (sensor) {
     .execute();
 }
 
-module.exports.createHistorySensor = function (sensor) {
-  sensor['dateTime'] = Date.now();
+module.exports.createHistorySensor = function (sensor, user) {
+  var date = Date.now();
+  var isoDate =  new Date(date).toISOString();
+  sensor['dateTime'] = date;
   console.log(sensor);
+  if (user.role != ('expert' || 'admin')) {
+    console.log("User has no verification rights!");
+    sensor.validation = false;
+  }
   var senphurl = 'http://www.opensensemap.org/SENPH#';
   sensor.sensorElement.forEach(element => {
     element['uri'] = "sensorElement_" + sensor.uri + "_" + element.phenomenonUri.slice(34) + '_' + sensor.dateTime;
@@ -467,7 +483,10 @@ module.exports.createHistorySensor = function (sensor) {
     '?sensorURI s:priceInEuro   ?price.' +
     '?sensorURI s:lifePeriod    ?life.' +
     '?sensorURI s:image         ?image.' +
-    '?sensorURI s:isValid       ?validation.';
+    '?sensorURI s:isValid       ?validation.' +
+    '?sensorURI s:editDate      ?dateTime.' +
+    '?sensorURI s:editBy        ?userName.';
+
 
   sensor.label.forEach(element => {
     bindingsText = bindingsText.concat(
@@ -503,13 +522,19 @@ module.exports.createHistorySensor = function (sensor) {
       price: { value: sensor.price, type: 'decimal' },
       life: { value: sensor.lifeperiod, type: 'integer' },
       image: { value: sensor.image, type: 'uri' },
-      validation: { value: sensor.validation, type: 'boolean' }
+      validation: { value: sensor.validation, type: 'boolean' },
+      dateTime: {value: isoDate,  type: 'http://www.w3.org/2001/XMLSchema#dateTime'},
+      userName: user.name
     })
     .execute();
 }
 
-module.exports.createNewSensor = function (sensor) {
+module.exports.createNewSensor = function (sensor, role) {
   console.log(sensor);
+  if (role != ('expert' || 'admin')) {
+    console.log("User has no verification rights!");
+    sensor.validation = false;
+  }
   var senphurl = 'http://www.opensensemap.org/SENPH#';
   sensor.sensorElement.forEach(element => {
     element['uri'] = "sensorElement_" + sensor.uri + "_" + element.phenomenonUri.slice(34);
@@ -652,4 +677,3 @@ module.exports.getSensorsForPhenomenon = function (iri) {
       console.log("Oh no, error!")
     });
 }
-

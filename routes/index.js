@@ -23,7 +23,7 @@ router.get('/unit/http://purl.obolibrary.org/obo/:iri', function (req, res) {
 });
 
 router.get('/all', function (req, res) {
-  QueriesController.getAll()
+    QueriesController.getAll()
     .then(data => res.json(data))
 }); 
 
