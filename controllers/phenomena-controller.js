@@ -1,9 +1,10 @@
 const SparqlClient = require('sparql-client-2');
 const SPARQL = SparqlClient.SPARQL;
-const endpoint = 'http://localhost:3030/senph/sparql';
-const updatepoint = 'http://localhost:3030/senph/update';
-const history_endpoint = 'http://localhost:3030/senph-history/sparql';
-const history_updatepoint = 'http://localhost:3030/senph-history/update';
+const fuseki_endpoint = config.get('fuseki_endpoint');
+const endpoint = `${fuseki_endpoint}/senph/sparql`;
+const updatepoint = `${fuseki_endpoint}/senph/update`;
+const history_endpoint = `${fuseki_endpoint}/senph-history/sparql`;
+const history_updatepoint = `${fuseki_endpoint}/senph-history/update`;
 // const unitpoint = 'http://localhost:3030/uo/sparql';
 
 
