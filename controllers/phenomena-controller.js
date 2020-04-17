@@ -1,5 +1,7 @@
 const SparqlClient = require('sparql-client-2');
 const SPARQL = SparqlClient.SPARQL;
+const config = require('config');
+
 const fuseki_endpoint = config.get('fuseki_endpoint');
 const endpoint = `${fuseki_endpoint}/senph/sparql`;
 const updatepoint = `${fuseki_endpoint}/senph/update`;

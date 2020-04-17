@@ -7,8 +7,6 @@ const updatepoint = `${fuseki_endpoint}/senph/update`;
 const history_endpoint = `${fuseki_endpoint}/senph-history/sparql`;
 const history_updatepoint = `${fuseki_endpoint}/senph-history/update`;
 // const unitpoint = 'http://localhost:3030/uo/sparql';
-console.log(config.util.getEnv());
-console.log('NODE_CONFIG_ENV: ' + config.util.getEnv('NODE_CONFIG_ENV'));
 
 // const unitsClient = new SparqlClient(unitpoint)
 //     .register({   owl: 'http://www.w3.org/2002/07/owl#',
