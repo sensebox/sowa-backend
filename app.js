@@ -16,7 +16,7 @@ var cors = require('cors')
 
 var app = express();
 
-var whitelist = ['http://localhost:4200']
+var whitelist = ['http://localhost:4200', 'http://api.sensor-wiki.opensensemap.org', 'https://api.sensor-wiki.opensensemap.org']
 var corsOptions = {
   origin: function (origin, callback) {
     if (whitelist.indexOf(origin) !== -1) {
