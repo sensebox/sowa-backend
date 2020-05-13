@@ -12,21 +12,20 @@ var phenomenaRouter = require('./routes/phenomena');
 var devicesRouter = require('./routes/devices');
 var domainsRouter = require('./routes/domains');
 var AuthController = require('./controllers/auth-controller');
-// var cors = require('cors')
+var cors = require('cors')
 
 var app = express();
 
-// var whitelist = ['http://localhost:4200', 'http://api.sensor-wiki.opensensemap.org', 'https://api.sensor-wiki.opensensemap.org']
-// var corsOptions = {
-//   origin: function (origin, callback) { 
-//     if (whitelist.indexOf(origin) !== -1) {
-//       callback(null, true)
-//     } else {
-//       console.log("Blocked request from: ", origin)
-//       callback(new Error('Not allowed by CORS'))
-//     }
-//   }
-// }
+var whitelist = ['http://api.sensor-wiki.opensensemap.org', 'https://api.sensor-wiki.opensensemap.org', 'https://sensor-wiki.opensensemap.org']
+var corsOptions = {
+  origin: function (origin, callback) { 
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  }
+}
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -40,9 +39,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-// app.use('/*', cors(corsOptions), function (req, res, next) {
-//   next();
-// });
+app.use('/*', cors(corsOptions), function (req, res, next) {
+  next();
+});
 
 app.post('*', AuthController.isAuthenticated, function (req, res, next) {
   console.log("LOCALS", res.locals.user.role);
