@@ -50,10 +50,11 @@ const historyClient = new SparqlClient(history_endpoint, {
 module.exports.getDevices = function () {
   return client
     .query(SPARQL`
-                     SELECT ?label ?device ?validation
+                     SELECT ?label ?device ?image ?validation
                      WHERE {
                         ?device rdf:type s:device.
                         ?device rdfs:label ?label.
+                        ?device s:image ?image.
                         OPTIONAL{
                           ?device s:isValid ?validation.
                           }
