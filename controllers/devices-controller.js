@@ -303,20 +303,21 @@ module.exports.deleteDevice = function (device, role) {
   var senphurl = 'http://www.opensensemap.org/SENPH#';
   if (role != ('expert' || 'admin')) {
     console.log("User has no verification rights!");
-    device.validation = false;
   }
-  var bindingsText = 
-  ` DELETE {?a ?b ?c}
+  else {
+    var bindingsText =
+      ` DELETE {?a ?b ?c}
     WHERE { ?a ?b ?c .
             FILTER (?a = ?deviceURI || ?c = ?deviceURI )
           }`;
-  console.log(bindingsText)
-  return client
-    .query(bindingsText)
-    .bind({
-      deviceURI: { value: senphurl + device.uri, type: 'uri' },
-    })
-    .execute();
+    console.log(bindingsText)
+    return client
+      .query(bindingsText)
+      .bind({
+        deviceURI: { value: senphurl + device.uri, type: 'uri' },
+      })
+      .execute();
+  }
 }
 
 //create new version of a device in history db 

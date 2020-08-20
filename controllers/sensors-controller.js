@@ -464,27 +464,28 @@ module.exports.deleteSensor = function (sensor, role) {
   var senphurl = 'http://www.opensensemap.org/SENPH#';
   if (role != ('expert' || 'admin')) {
     console.log("User has no verification rights!");
-    sensor.validation = false;
   }
-  var bindingsText = 
-  ` DELETE {?a ?b ?c}
+  else {
+    var bindingsText =
+      ` DELETE {?a ?b ?c}
     WHERE { ?a ?b ?c .
             FILTER (?a = ?sensorURI || ?c = ?sensorURI )
           }`;
-  console.log(bindingsText)
-  return client
-    .query(bindingsText)
-    .bind({
-      sensorURI: { value: senphurl + sensor.uri, type: 'uri' },
-    })
-    .execute();
+    console.log(bindingsText)
+    return client
+      .query(bindingsText)
+      .bind({
+        sensorURI: { value: senphurl + sensor.uri, type: 'uri' },
+      })
+      .execute();
+  }
 }
 
 
 
 module.exports.createHistorySensor = function (sensor, user) {
   var date = Date.now();
-  var isoDate =  new Date(date).toISOString();
+  var isoDate = new Date(date).toISOString();
   sensor['dateTime'] = date;
   console.log(sensor);
   if (user.role != ('expert' || 'admin')) {
@@ -545,7 +546,7 @@ module.exports.createHistorySensor = function (sensor, user) {
       life: { value: sensor.lifeperiod, type: 'integer' },
       image: { value: sensor.image, type: 'uri' },
       validation: { value: sensor.validation, type: 'boolean' },
-      dateTime: {value: isoDate,  type: 'http://www.w3.org/2001/XMLSchema#dateTime'},
+      dateTime: { value: isoDate, type: 'http://www.w3.org/2001/XMLSchema#dateTime' },
       userName: user.name
     })
     .execute();

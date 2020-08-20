@@ -222,7 +222,7 @@ module.exports.getHistoricDomain = function (iri) {
 module.exports.editDomain = function (domain, role) {
   var senphurl = 'http://www.opensensemap.org/SENPH#';
   console.log(domain);
-  if(role != ('expert' || 'admin')){
+  if (role != ('expert' || 'admin')) {
     console.log("User has no verification rights!");
     domain.validation = false;
   }
@@ -267,29 +267,30 @@ module.exports.deleteDomain = function (domain, role) {
   var senphurl = 'http://www.opensensemap.org/SENPH#';
   if (role != ('expert' || 'admin')) {
     console.log("User has no verification rights!");
-    domain.validation = false;
   }
-  var bindingsText = 
-  ` DELETE {?a ?b ?c}
+  else {
+    var bindingsText =
+      ` DELETE {?a ?b ?c}
     WHERE { ?a ?b ?c .
             FILTER (?a = ?domainURI || ?c = ?domainURI )
           }`;
-  console.log(bindingsText)
-  return client
-    .query(bindingsText)
-    .bind({
-      domainURI: { value: senphurl + domain.uri, type: 'uri' },
-    })
-    .execute();
+    console.log(bindingsText)
+    return client
+      .query(bindingsText)
+      .bind({
+        domainURI: { value: senphurl + domain.uri, type: 'uri' },
+      })
+      .execute();
+  }
 }
 
 //create new version of a domain in history db 
 module.exports.createHistoryDomain = function (domain, user) {
   var date = Date.now();
-  var isoDate =  new Date(date).toISOString();
+  var isoDate = new Date(date).toISOString();
   domain['dateTime'] = date;
   console.log(domain);
-  if(user.role != ('expert' || 'admin')){
+  if (user.role != ('expert' || 'admin')) {
     console.log("User has no verification rights!");
     domain.validation = false;
   }
@@ -329,7 +330,7 @@ module.exports.createHistoryDomain = function (domain, user) {
       // +++ FIXME +++ language hardcoded, make it dynamic
       desc: { value: domain.description, lang: "en" },
       validation: { value: domain.validation, type: 'boolean' },
-      dateTime: {value: isoDate,  type: 'http://www.w3.org/2001/XMLSchema#dateTime'},
+      dateTime: { value: isoDate, type: 'http://www.w3.org/2001/XMLSchema#dateTime' },
       userName: user.name
     })
     .execute()
@@ -338,7 +339,7 @@ module.exports.createHistoryDomain = function (domain, user) {
 //create new domain 
 module.exports.createNewDomain = function (domain, role) {
   console.log(domain);
-  if(role != ('expert' || 'admin')){
+  if (role != ('expert' || 'admin')) {
     console.log("User has no verification rights!");
     domain.validation = false;
   }
