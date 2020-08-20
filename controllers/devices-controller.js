@@ -84,7 +84,7 @@ module.exports.getDeviceHistory = function (iri) {
                     }`;
   return historyClient
     .query(bindingsText)
-    .bind('iri', senphurl + iri)
+    .bind('iri', senphurl + iri + "_")
     .execute()
     .then(res => {
       console.log(res.results.bindings)
@@ -297,6 +297,26 @@ module.exports.editDevice = function (device, role) {
       validation: { value: device.validation, type: 'boolean' }
     })
     .execute()
+}
+
+module.exports.deleteDevice = function (device, role) {
+  var senphurl = 'http://www.opensensemap.org/SENPH#';
+  if (role != ('expert' || 'admin')) {
+    console.log("User has no verification rights!");
+    device.validation = false;
+  }
+  var bindingsText = 
+  ` DELETE {?a ?b ?c}
+    WHERE { ?a ?b ?c .
+            FILTER (?a = ?deviceURI || ?c = ?deviceURI )
+          }`;
+  console.log(bindingsText)
+  return client
+    .query(bindingsText)
+    .bind({
+      deviceURI: { value: senphurl + device.uri, type: 'uri' },
+    })
+    .execute();
 }
 
 //create new version of a device in history db 
