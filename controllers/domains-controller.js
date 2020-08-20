@@ -84,7 +84,7 @@ module.exports.getDomainHistory = function (iri) {
                      }`;
   return historyClient
     .query(bindingsText)
-    .bind('iri', senphurl + iri)
+    .bind('iri', senphurl + iri + "_")
     .execute()
     .then(res => {
       console.log(res.results.bindings)
@@ -261,6 +261,26 @@ module.exports.editDomain = function (domain, role) {
       validation: { value: domain.validation, type: 'boolean' }
     })
     .execute()
+}
+
+module.exports.deleteDomain = function (domain, role) {
+  var senphurl = 'http://www.opensensemap.org/SENPH#';
+  if (role != ('expert' || 'admin')) {
+    console.log("User has no verification rights!");
+    domain.validation = false;
+  }
+  var bindingsText = 
+  ` DELETE {?a ?b ?c}
+    WHERE { ?a ?b ?c .
+            FILTER (?a = ?domainURI || ?c = ?domainURI )
+          }`;
+  console.log(bindingsText)
+  return client
+    .query(bindingsText)
+    .bind({
+      domainURI: { value: senphurl + domain.uri, type: 'uri' },
+    })
+    .execute();
 }
 
 //create new version of a domain in history db 

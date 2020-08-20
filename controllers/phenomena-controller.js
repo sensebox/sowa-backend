@@ -98,7 +98,7 @@ module.exports.getPhenomenonHistory = function (iri) {
                      }`;
   return historyClient
     .query(bindingsText)
-    .bind('iri', senphurl + iri)
+    .bind('iri', senphurl + iri + "_")
     .execute()
     .then(res => {
       console.log(res.results.bindings)
@@ -367,6 +367,32 @@ module.exports.editPhenomenon = function (phenomenon, role) {
     })
     .execute();
 }
+
+//delete a single device identified by its iri 
+module.exports.deletePhenomenon = function (phenomenon, role) {
+  var senphurl = 'http://www.opensensemap.org/SENPH#';
+  console.log(phenomenon);
+  if(role != ('expert' || 'admin')){
+    console.log("User has no verification rights!");
+    phenomenon.validation = false;
+  }
+  // create SPARQL Query: 
+  var bindingsText = 
+  ` DELETE {?a ?b ?c}
+    WHERE {?a ?b ?c .
+    FILTER (?a = ?phenomenonURI || ?c = ?phenomenonURI)
+  }`;
+  console.log(bindingsText);
+
+  return client
+    .query(bindingsText)
+    // bind values to variable names
+    .bind({
+      phenomenonURI: { value: senphurl + phenomenon.uri, type: 'uri' }
+    })
+    .execute();
+}
+
 
 
 module.exports.createHistoryPhenomenon = function (phenomenon, user) {

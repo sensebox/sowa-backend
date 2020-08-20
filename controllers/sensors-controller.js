@@ -82,7 +82,7 @@ module.exports.getSensorHistory = function (iri) {
                       }`;
   return historyClient
     .query(bindingsText)
-    .bind('iri', senphurl + iri)
+    .bind('iri', senphurl + iri + "_")
     .execute()
     .then(res => {
       console.log(res.results.bindings)
@@ -459,6 +459,28 @@ module.exports.editSensor = function (sensor, role) {
     })
     .execute();
 }
+
+module.exports.deleteSensor = function (sensor, role) {
+  var senphurl = 'http://www.opensensemap.org/SENPH#';
+  if (role != ('expert' || 'admin')) {
+    console.log("User has no verification rights!");
+    sensor.validation = false;
+  }
+  var bindingsText = 
+  ` DELETE {?a ?b ?c}
+    WHERE { ?a ?b ?c .
+            FILTER (?a = ?sensorURI || ?c = ?sensorURI )
+          }`;
+  console.log(bindingsText)
+  return client
+    .query(bindingsText)
+    .bind({
+      sensorURI: { value: senphurl + sensor.uri, type: 'uri' },
+    })
+    .execute();
+}
+
+
 
 module.exports.createHistorySensor = function (sensor, user) {
   var date = Date.now();
