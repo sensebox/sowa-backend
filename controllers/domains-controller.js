@@ -1,6 +1,7 @@
 const SparqlClient = require('sparql-client-2');
 const SPARQL = SparqlClient.SPARQL;
 const config = require('config');
+const Domain = require('../models/Domain');
 
 const fuseki_endpoint = config.get('fuseki_endpoint');
 const endpoint = `${fuseki_endpoint}/senph/sparql`;
@@ -363,6 +364,8 @@ module.exports.createNewDomain = function (domain, role) {
     .execute()
 }
 
-
+module.exports.convertDomainToJson = function(domain){
+  return new Domain(domain);
+}
 
 

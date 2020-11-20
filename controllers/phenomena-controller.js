@@ -7,6 +7,8 @@ const endpoint = `${fuseki_endpoint}/senph/sparql`;
 const updatepoint = `${fuseki_endpoint}/senph/update`;
 const history_endpoint = `${fuseki_endpoint}/senph-history/sparql`;
 const history_updatepoint = `${fuseki_endpoint}/senph-history/update`;
+
+const Phenomenon = require('../models/Phenomenon');
 // const unitpoint = 'http://localhost:3030/uo/sparql';
 
 
@@ -474,4 +476,16 @@ module.exports.createNewPhenomenon = function (phenomenon, role) {
       validation: { value: phenomenon.validation, type: 'boolean' }
     })
     .execute();
+}
+
+
+module.exports.convertPhenomenonToJson = function(pheno){
+  return new Phenomenon(pheno);
+}
+
+module.exports.convertPhenomenaToJson = function(phenos){
+  //TODO: IMPLEMENT IF NEEDED
+  // return new Phenomenon(pheno);
+  return phenos
+ 
 }

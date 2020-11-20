@@ -1,6 +1,8 @@
 const SparqlClient = require('sparql-client-2');
 const SPARQL = SparqlClient.SPARQL;
 const config = require('config');
+const Device = require('../models/Device');
+const Devices = require('../models/Devices');
 const fuseki_endpoint = config.get('fuseki_endpoint');
 const endpoint = `${fuseki_endpoint}/senph/sparql`;
 const updatepoint = `${fuseki_endpoint}/senph/update`;
@@ -402,6 +404,13 @@ module.exports.createNewDevice = function (device, role) {
       validation: { value: device.validation, type: 'boolean' }
     })
     .execute()
+}
+
+module.exports.convertDeviceToJson = function (device){
+  return new Device(device)
+}
+module.exports.convertDevicesToJson = function (devices){
+  return devices.map(dev => new Devices(dev));
 }
 
 

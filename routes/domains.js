@@ -19,7 +19,13 @@ router.get('/all', function (req, res) {
 router.get('/domain/:iri', function (req, res) {
   console.log(req);
   DomainsController.getDomain(req.params.iri)
-    .then(data => res.json(data))
+    .then(data => {
+      if(req.query.format === 'json'){
+        return res.json(DomainsController.convertDomainToJson(data))
+      } else {
+        return res.json(data);
+      }
+    })
 });
 
 router.get('/historic-domain/:iri', function (req, res) {

@@ -36,7 +36,13 @@ router.get('/all', function (req, res) {
 router.get('/sensor/:iri', function (req, res) {
   console.log(req.params.iri);
   SensorsController.getSensor(req.params.iri)
-    .then(data => res.json(data))
+    .then(data =>  {
+      if(req.query.format === 'json'){
+        res.json(SensorsController.convertSensorToJson(data));
+      } else {
+        res.json(data)
+      }
+    })
 });
 
 router.get('/historic-sensor/:iri', function (req, res) {
