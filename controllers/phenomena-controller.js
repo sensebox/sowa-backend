@@ -103,7 +103,7 @@ module.exports.getPhenomenonHistory = function (iri) {
                      }`;
   return historyClient
     .query(bindingsText)
-    .bind('iri', senphurl + iri)
+    .bind('iri', senphurl + iri + "_")
     .execute()
     .then(res => {
       console.log(res.results.bindings)
@@ -198,7 +198,7 @@ module.exports.getPhenomenon = function (iri) {
               Group BY ?sensors  ?domain ?unit ?label ?description ?sensorlabel ?domainLabel ?unitLabel ?validation
               ORDER BY ?sensors ?domain ?unit
         `;
-        console.log(bindingsText)
+  console.log(bindingsText)
   return client
     .query(bindingsText)
     .bind('iri', { s: iri })
@@ -325,7 +325,7 @@ module.exports.getHistoricPhenomenon = function (iri) {
 module.exports.editPhenomenon = function (phenomenon, role) {
   var senphurl = 'http://www.opensensemap.org/SENPH#';
   console.log(phenomenon);
-  if(role != ('expert' || 'admin')){
+  if (role != 'expert' && role != 'admin') {
     console.log("User has no verification rights!");
     phenomenon.validation = false;
   }
@@ -373,13 +373,40 @@ module.exports.editPhenomenon = function (phenomenon, role) {
     .execute();
 }
 
+//delete a single device identified by its iri 
+module.exports.deletePhenomenon = function (phenomenon, role) {
+  var senphurl = 'http://www.opensensemap.org/SENPH#';
+  console.log(phenomenon);
+  if (role != 'expert' && role != 'admin') {
+    console.log("User has no verification rights!");
+  }
+  else {
+    // create SPARQL Query: 
+    var bindingsText =
+      ` DELETE {?a ?b ?c}
+    WHERE {?a ?b ?c .
+    FILTER (?a = ?phenomenonURI || ?c = ?phenomenonURI)
+  }`;
+    console.log(bindingsText);
+
+    return client
+      .query(bindingsText)
+      // bind values to variable names
+      .bind({
+        phenomenonURI: { value: senphurl + phenomenon.uri, type: 'uri' }
+      })
+      .execute();
+  }
+}
+
+
 
 module.exports.createHistoryPhenomenon = function (phenomenon, user) {
   var date = Date.now();
-  var isoDate =  new Date(date).toISOString();
+  var isoDate = new Date(date).toISOString();
   phenomenon['dateTime'] = date;
   console.log(phenomenon);
-  if(user.role != ('expert' || 'admin')){
+  if (user.role != 'expert' && user.role != 'admin') {
     console.log("User has no verification rights!");
     phenomenon.validation = false;
   }
@@ -420,11 +447,11 @@ module.exports.createHistoryPhenomenon = function (phenomenon, user) {
   return historyClient
     .query(bindingsText)
     .bind({
-      phenomenonURI: { value: senphurl + phenomenon.uri+ '_' + phenomenon.dateTime, type: 'uri' },
+      phenomenonURI: { value: senphurl + phenomenon.uri + '_' + phenomenon.dateTime, type: 'uri' },
       // +++ FIXME +++ language hardcoded, make it dynamic
       desc: { value: phenomenon.description, lang: "en" },
       validation: { value: phenomenon.validation, type: 'boolean' },
-      dateTime: {value: isoDate,  type: 'http://www.w3.org/2001/XMLSchema#dateTime'},
+      dateTime: { value: isoDate, type: 'http://www.w3.org/2001/XMLSchema#dateTime' },
       userName: user.name
     })
     .execute();
@@ -433,7 +460,7 @@ module.exports.createHistoryPhenomenon = function (phenomenon, user) {
 
 module.exports.createNewPhenomenon = function (phenomenon, role) {
   console.log(phenomenon);
-  if(role != ('expert' || 'admin')){
+  if (role != 'expert' && role != 'admin') {
     console.log("User has no verification rights!");
     phenomenon.validation = false;
   }

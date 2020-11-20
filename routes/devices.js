@@ -64,6 +64,12 @@ router.post('/device/edit/', function (req, res) {
   .then(res.json(req.body))
 });
 
+router.post('/device/delete/', function (req, res) {
+  console.log(req.body);
+  DevicesController.deleteDevice(req.body, res.locals.user.role)
+    .then(res.json(req.body))
+});
+
 // router.post('/device/add/', function (req, res) {
 //   console.dir(req.body);
 //   DevicesController.addDevice(req.body)

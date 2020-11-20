@@ -94,7 +94,6 @@ router.post('/sensor/create/', function (req, res) {
     .then(res.json(req.body))
 });
 
-
 router.post('/sensor/edit/', function (req, res) {
   console.log(req.body);
   SensorsController.editSensor(req.body, res.locals.user.role)
@@ -102,6 +101,11 @@ router.post('/sensor/edit/', function (req, res) {
     .then(res.json(req.body))
 });
 
+router.post('/sensor/delete/', function (req, res) {
+  console.log(req.body);
+  SensorsController.deleteSensor(req.body, res.locals.user.role)
+    .then(res.json(req.body))
+});
 
 
 /* --------------------Sensor element functions ------------------------*/

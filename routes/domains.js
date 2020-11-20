@@ -55,5 +55,11 @@ router.post('/domain/edit/', function (req, res) {
   .then(res.json(req.body))
 });
 
+router.post('/domain/delete/', function (req, res) {
+  console.log(req.body);
+  DomainsController.deleteDomain(req.body, res.locals.user.role)
+    .then(res.json(req.body))
+});
+
 
 module.exports = router;
