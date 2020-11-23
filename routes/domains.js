@@ -19,7 +19,13 @@ router.get('/all', function (req, res) {
 router.get('/domain/:iri', function (req, res) {
   console.log(req);
   DomainsController.getDomain(req.params.iri)
-    .then(data => res.json(data))
+    .then(data => {
+      if(req.query.format === 'json'){
+        return res.json(DomainsController.convertDomainToJson(data))
+      } else {
+        return res.json(data);
+      }
+    })
 });
 
 router.get('/historic-domain/:iri', function (req, res) {
@@ -47,6 +53,12 @@ router.post('/domain/edit/', function (req, res) {
   DomainsController.editDomain(req.body, res.locals.user.role)
   DomainsController.createHistoryDomain(req.body, res.locals.user)
   .then(res.json(req.body))
+});
+
+router.post('/domain/delete/', function (req, res) {
+  console.log(req.body);
+  DomainsController.deleteDomain(req.body, res.locals.user.role)
+    .then(res.json(req.body))
 });
 
 

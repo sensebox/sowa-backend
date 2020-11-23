@@ -12,13 +12,24 @@ router.get('/', function (req, res, next) {
 /* ---------- All device funtions: -----------------*/
 router.get('/all', function (req, res) {
   DevicesController.getDevices()
-    .then(data => res.json(data))
+    .then(data => {
+      if(req.query.format === 'json'){
+        return res.json(DevicesController.convertDevicesToJson(data))
+      } else {
+        return res.json(data);
+      }
+    })
 });
 
 router.get('/device/:iri', function (req, res) {
-  console.log(req);
   DevicesController.getDevice(req.params.iri)
-    .then(data => res.json(data))
+    .then(data => {
+      if(req.query.format === 'json'){
+        return res.json(DevicesController.convertDeviceToJson(data))
+      } else {
+        return res.json(data);
+      }
+    })
 });
 
 // router.post('/device/update/', function (req, res) {
@@ -51,6 +62,12 @@ router.post('/device/edit/', function (req, res) {
   DevicesController.editDevice(req.body, res.locals.user.role)
   DevicesController.createHistoryDevice(req.body, res.locals.user)
   .then(res.json(req.body))
+});
+
+router.post('/device/delete/', function (req, res) {
+  console.log(req.body);
+  DevicesController.deleteDevice(req.body, res.locals.user.role)
+    .then(res.json(req.body))
 });
 
 // router.post('/device/add/', function (req, res) {

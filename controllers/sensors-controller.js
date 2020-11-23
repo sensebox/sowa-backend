@@ -1,6 +1,7 @@
 const SparqlClient = require('sparql-client-2');
 const SPARQL = SparqlClient.SPARQL;
 const config = require('config');
+const Sensor = require('../models/Sensor');
 
 const fuseki_endpoint = config.get('fuseki_endpoint');
 const endpoint = `${fuseki_endpoint}/senph/sparql`;
@@ -86,7 +87,7 @@ module.exports.getSensorHistory = function (iri) {
                       }`;
   return historyClient
     .query(bindingsText)
-    .bind('iri', senphurl + iri)
+    .bind('iri', senphurl + iri + "_")
     .execute()
     .then(res => {
       console.log(res.results.bindings)
@@ -394,7 +395,7 @@ ORDER BY ?phenomenon ?device ?sensorElement`;
 
 module.exports.editSensor = function (sensor, role) {
   var senphurl = 'http://www.opensensemap.org/SENPH#';
-  if (role != ('expert' || 'admin')) {
+  if (role != 'expert' && role != 'admin') {
     console.log("User has no verification rights!");
     sensor.validation = false;
   }
@@ -466,12 +467,35 @@ module.exports.editSensor = function (sensor, role) {
     .execute();
 }
 
+module.exports.deleteSensor = function (sensor, role) {
+  var senphurl = 'http://www.opensensemap.org/SENPH#';
+  if (role != 'expert' && role != 'admin') {
+    console.log("User has no verification rights!");
+  }
+  else {
+    var bindingsText =
+      ` DELETE {?a ?b ?c}
+    WHERE { ?a ?b ?c .
+            FILTER (?a = ?sensorURI || ?c = ?sensorURI )
+          }`;
+    console.log(bindingsText)
+    return client
+      .query(bindingsText)
+      .bind({
+        sensorURI: { value: senphurl + sensor.uri, type: 'uri' },
+      })
+      .execute();
+  }
+}
+
+
+
 module.exports.createHistorySensor = function (sensor, user) {
   var date = Date.now();
-  var isoDate =  new Date(date).toISOString();
+  var isoDate = new Date(date).toISOString();
   sensor['dateTime'] = date;
   console.log(sensor);
-  if (user.role != ('expert' || 'admin')) {
+  if (user.role != 'expert' && user.role != 'admin') {
     console.log("User has no verification rights!");
     sensor.validation = false;
   }
@@ -529,7 +553,7 @@ module.exports.createHistorySensor = function (sensor, user) {
       life: { value: sensor.lifeperiod, type: 'integer' },
       image: { value: sensor.image, type: 'uri' },
       validation: { value: sensor.validation, type: 'boolean' },
-      dateTime: {value: isoDate,  type: 'http://www.w3.org/2001/XMLSchema#dateTime'},
+      dateTime: { value: isoDate, type: 'http://www.w3.org/2001/XMLSchema#dateTime' },
       userName: user.name
     })
     .execute();
@@ -537,7 +561,7 @@ module.exports.createHistorySensor = function (sensor, user) {
 
 module.exports.createNewSensor = function (sensor, role) {
   console.log(sensor);
-  if (role != ('expert' || 'admin')) {
+  if (role != 'expert' && role != 'admin') {
     console.log("User has no verification rights!");
     sensor.validation = false;
   }
@@ -684,4 +708,8 @@ module.exports.getSensorsForPhenomenon = function (iri) {
       console.log("Oh no, error!")
       console.log(error);
     });
+}
+
+module.exports.convertSensorToJson = function(sensor){
+  return new Sensor(sensor);
 }
