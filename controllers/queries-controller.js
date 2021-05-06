@@ -747,7 +747,7 @@ module.exports.getUnitsForPhenomenon = function (iri) {
 }
 
 module.exports.getUnits = function (iri) {
-  return localUnitClient
+  return unitClient
     .query(SPARQL`
     SELECT DISTINCT ?y ?label
     WHERE
