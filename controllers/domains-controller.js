@@ -269,10 +269,6 @@ module.exports.editDomain = function (domain, role) {
 
 module.exports.deleteDomain = function (domain, role) {
   var senphurl = 'http://www.opensensemap.org/SENPH#';
-  if (role != 'expert' && role != 'admin') {
-    console.log("User has no verification rights!");
-  }
-  else {
     var bindingsText =
       ` DELETE {?a ?b ?c}
     WHERE { ?a ?b ?c .
@@ -286,7 +282,6 @@ module.exports.deleteDomain = function (domain, role) {
       })
       .execute();
   }
-}
 
 //create new version of a domain in history db 
 module.exports.createHistoryDomain = function (domain, user) {
