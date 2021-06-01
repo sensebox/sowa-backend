@@ -346,9 +346,13 @@ module.exports.editPhenomenon = function (phenomenon, role) {
   });
   // create insert ;line for each unit 
   phenomenon.unit.forEach(element => {
+    var rov = senphurl + Math.random().toString().split(".")[1];
     bindingsText = bindingsText.concat(
-      '?phenomenonURI s:describedBy ' + '<' + element.unitUri + '>' + '.' +
-      '<' + element.unitUri + '> rdfs:label "' + element.unitLabel + '".'
+      '?phenomenonURI s:describedBy ' + '<' + rov + '>.' +
+      '<' + rov + '> s:describedBy ' + '<' + element.unitUri + '>' + '.' +
+      '<' + element.unitUri + '> rdfs:label "' + element.unitLabel + '".' +
+      '<' + rov + '> s:min "' + element.min + '".' +
+      '<' + rov + '> s:max "' + element.max + '".'
     );
   });
   // create insert ;line for each domain 
