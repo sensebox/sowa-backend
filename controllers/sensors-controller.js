@@ -2,6 +2,7 @@ const SparqlClient = require('sparql-client-2');
 const SPARQL = SparqlClient.SPARQL;
 const config = require('config');
 const Sensor = require('../models/Sensor');
+const Sensors = require('../models/Sensors');
 
 const fuseki_endpoint = config.get('fuseki_endpoint');
 const endpoint = `${fuseki_endpoint}/senph/sparql`;
@@ -712,4 +713,8 @@ module.exports.getSensorsForPhenomenon = function (iri) {
 
 module.exports.convertSensorToJson = function(sensor){
   return new Sensor(sensor);
+}
+module.exports.convertSensorsToJson = function (sensors){
+  console.log(sensors)
+  return sensors.map(sensor => new Sensors(sensor));
 }
