@@ -16,8 +16,7 @@ var cors = require('cors')
 
 var app = express();
 
-//var whitelist = ['http://api.sensor-wiki.opensensemap.org', 'https://api.sensor-wiki.opensensemap.org', 'https://sensor-wiki.opensensemap.org']
-var whitelist = ['*'];
+var whitelist = ['http://api.sensor-wiki.opensensemap.org', 'https://api.sensor-wiki.opensensemap.org', 'https://sensor-wiki.opensensemap.org']
 var corsOptions = {
   origin: function (origin, callback) { 
     if (whitelist.indexOf(origin) !== -1 || whitelist.indexOf('*') !== -1) {
