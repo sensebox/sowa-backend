@@ -6,13 +6,10 @@ var Sensors = class {
     // validation;
 
     constructor(resSensor) {
-        console.log("SENSOR::::")
-        console.log( resSensor)
         this.sensor = resSensor.sensor;
         this.sensorLabel = resSensor.sensorLabel;
         this.validation = resSensor.validation;
     }
 };
-
 
 module.exports = Sensors;
