@@ -12,7 +12,13 @@ router.get('/', function (req, res, next) {
 /* ---------- All sensor funtions: -----------------*/
 router.get('/all', function (req, res) {
   SensorsController.getSensors()
-    .then(data => res.json(data))
+    .then(data => {
+      if(req.query.format === 'json'){
+        res.json(SensorsController.convertSensorsToJson(data));
+      } else {
+        res.json(data)
+      }
+    })
 });
 
 // async function asyncForEach(array, callback) {

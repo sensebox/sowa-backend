@@ -9,6 +9,7 @@ var Sensor = class {
     this.sensorElements = [];
     this.devices = [];
 
+    console.log("SENSOR",res);
     res.forEach((element) => {
       // console.log(element);
       switch (Object.getOwnPropertyNames(element)[0]) {
