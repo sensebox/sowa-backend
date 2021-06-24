@@ -165,7 +165,7 @@ module.exports.getPhenomenon = function (iri) {
   var senphurl = 'http://www.opensensemap.org/SENPH#';
 
   var bindingsText = `
-  Select Distinct ?label ?description ?sensors ?domain ?unit ?sensorlabel ?unitLabel ?domainLabel ?validation
+  Select Distinct ?label ?description ?sensors ?domain ?rov ?min ?max ?unit ?sensorlabel ?unitLabel ?domainLabel ?validation
                    WHERE {   
                       {   
                           ?iri rdfs:label ?label
@@ -176,7 +176,10 @@ module.exports.getPhenomenon = function (iri) {
                       }
                       UNION
                       {	
-                          ?iri s:describedBy ?unit.
+                          ?iri s:describedBy ?rov.
+                          ?rov s:describedBy ?unit.
+                          ?rov s:min ?min.
+                          ?rov s:max ?max.
                       }
                       UNION
                       {
@@ -195,7 +198,7 @@ module.exports.getPhenomenon = function (iri) {
                           ?iri s:isValid ?validation.
                       }            
                    }
-              Group BY ?sensors  ?domain ?unit ?label ?description ?sensorlabel ?domainLabel ?unitLabel ?validation
+              Group BY ?sensors  ?domain ?rov ?min ?max ?unit ?label ?description ?sensorlabel ?domainLabel ?unitLabel ?validation
               ORDER BY ?sensors ?domain ?unit
         `;
   console.log(bindingsText)
@@ -343,9 +346,13 @@ module.exports.editPhenomenon = function (phenomenon, role) {
   });
   // create insert ;line for each unit 
   phenomenon.unit.forEach(element => {
+    var rov = senphurl + Math.random().toString().split(".")[1];
     bindingsText = bindingsText.concat(
-      '?phenomenonURI s:describedBy ' + '<' + element.unitUri + '>' + '.' +
-      '<' + element.unitUri + '> rdfs:label "' + element.unitLabel + '".'
+      '?phenomenonURI s:describedBy ' + '<' + rov + '>.' +
+      '<' + rov + '> s:describedBy ' + '<' + element.unitUri + '>' + '.' +
+      '<' + element.unitUri + '> rdfs:label "' + element.unitLabel + '".' +
+      '<' + rov + '> s:min "' + element.min + '".' +
+      '<' + rov + '> s:max "' + element.max + '".'
     );
   });
   // create insert ;line for each domain 
@@ -377,26 +384,21 @@ module.exports.editPhenomenon = function (phenomenon, role) {
 module.exports.deletePhenomenon = function (phenomenon, role) {
   var senphurl = 'http://www.opensensemap.org/SENPH#';
   console.log(phenomenon);
-  if (role != 'expert' && role != 'admin') {
-    console.log("User has no verification rights!");
-  }
-  else {
-    // create SPARQL Query: 
-    var bindingsText =
-      ` DELETE {?a ?b ?c}
+  // create SPARQL Query: 
+  var bindingsText =
+    ` DELETE {?a ?b ?c}
     WHERE {?a ?b ?c .
     FILTER (?a = ?phenomenonURI || ?c = ?phenomenonURI)
   }`;
-    console.log(bindingsText);
+  console.log(bindingsText);
 
-    return client
-      .query(bindingsText)
-      // bind values to variable names
-      .bind({
-        phenomenonURI: { value: senphurl + phenomenon.uri, type: 'uri' }
-      })
-      .execute();
-  }
+  return client
+    .query(bindingsText)
+    // bind values to variable names
+    .bind({
+      phenomenonURI: { value: senphurl + phenomenon.uri, type: 'uri' }
+    })
+    .execute();
 }
 
 
@@ -459,7 +461,6 @@ module.exports.createHistoryPhenomenon = function (phenomenon, user) {
 
 
 module.exports.createNewPhenomenon = function (phenomenon, role) {
-  console.log(phenomenon);
   if (role != 'expert' && role != 'admin') {
     console.log("User has no verification rights!");
     phenomenon.validation = false;
@@ -471,7 +472,7 @@ module.exports.createNewPhenomenon = function (phenomenon, role) {
     '?phenomenonURI rdf:type     s:phenomenon.' +
     '?phenomenonURI rdfs:comment ?desc.' +
     '?phenomenonURI s:isValid ?validation.';
-  // create insert ;line for each unit 
+  // create insert ;line for each label 
   phenomenon.label.forEach(element => {
     bindingsText = bindingsText.concat(
       '?phenomenonURI rdfs:label ' + JSON.stringify(element.value) + '@' + element.lang + '. '
@@ -479,9 +480,13 @@ module.exports.createNewPhenomenon = function (phenomenon, role) {
   });
   // create insert ;line for each unit 
   phenomenon.unit.forEach(element => {
+    var rov = senphurl + Math.random().toString().split(".")[1];
     bindingsText = bindingsText.concat(
-      '?phenomenonURI s:describedBy ' + '<' + element.unitUri + '>' + '.' +
-      '<' + element.unitUri + '> rdfs:label "' + element.unitLabel + '".'
+      '?phenomenonURI s:describedBy ' + '<' + rov + '>.' +
+      '<' + rov + '> s:describedBy ' + '<' + element.unitUri + '>' + '.' +
+      '<' + element.unitUri + '> rdfs:label "' + element.unitLabel + '".' +
+      '<' + rov + '> s:min "' + element.min + '".' +
+      '<' + rov + '> s:max "' + element.max + '".'
     );
   });
   // create insert ;line for each domain 
@@ -498,6 +503,7 @@ module.exports.createNewPhenomenon = function (phenomenon, role) {
     .query(bindingsText)
     .bind({
       phenomenonURI: { value: senphurl + phenomenon.uri, type: 'uri' },
+      rov: {value: senphurl + Math.random().toString().split(".")[1], type: "uri"},
       // +++ FIXME +++ language hardcoded, make it dynamic
       desc: { value: phenomenon.description, lang: "en" },
       validation: { value: phenomenon.validation, type: 'boolean' }
@@ -506,13 +512,12 @@ module.exports.createNewPhenomenon = function (phenomenon, role) {
 }
 
 
-module.exports.convertPhenomenonToJson = function(pheno){
+module.exports.convertPhenomenonToJson = function (pheno) {
   return new Phenomenon(pheno);
 }
 
-module.exports.convertPhenomenaToJson = function(phenos){
+module.exports.convertPhenomenaToJson = function (phenos) {
   //TODO: IMPLEMENT IF NEEDED
   // return new Phenomenon(pheno);
   return phenos
- 
 }

@@ -11,6 +11,7 @@ router.get('/', function (req, res, next) {
 
 /* ---------- All phenomenon funtions: -----------------*/
 router.get('/phenomena', function (req, res) {
+  console.log(req);
   QueriesController.getPhenomena()
     .then(data => res.json(data))
 });

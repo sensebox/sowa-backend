@@ -29,6 +29,7 @@ router.get('/all/labels', function (req, res) {
 router.get('/phenomenon/:iri', function (req, res) {
   PhenomenaController.getPhenomenon(req.params.iri)
     .then(data => {
+      console.log(data);
       if(req.query.format === 'json'){
         res.json(PhenomenaController.convertPhenomenaToJson(data));
       } else {
