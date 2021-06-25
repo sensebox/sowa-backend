@@ -9,6 +9,7 @@ const history_endpoint = `${fuseki_endpoint}/senph-history/sparql`;
 const history_updatepoint = `${fuseki_endpoint}/senph-history/update`;
 
 const Phenomenon = require('../models/Phenomenon');
+const Phenomena = require('../models/Phenomena');
 // const unitpoint = 'http://localhost:3030/uo/sparql';
 
 
@@ -54,16 +55,24 @@ const historyClient = new SparqlClient(history_endpoint, {
 module.exports.getPhenomena = function () {
   return client
     .query(SPARQL`
-                     SELECT ?phenomenonLabel ?phenomenon ?validation
+                     SELECT ?phenomenonLabel ?phenomenon ?validation ?rovs ?min ?max ?unit
                      WHERE {
-                       ?phenomenon rdf:type s:phenomenon.
-                       ?phenomenon rdfs:label ?phenomenonLabel.
-                       OPTIONAL{
+                      
+                      ?phenomenon rdf:type s:phenomenon.
+                      ?phenomenon rdfs:label ?phenomenonLabel.
+                      
+                      OPTIONAL {
+                        ?phenomenon s:describedBy ?rovs.
+                        ?rovs s:min ?min.
+                        ?rovs s:max ?max.
+                        ?rovs s:describedBy ?unit.
+                      }
+                      OPTIONAL{
                         ?phenomenon s:isValid ?validation.
                         }
-                      }`)
+                      } GROUP BY ?phenomenonLabel ?phenomenon ?validation ?rovs ?min ?max ?unit`)
     .execute({ format: { resource: 'phenomenon' } })
-    .then(res => res.results.bindings)
+    .then(res => { console.log(res.results.bindings); return res.results.bindings})
     .catch(function (error) {
       console.log("Oh no, error!")
     });
@@ -518,6 +527,6 @@ module.exports.convertPhenomenonToJson = function (pheno) {
 
 module.exports.convertPhenomenaToJson = function (phenos) {
   //TODO: IMPLEMENT IF NEEDED
-  // return new Phenomenon(pheno);
-  return phenos
+  console.log("PHENOS", phenos)
+  return phenos.map(pheno => new Phenomena(pheno));
 }

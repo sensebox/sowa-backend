@@ -29,9 +29,8 @@ router.get('/all/labels', function (req, res) {
 router.get('/phenomenon/:iri', function (req, res) {
   PhenomenaController.getPhenomenon(req.params.iri)
     .then(data => {
-      console.log(data);
       if(req.query.format === 'json'){
-        res.json(PhenomenaController.convertPhenomenaToJson(data));
+        res.json(PhenomenaController.convertPhenomenonToJson(data));
       } else {
         res.json(data)
       }
@@ -50,33 +49,28 @@ router.get('/phenomenon/:iri', function (req, res) {
 // });
 
 router.get('/historic-phenomenon/:iri', function (req, res) {
-  console.log(req.params.iri);
   PhenomenaController.getHistoricPhenomenon(req.params.iri)
     .then(data => res.json(data))
 });
 
 router.get('/phenomenon-history/:iri', function (req, res) {
-  console.log(req.params.iri);
   PhenomenaController.getPhenomenonHistory(req.params.iri)
     .then(data => res.json(data))
 });
 
 router.post('/phenomenon/create/', function (req, res) {
-  console.log(req.body);
   PhenomenaController.createNewPhenomenon(req.body, res.locals.user.role)
   PhenomenaController.createHistoryPhenomenon(req.body, res.locals.user)
     .then(res.json(req.body))
 });
 
 router.post('/phenomenon/edit/', function (req, res) {
-  console.dir(req.body);
   PhenomenaController.editPhenomenon(req.body, res.locals.user.role)
   PhenomenaController.createHistoryPhenomenon(req.body, res.locals.user)
     .then(res.json(req.body))
 });
 
 router.post('/phenomenon/delete/', function (req, res) {
-  console.dir(req.body);
   PhenomenaController.deletePhenomenon(req.body, res.locals.user.role)
     .then(res.json(req.body))
 });
