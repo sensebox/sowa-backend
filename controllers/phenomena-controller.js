@@ -55,7 +55,7 @@ const historyClient = new SparqlClient(history_endpoint, {
 module.exports.getPhenomena = function () {
   return client
     .query(SPARQL`
-                     SELECT ?phenomenonLabel ?phenomenon ?validation ?rovs ?min ?max ?unit
+                     SELECT ?phenomenonLabel ?phenomenon ?validation ?rovs ?unit
                      WHERE {
                      
                       ?phenomenon rdf:type s:phenomenon.
@@ -65,16 +65,49 @@ module.exports.getPhenomena = function () {
                       
                       OPTIONAL {
                         ?phenomenon s:describedBy ?rovs.
-                        ?rovs s:min ?min.
-                        ?rovs s:max ?max.
                         ?rovs s:describedBy ?unit.
                       }
                       OPTIONAL {
                         ?phenomenon s:isValid ?validation.
                         }
-                      } GROUP BY ?phenomenonLabel ?phenomenon ?validation ?rovs ?min ?max ?unit`)
+                      } GROUP BY ?phenomenonLabel ?phenomenon ?validation ?rovs ?unit`)
     .execute({ format: { resource: 'phenomenon' } })
-    .then(res => { res.results.bindings.map(res => {res.rovs.map(rov => {this.getROV(rov.value)})}); return res.results.bindings})
+    .then(async res => {
+       let mappedRes = [];
+      //  res.results.bindings.forEach(binding => {
+      //    console.log("dasistbinding", binding);
+      //    binding.rov = [];
+      //    let rovs = this.asyncRovForEachEachSuperFunction(binding.rovs);
+      //   //  binding.rovs.forEach( rov => async function() {
+      //   //   let rovValues = await this.getROV(rov.value);
+      //   //   console.log("VALUES", rovValues)
+      //   //   binding.rov.push(rovValues);
+      //   //  })
+      //   binding.rov.push(rovs)
+      //    mappedRes.push(binding);
+      //  })
+       res.results.bindings.map(async (binding) => {
+        //  let mappedBinding = binding;
+        //  mappedBinding.rov = [];
+        // let promises = [];
+         let promises = binding.rovs.map(rov => {
+           console.log("ROVV", rov)
+           return this.getROV(rov.value);
+          //  mappedBinding.rov.push(this.getROV(rov.value))
+          });
+          await Promise.all(promises).then(values => {
+            values.forEach(value => {
+              let rov = {unit: value.unit.value, min: value.min.value, max: value.max.value}
+            })
+          });
+          console.log("PROMISES ", promises);
+          // Promise.all(promises).then(results => console.log("ALL RESOLVED", results))
+        //  res.rovs.map(rov => this.getROV(rov.value)));
+        //  mappedRes.push(mappedBinding);
+        })
+      //  console.log("MAPPEDRES", mappedRes)
+       return mappedRes;
+      })
     .catch(function (error) {
       console.log("Oh no, error!")
     });
@@ -560,4 +593,34 @@ module.exports.convertPhenomenaToJson = function (phenos) {
   
 
   return phenos.map(pheno => new Phenomena(pheno));
+}
+
+
+module.exports.asyncForEach = async function(array, callback) {
+  for (let index = 0; index < array.length; index++) {
+    await callback(array[index], index, array);
+  }
+}
+
+
+module.exports.asyncRovForEachEachSuperFunction = async function(array){
+  console.log("ARRAY", array)
+  let rovs = [];
+  await this.asyncForEach(array, async (rov) => {
+    let rovValues = await this.getROV(rov.value);
+    console.log("VALUES", rovValues)
+    rovs.push(rovValues);
+  });
+  return rovs;
+}
+
+module.exports.asyncRovForEachEachSuperFunction2 = async function(array){
+  console.log("ARRAY", array)
+  let rovs = [];
+  await this.asyncForEach(array, async (rov) => {
+    let rovValues = await this.getROV(rov.value);
+    console.log("VALUES", rovValues)
+    rovs.push(rovValues);
+  });
+  return rovs;
 }
