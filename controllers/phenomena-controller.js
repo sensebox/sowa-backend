@@ -74,42 +74,25 @@ module.exports.getPhenomena = function () {
     .execute({ format: { resource: 'phenomenon' } })
     .then(async res => {
        let mappedRes = [];
-      //  res.results.bindings.forEach(binding => {
-      //    console.log("dasistbinding", binding);
-      //    binding.rov = [];
-      //    let rovs = this.asyncRovForEachEachSuperFunction(binding.rovs);
-      //   //  binding.rovs.forEach( rov => async function() {
-      //   //   let rovValues = await this.getROV(rov.value);
-      //   //   console.log("VALUES", rovValues)
-      //   //   binding.rov.push(rovValues);
-      //   //  })
-      //   binding.rov.push(rovs)
-      //    mappedRes.push(binding);
-      //  })
-       res.results.bindings.map(async (binding) => {
-        //  let mappedBinding = binding;
-        //  mappedBinding.rov = [];
-        // let promises = [];
-         let promises = binding.rovs.map(rov => {
-           console.log("ROVV", rov)
-           return this.getROV(rov.value);
-          //  mappedBinding.rov.push(this.getROV(rov.value))
-          });
-          await Promise.all(promises).then(values => {
-            values.forEach(value => {
-              let rov = {unit: value.unit.value, min: value.min.value, max: value.max.value}
-            })
-          });
-          console.log("PROMISES ", promises);
-          // Promise.all(promises).then(results => console.log("ALL RESOLVED", results))
-        //  res.rovs.map(rov => this.getROV(rov.value)));
-        //  mappedRes.push(mappedBinding);
-        })
-      //  console.log("MAPPEDRES", mappedRes)
+      for (let binding of res.results.bindings) {
+        let allrov = [];
+        for(let rov of binding.rovs){
+          let rovValue = await this.getROV(rov.value);
+          rovValue.forEach(value => {
+            if (value.unit){
+              let rov = {unit: value.unit.value, min: value.min.value, max: value.max.value};
+              console.log("ROV", rov);
+              allrov.push(rov);
+            }
+          })
+        }
+        binding.rovs = allrov;
+        mappedRes.push(binding);
+        }
        return mappedRes;
       })
     .catch(function (error) {
-      console.log("Oh no, error!")
+      console.log("Oh no, error!", error)
     });
 }
 
