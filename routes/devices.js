@@ -3,6 +3,7 @@ var router = express.Router();
 //var bodyParser = require("body-parser");
 
 const DevicesController = require('../controllers/devices-controller');
+const SensorsController = require('../controllers/sensors-controller');
 /* GET users listing. */
 router.get('/', function (req, res, next) {
   res.send('respond with a resource');
@@ -29,6 +30,33 @@ router.get('/device/:iri', function (req, res) {
       } else {
         return res.json(data);
       }
+    })
+});
+
+router.get('/device/:iri/sensors', function (req, res) {
+  DevicesController.getSensorsOfDevice(req.params.iri)
+    .then(data => {
+      return res.json(data);
+      //Do We need this conversion stuff?
+      // if(req.query.format === 'json'){
+      //   return res.json(SensorsController.convertSensorsToJson(data))
+      // } else {
+      //   return res.json(data);
+      // }
+    })
+});
+
+router.get('/all/sensors', function (req, res) {
+  DevicesController.getAllSensorsOfAllDevices()
+    .then(data => {
+      console.log(data);
+      return res.json(data);
+      //Do We need this conversion stuff?
+      // if(req.query.format === 'json'){
+      //   return res.json(SensorsController.convertSensorsToJson(data))
+      // } else {
+      //   return res.json(data);
+      // }
     })
 });
 

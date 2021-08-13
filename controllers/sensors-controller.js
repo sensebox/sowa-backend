@@ -715,6 +715,5 @@ module.exports.convertSensorToJson = function(sensor){
   return new Sensor(sensor);
 }
 module.exports.convertSensorsToJson = function (sensors){
-  console.log(sensors)
   return sensors.map(sensor => new Sensors(sensor));
 }

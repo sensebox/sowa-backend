@@ -577,33 +577,3 @@ module.exports.convertPhenomenaToJson = function (phenos) {
 
   return phenos.map(pheno => new Phenomena(pheno));
 }
-
-
-module.exports.asyncForEach = async function(array, callback) {
-  for (let index = 0; index < array.length; index++) {
-    await callback(array[index], index, array);
-  }
-}
-
-
-module.exports.asyncRovForEachEachSuperFunction = async function(array){
-  console.log("ARRAY", array)
-  let rovs = [];
-  await this.asyncForEach(array, async (rov) => {
-    let rovValues = await this.getROV(rov.value);
-    console.log("VALUES", rovValues)
-    rovs.push(rovValues);
-  });
-  return rovs;
-}
-
-module.exports.asyncRovForEachEachSuperFunction2 = async function(array){
-  console.log("ARRAY", array)
-  let rovs = [];
-  await this.asyncForEach(array, async (rov) => {
-    let rovValues = await this.getROV(rov.value);
-    console.log("VALUES", rovValues)
-    rovs.push(rovValues);
-  });
-  return rovs;
-}
