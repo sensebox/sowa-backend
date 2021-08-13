@@ -462,7 +462,7 @@ module.exports.editSensor = function (sensor, role) {
       datasheet: { value: sensor.datasheet, type: 'uri' },
       price: { value: sensor.price, type: 'decimal' },
       life: { value: sensor.lifeperiod, type: 'integer' },
-      image: { value: sensor.image, type: 'uri' },
+      image: { value: sensor.image, type: 'string' },
       validation: { value: sensor.validation, type: 'boolean' }
     })
     .execute();
@@ -552,7 +552,7 @@ module.exports.createHistorySensor = function (sensor, user) {
       datasheet: { value: sensor.datasheet, type: 'uri' },
       price: { value: sensor.price, type: 'decimal' },
       life: { value: sensor.lifeperiod, type: 'integer' },
-      image: { value: sensor.image, type: 'uri' },
+      image: { value: sensor.image, type: 'string' },
       validation: { value: sensor.validation, type: 'boolean' },
       dateTime: { value: isoDate, type: 'http://www.w3.org/2001/XMLSchema#dateTime' },
       //userName: user.name
@@ -615,7 +615,7 @@ module.exports.createNewSensor = function (sensor, role) {
       datasheet: { value: sensor.datasheet, type: 'uri' },
       price: { value: sensor.price, type: 'decimal' },
       life: { value: sensor.lifeperiod, type: 'integer' },
-      image: { value: sensor.image, type: 'uri' },
+      image: { value: sensor.image, type: 'string' },
       validation: { value: sensor.validation, type: 'boolean' }
     })
     .execute();

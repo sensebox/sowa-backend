@@ -20,7 +20,7 @@ let upload = multer({
 })
 
 router.post('/upload', upload.single('image'), (req, res) => {
-    console.log("post", req.body);
+    console.log("Additional Parameters: ", req.body);
     if (!req.file) {
         console.log("No file is available!");
         return res.send({
@@ -28,29 +28,24 @@ router.post('/upload', upload.single('image'), (req, res) => {
         });
 
     } else {
-        // fs.renameSync(req.file.path, req.file.path.replace(req.file.originalname,
-        //     req.body.sensorname + "." + req.file.originalname.split(".")[1]));
-        // console.log('File is available!');
+        fs.renameSync(req.file.path, req.file.path.replace(req.file.originalname,
+            req.body.sensorUri + "." + req.file.originalname.split(".")[1]));
+        console.log('File is available!');
         return res.send({
             success: true
         })
     }
 });
 
-router.get('/:name', async (req, res) => {
-    res.sendFile('/public/images/upload/' + req.params.name + "." + "jpg", { root: './' })
+router.get('/:name', (req, res) => {
+    res.sendFile('/public/images/upload/' + req.params.name, { root: './' })
+    // var files = fs.readdirSync('./public/images/upload');
+    // files.forEach(element => {
+    //     console.log(element);
+    //     if(element.split('.')[0] == req.params.name) {
+    //         res.sendFile('/public/images/upload/' + element, { root: './' })
+    //     }
+    // });
 })
-
-// async function getFileExtension(name) {
-//     fs.readdir("./public/images/upload/", (err, files) => {
-//         files.forEach(file => {
-//             console.log(file.split(".")[0], name, file.split(".")[1]);
-//             if (file.split(".")[0] == name) {
-//                 return file.split(".")[1];
-//             }
-//         });
-//     });
-// }
-
 
 module.exports = router;
