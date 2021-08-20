@@ -396,10 +396,10 @@ ORDER BY ?phenomenon ?device ?sensorElement`;
 
 module.exports.editSensor = function (sensor, role) {
   var senphurl = 'http://www.opensensemap.org/SENPH#';
-  if (role != 'expert' && role != 'admin') {
-    console.log("User has no verification rights!");
-    sensor.validation = false;
-  }
+  // if (role != 'expert' && role != 'admin') {
+  //   console.log("User has no verification rights!");
+  //   sensor.validation = false;
+  // }
   sensor.sensorElement.forEach(element => {
     element['uri'] = "sensorElement_" + sensor.uri + "_" + element.phenomenonUri.slice(34);
   })
@@ -462,7 +462,7 @@ module.exports.editSensor = function (sensor, role) {
       datasheet: { value: sensor.datasheet, type: 'uri' },
       price: { value: sensor.price, type: 'decimal' },
       life: { value: sensor.lifeperiod, type: 'integer' },
-      image: { value: sensor.image, type: 'uri' },
+      image: { value: sensor.image, type: 'string' },
       validation: { value: sensor.validation, type: 'boolean' }
     })
     .execute();
@@ -470,10 +470,10 @@ module.exports.editSensor = function (sensor, role) {
 
 module.exports.deleteSensor = function (sensor, role) {
   var senphurl = 'http://www.opensensemap.org/SENPH#';
-  if (role != 'expert' && role != 'admin') {
-    console.log("User has no verification rights!");
-  }
-  else {
+  // if (role != 'expert' && role != 'user') {
+  //   console.log("User has no verification rights!");
+  // }
+  // else {
     var bindingsText =
       ` DELETE {?a ?b ?c}
     WHERE { ?a ?b ?c .
@@ -486,7 +486,7 @@ module.exports.deleteSensor = function (sensor, role) {
         sensorURI: { value: senphurl + sensor.uri, type: 'uri' },
       })
       .execute();
-  }
+  //}
 }
 
 
@@ -495,11 +495,11 @@ module.exports.createHistorySensor = function (sensor, user) {
   var date = Date.now();
   var isoDate = new Date(date).toISOString();
   sensor['dateTime'] = date;
-  console.log(sensor);
-  if (user.role != 'expert' && user.role != 'admin') {
-    console.log("User has no verification rights!");
-    sensor.validation = false;
-  }
+  //console.log(sensor);
+  // if (user.role != 'expert' && user.role != 'admin') {
+  //   console.log("User has no verification rights!");
+  //   sensor.validation = false;
+  // }
   var senphurl = 'http://www.opensensemap.org/SENPH#';
   sensor.sensorElement.forEach(element => {
     element['uri'] = "sensorElement_" + sensor.uri + "_" + element.phenomenonUri.slice(34) + '_' + sensor.dateTime;
@@ -542,7 +542,7 @@ module.exports.createHistorySensor = function (sensor, user) {
   bindingsText = bindingsText.concat('}')
   // TODO: Add dynamic description language tag!
   // LOG and EXECTUE UPDATE 
-  console.log(bindingsText)
+  //console.log(bindingsText)
   return historyClient
     .query(bindingsText)
     .bind({
@@ -552,20 +552,20 @@ module.exports.createHistorySensor = function (sensor, user) {
       datasheet: { value: sensor.datasheet, type: 'uri' },
       price: { value: sensor.price, type: 'decimal' },
       life: { value: sensor.lifeperiod, type: 'integer' },
-      image: { value: sensor.image, type: 'uri' },
+      image: { value: sensor.image, type: 'string' },
       validation: { value: sensor.validation, type: 'boolean' },
       dateTime: { value: isoDate, type: 'http://www.w3.org/2001/XMLSchema#dateTime' },
-      userName: user.name
+      //userName: user.name
     })
     .execute();
 }
 
 module.exports.createNewSensor = function (sensor, role) {
   console.log(sensor);
-  if (role != 'expert' && role != 'admin') {
-    console.log("User has no verification rights!");
-    sensor.validation = false;
-  }
+  // if (role != 'expert' && role != 'admin') {
+  //   console.log("User has no verification rights!");
+  //   sensor.validation = false;
+  // }
   var senphurl = 'http://www.opensensemap.org/SENPH#';
   sensor.sensorElement.forEach(element => {
     element['uri'] = "sensorElement_" + sensor.uri + "_" + element.phenomenonUri.slice(34);
@@ -605,7 +605,7 @@ module.exports.createNewSensor = function (sensor, role) {
   bindingsText = bindingsText.concat('}')
   // TODO: Add dynamic description language tag!
   // LOG and EXECTUE UPDATE 
-  console.log(bindingsText)
+  //console.log(bindingsText)
   return client
     .query(bindingsText)
     .bind({
@@ -615,7 +615,7 @@ module.exports.createNewSensor = function (sensor, role) {
       datasheet: { value: sensor.datasheet, type: 'uri' },
       price: { value: sensor.price, type: 'decimal' },
       life: { value: sensor.lifeperiod, type: 'integer' },
-      image: { value: sensor.image, type: 'uri' },
+      image: { value: sensor.image, type: 'string' },
       validation: { value: sensor.validation, type: 'boolean' }
     })
     .execute();

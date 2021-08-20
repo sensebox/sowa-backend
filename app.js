@@ -11,6 +11,7 @@ var sensorsRouter = require('./routes/sensors');
 var phenomenaRouter = require('./routes/phenomena');
 var devicesRouter = require('./routes/devices');
 var domainsRouter = require('./routes/domains');
+var imageRouter = require('./routes/image');
 var AuthController = require('./controllers/auth-controller');
 var cors = require('cors')
 
@@ -44,16 +45,18 @@ app.use('/*', cors(corsOptions), function (req, res, next) {
   next();
 });
 
-app.post('*', AuthController.isAuthenticated, function (req, res, next) {
-  console.log("LOCALS", res.locals.user.role);
-  next();
-});
+// app.post('*', AuthController.isAuthenticated, function (req, res, next) {
+//   console.log("LOCALS", res.locals.user.role);
+//   next();
+// });
+
 app.use('/', indexRouter);
 app.use('/queries', queriesRouter);
 app.use('/sensors', sensorsRouter);
 app.use('/phenomena', phenomenaRouter);
 app.use('/devices', devicesRouter);
 app.use('/domains', domainsRouter);
+app.use('/image', imageRouter);
 app.use(express.static('owl'));
 
 
