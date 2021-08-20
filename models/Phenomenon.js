@@ -13,10 +13,10 @@ const Phenomenon = class {
     // this.domains = phenomenonResponse.domains;
 
     this.labels = [];
-    this.units = [];
+    this.rovs = [];
     this.domains = [];
     this.sensors = [];
-    this.rovs = [];
+    // this.rovs = [];
 
     res.forEach((element) => {
       switch (Object.getOwnPropertyNames(element)[0]) {
@@ -37,7 +37,8 @@ const Phenomenon = class {
         }
 
         case "rov": {
-          this.units.push(element);
+          console.log("ELEMENT", element)
+          this.rovs.push(element);
           break;
         }
 

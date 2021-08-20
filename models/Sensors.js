@@ -7,7 +7,8 @@ var Sensors = class {
 
     constructor(resSensor) {
         this.sensor = resSensor.sensor;
-        this.sensorLabel = resSensor.sensorLabel;
+        this.label = resSensor.sensorLabel;
+        this.sensorElement = resSensor.sensorElement;
         this.validation = resSensor.validation;
     }
 };

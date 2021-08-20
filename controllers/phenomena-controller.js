@@ -9,6 +9,7 @@ const history_endpoint = `${fuseki_endpoint}/senph-history/sparql`;
 const history_updatepoint = `${fuseki_endpoint}/senph-history/update`;
 
 const Phenomenon = require('../models/Phenomenon');
+const Phenomena = require('../models/Phenomena');
 // const unitpoint = 'http://localhost:3030/uo/sparql';
 
 
@@ -54,18 +55,44 @@ const historyClient = new SparqlClient(history_endpoint, {
 module.exports.getPhenomena = function () {
   return client
     .query(SPARQL`
-                     SELECT ?phenomenonLabel ?phenomenon ?validation
+                     SELECT ?phenomenonLabel ?phenomenon ?validation ?rovs ?unit
                      WHERE {
-                       ?phenomenon rdf:type s:phenomenon.
-                       ?phenomenon rdfs:label ?phenomenonLabel.
-                       OPTIONAL{
+                     
+                      ?phenomenon rdf:type s:phenomenon.
+
+                      ?phenomenon rdfs:label ?phenomenonLabel.
+                    
+                      
+                      OPTIONAL {
+                        ?phenomenon s:describedBy ?rovs.
+                        ?rovs s:describedBy ?unit.
+                      }
+                      OPTIONAL {
                         ?phenomenon s:isValid ?validation.
                         }
-                      }`)
+                      } GROUP BY ?phenomenonLabel ?phenomenon ?validation ?rovs ?unit`)
     .execute({ format: { resource: 'phenomenon' } })
-    .then(res => res.results.bindings)
+    .then(async res => {
+       let mappedRes = [];
+      for (let binding of res.results.bindings) {
+        let allrov = [];
+        for(let rov of binding.rovs){
+          let rovValue = await this.getROV(rov.value);
+          rovValue.forEach(value => {
+            if (value.unit){
+              let rov = {unit: value.unit.value, min: value.min.value, max: value.max.value};
+              console.log("ROV", rov);
+              allrov.push(rov);
+            }
+          })
+        }
+        binding.rovs = allrov;
+        mappedRes.push(binding);
+        }
+       return mappedRes;
+      })
     .catch(function (error) {
-      console.log("Oh no, error!")
+      console.log("Oh no, error!", error)
     });
 }
 
@@ -201,7 +228,6 @@ module.exports.getPhenomenon = function (iri) {
               Group BY ?sensors  ?domain ?rov ?min ?max ?unit ?label ?description ?sensorlabel ?domainLabel ?unitLabel ?validation
               ORDER BY ?sensors ?domain ?unit
         `;
-  console.log(bindingsText)
   return client
     .query(bindingsText)
     .bind('iri', { s: iri })
@@ -216,6 +242,34 @@ module.exports.getPhenomenon = function (iri) {
         }
       })
       console.log(res.results.bindings);
+      return res.results.bindings;
+    })
+    .catch(function (error) {
+      console.dir(arguments, { depth: null })
+      console.log("Oh no, error!")
+      console.log(error)
+    });
+}
+
+module.exports.getROV = function (iri) {
+  console.log(iri)
+  //still missing: ?domains rdfs:label ?domainsLabel.
+  // var senphurl = 'http://www.opensensemap.org/SENPH#';
+
+  var bindingsText = `
+  Select Distinct ?unit ?min ?max
+                   WHERE {   
+                    ?iri s:describedBy ?unit.
+                    ?iri s:min ?min.
+                    ?iri s:max ?max.
+                   }
+        `;
+  return client
+    .query(bindingsText)
+    .bind({iri: {value: iri, type: 'uri'}})
+    .execute()
+    .then(res => {
+      console.log("BINDINGS", res.results.bindings)
       return res.results.bindings;
     })
     .catch(function (error) {
@@ -518,6 +572,8 @@ module.exports.convertPhenomenonToJson = function (pheno) {
 
 module.exports.convertPhenomenaToJson = function (phenos) {
   //TODO: IMPLEMENT IF NEEDED
-  // return new Phenomenon(pheno);
-  return phenos
+  console.log("PHENOS", phenos)
+  
+
+  return phenos.map(pheno => new Phenomena(pheno));
 }

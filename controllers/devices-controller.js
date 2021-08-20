@@ -142,7 +142,6 @@ module.exports.getDevice = function (iri) {
           `)
     .execute()
     .then(res => {
-      console.log(res);
       res.results.bindings.push({
         'iri':
         {
@@ -220,6 +219,124 @@ module.exports.getHistoricDevice = function (iri) {
       console.log(error)
     });
 }
+
+
+module.exports.getSensorsOfDevice = function (iri) {
+  var senphurl = 'http://www.opensensemap.org/SENPH#';
+  console.log("IRI",iri);
+  return client
+    .query(SPARQL`
+                     SELECT ?sensor ?label ?description ?sensorElement
+                     WHERE {
+                        ?sensor s:isSensorOf ${{ s: iri }}.
+                        ?sensor rdfs:label ?label.
+                        ?sensor rdfs:comment ?description.
+                        ?sensor s:hasElement ?sensorElement.
+                    }`)
+    .execute({ format: { resource: 'sensor' } })
+    .then(async res => {
+      
+      let mappedRes = [];
+      for (let binding of res.results.bindings) {
+        let allsensorElement = [];
+        if(binding.sensorElement){
+          for(let sensorElement of binding.sensorElement){
+            let sensorElementValue = await this.getSensorElement(sensorElement.value);
+            sensorElementValue.forEach(value => {
+              if (value){
+                let sensorElement = {phenomenon: value.phenomenon.value, unit: value.unit.value, acc: value.accuracy ? value.accuracy.value : undefined };
+                allsensorElement.push(sensorElement);
+              }
+            })
+          }
+          binding.sensorElement = allsensorElement;
+        }
+        mappedRes.push(binding);
+        }
+       return mappedRes;
+
+      }
+    )
+    .catch(function (error) {
+      console.dir(arguments, { depth: null })
+      console.log("Oh no, error!")
+      console.log(error)
+    });
+}
+
+
+//TODO: maybe move this function to sensors
+module.exports.getAllSensorsOfAllDevices = function () {
+  var senphurl = 'http://www.opensensemap.org/SENPH#';
+  return client
+    .query(SPARQL`
+                     SELECT ?sensor ?label ?description ?sensorElement
+                     WHERE {
+                        ?sensor rdf:type s:sensor.
+                        ?sensor rdfs:label ?label.
+                        ?sensor rdfs:comment ?description.
+                        ?sensor s:hasElement ?sensorElement.
+                    }`)
+    .execute({ format: { resource: 'sensor' } })
+    .then(async res => {
+      
+      let mappedRes = [];
+      for (let binding of res.results.bindings) {
+        let allsensorElement = [];
+        if(binding.sensorElement){
+          for(let sensorElement of binding.sensorElement){
+            let sensorElementValue = await this.getSensorElement(sensorElement.value);
+            sensorElementValue.forEach(value => {
+              if (value){
+                let sensorElement = {phenomenon: value.phenomenon.value, unit: value.unit.value, acc: value.accuracy ? value.accuracy.value : undefined };
+                allsensorElement.push(sensorElement);
+              }
+            })
+          }
+          binding.sensorElement = allsensorElement;
+        }
+        mappedRes.push(binding);
+        }
+       return mappedRes;
+
+      }
+    )
+    .catch(function (error) {
+      console.dir(arguments, { depth: null })
+      console.log("Oh no, error!")
+      console.log(error)
+    });
+}
+
+
+module.exports.getSensorElement = function (iri) {
+  console.log(iri)
+  //still missing: ?domains rdfs:label ?domainsLabel.
+  // var senphurl = 'http://www.opensensemap.org/SENPH#';
+
+  var bindingsText = `
+  Select Distinct ?phenomenon ?unit ?accuracy
+                   WHERE {   
+                    ?iri s:canMeasure ?phenomenon.
+                    ?iri s:hasAccuracyUnit ?unit.
+                    ?iri s:accuracyValue ?accVal.
+                   }
+        `;
+  return client
+    .query(bindingsText)
+    .bind({iri: {value: iri, type: 'uri'}})
+    .execute()
+    .then(res => {
+      console.log("BINDINGS", res.results.bindings)
+      return res.results.bindings;
+    })
+    .catch(function (error) {
+      console.dir(arguments, { depth: null })
+      console.log("Oh no, error!")
+      console.log(error)
+    });
+}
+
 
 
 // //update/add a new device @inputs required: label + language, description + language; optional: website, image, contact, compatible sensor
