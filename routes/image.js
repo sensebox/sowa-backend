@@ -21,19 +21,23 @@ let upload = multer({
 
 router.post('/upload', upload.single('image'), (req, res) => {
     console.log("Additional Parameters: ", req.body);
-    if (!req.file) {
-        console.log("No file is available!");
-        return res.send({
-            success: false
-        });
-
-    } else {
-        fs.renameSync(req.file.path, req.file.path.replace(req.file.originalname,
-            req.body.sensorname + "." + req.file.originalname.split(".")[1]));
-        console.log('File is available!');
-        return res.send({
-            success: true
-        })
+    try {
+        if (!req.file) {
+            console.log("No file is available!");
+            return res.send({
+                success: false
+            });
+    
+        } else {
+            fs.renameSync(req.file.path, req.file.path.replace(req.file.originalname,
+                req.body.uri + "." + req.file.originalname.split(".")[1]));
+            console.log('File is available!');
+            return res.send({
+                success: true
+            })
+        }
+    } catch (error) {
+        console.log(error);
     }
 });
 
