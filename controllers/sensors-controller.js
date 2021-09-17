@@ -189,7 +189,7 @@ module.exports.getSensorElement = function (iri) {
     .then(res => res.results.bindings)
     .catch(function (error) {
       console.log(error);
-console.log("Oh no, error!")
+      console.log("Oh no, error!")
     });
 }
 
@@ -474,18 +474,18 @@ module.exports.deleteSensor = function (sensor, role) {
   //   console.log("User has no verification rights!");
   // }
   // else {
-    var bindingsText =
-      ` DELETE {?a ?b ?c}
+  var bindingsText =
+    ` DELETE {?a ?b ?c}
     WHERE { ?a ?b ?c .
             FILTER (?a = ?sensorURI || ?c = ?sensorURI )
           }`;
-    console.log(bindingsText)
-    return client
-      .query(bindingsText)
-      .bind({
-        sensorURI: { value: senphurl + sensor.uri, type: 'uri' },
-      })
-      .execute();
+  console.log(bindingsText)
+  return client
+    .query(bindingsText)
+    .bind({
+      sensorURI: { value: senphurl + sensor.uri, type: 'uri' },
+    })
+    .execute();
   //}
 }
 
@@ -560,8 +560,22 @@ module.exports.createHistorySensor = function (sensor, user) {
     .execute();
 }
 
-module.exports.createNewSensor = function (sensor, role) {
+async function checkForExistance(uri) {
+  var textToCheckExistance = 'ASK WHERE {' +
+    '{ <http://www.opensensemap.org/SENPH#' + uri + '> ?p ?o } UNION { GRAPH ?g { <http://www.opensensemap.org/SENPH#' + uri + '> ?p ?o } }' +
+    '}'
+  return client.query(textToCheckExistance).execute().then(res => {
+    console.log("Check for existance: " + res.boolean);
+  });
+}
+
+module.exports.createNewSensor = async function (sensor, role) {
   console.log(sensor);
+
+  if (await checkForExistance(sensor.uri)) {
+    return "Uri exists already";
+  }
+
   // if (role != 'expert' && role != 'admin') {
   //   console.log("User has no verification rights!");
   //   sensor.validation = false;
@@ -711,9 +725,9 @@ module.exports.getSensorsForPhenomenon = function (iri) {
     });
 }
 
-module.exports.convertSensorToJson = function(sensor){
+module.exports.convertSensorToJson = function (sensor) {
   return new Sensor(sensor);
 }
-module.exports.convertSensorsToJson = function (sensors){
+module.exports.convertSensorsToJson = function (sensors) {
   return sensors.map(sensor => new Sensors(sensor));
 }

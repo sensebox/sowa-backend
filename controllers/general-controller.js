@@ -28,7 +28,6 @@ module.exports.uriExists = function (iri) {
         .query(bindingsText)
         .execute()
         .then(res => {
-            console.log(res.boolean)
             return res.boolean;
         })
 }
