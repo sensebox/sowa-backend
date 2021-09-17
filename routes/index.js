@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 
 const QueriesController = require('../controllers/queries-controller');
+const GeneralController = require('../controllers/general-controller');
+
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -27,4 +29,10 @@ router.get('/all', function (req, res) {
     .then(data => res.json(data))
 }); 
 
+router.get('/exists/:iri', function (req, res) {
+    GeneralController.uriExists(req.params.iri)
+    .then(data => {
+      res.send(data);
+    })
+})
 
