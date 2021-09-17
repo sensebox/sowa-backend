@@ -29,7 +29,7 @@ router.post('/upload', upload.single('image'), (req, res) => {
 
     } else {
         fs.renameSync(req.file.path, req.file.path.replace(req.file.originalname,
-            req.body.sensorUri + "." + req.file.originalname.split(".")[1]));
+            req.body.uri + "." + req.file.originalname.split(".")[1]));
         console.log('File is available!');
         return res.send({
             success: true
