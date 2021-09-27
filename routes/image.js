@@ -16,7 +16,8 @@ let storage = multer.diskStorage({
 });
 
 let upload = multer({
-    storage: storage
+    storage: storage,
+    limits: { files: 1 }
 })
 
 router.post('/upload', upload.single('image'), (req, res) => {
@@ -28,9 +29,11 @@ router.post('/upload', upload.single('image'), (req, res) => {
         });
 
     } else {
+        console.log("Endung: " + req.file.originalname.slice(req.file.originalname.lastIndexOf('.')));
         fs.renameSync(req.file.path, req.file.path.replace(req.file.originalname,
-            req.body.uri + "." + req.file.originalname.split(".")[1]));
+            req.body.uri + req.file.originalname.slice(req.file.originalname.lastIndexOf('.'))));
         console.log('File is available!');
+        console.log(req.file);
         return res.send({
             success: true
         })
