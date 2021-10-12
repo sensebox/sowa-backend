@@ -51,4 +51,18 @@ router.get('/:name', (req, res) => {
     // });
 })
 
+router.delete('/delete/:name', (req, res) => {
+    console.log(req.params.name);
+    fs.unlink('./public/images/upload/' + req.params.name, (err) => {
+        if (err) {
+            console.log(err);
+            res.sendStatus(404);
+        }
+        else {
+            console.log('successfully deleted ' + req.params.name);
+            res.sendStatus(200);
+        }
+    })
+})
+
 module.exports = router;
