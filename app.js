@@ -20,7 +20,7 @@ var app = express();
 var whitelist = ['http://api.sensor-wiki.opensensemap.org', 'https://api.sensor-wiki.opensensemap.org', 'https://sensor-wiki.opensensemap.org']
 var corsOptions = {
   origin: function (origin, callback) { 
-    if (whitelist.indexOf(origin) !== -1 || whitelist.indexOf('*') !== -1) {
+    if (whitelist.indexOf(origin) !== -1) {
       callback(null, true)
     } else {
       callback(new Error('Not allowed by CORS'))
@@ -44,10 +44,10 @@ app.use('/*', cors(corsOptions), function (req, res, next) {
   next();
 });
 
-// app.post('*', AuthController.isAuthenticated, function (req, res, next) {
-//   console.log("LOCALS", res.locals.user.role);
-//   next();
-// });
+app.post('*', AuthController.isAuthenticated, function (req, res, next) {
+  console.log("LOCALS", res.locals.user.role);
+  next();
+});
 
 app.use('/', indexRouter);
 app.use('/queries', queriesRouter);
