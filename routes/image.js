@@ -56,11 +56,11 @@ router.delete('/delete/:name', (req, res) => {
     fs.unlink('./public/images/upload/' + req.params.name, (err) => {
         if (err) {
             console.log(err);
-            res.sendStatus(404);
+            res.send({success: false});
         }
         else {
             console.log('successfully deleted ' + req.params.name);
-            res.sendStatus(200);
+            res.send({success: true});
         }
     })
 })
