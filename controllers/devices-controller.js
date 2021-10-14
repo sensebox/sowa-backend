@@ -412,7 +412,7 @@ module.exports.editDevice = function (device, role) {
       // +++ FIXME +++ language hardcoded, make it dynamic
       desc: { value: device.description, lang: "en" },
       website: device.website,
-      image: device.image,
+      image: { value: device.image, type: 'string' },
       contact: device.contact,
       validation: { value: device.validation, type: 'boolean' }
     })
