@@ -418,7 +418,8 @@ module.exports.editSensor = function (sensor, role) {
     '?sensorURI s:priceInEuro   ?price.' +
     '?sensorURI s:lifePeriod    ?life.' +
     '?sensorURI s:image         ?image.' +
-    '?sensorURI s:isValid       ?validation.';
+    '?sensorURI s:isValid       ?validation.' +
+    '?sensorURI s:markdown      ?markdown.';
 
 
   sensor.label.forEach(element => {
@@ -467,7 +468,8 @@ module.exports.editSensor = function (sensor, role) {
       price: { value: sensor.price, type: 'decimal' },
       life: { value: sensor.lifeperiod, type: 'integer' },
       image: { value: sensor.image, type: 'string' },
-      validation: { value: sensor.validation, type: 'boolean' }
+      validation: { value: sensor.validation, type: 'boolean' },
+      markdown: { value: sensor.markdown, type: 'string'}
     })
     .execute();
 }
