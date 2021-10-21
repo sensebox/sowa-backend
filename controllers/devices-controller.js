@@ -107,7 +107,7 @@ module.exports.getDevice = function (iri) {
 
   return client
     .query(SPARQL`
-    Select Distinct ?label ?description ?website ?image ?contact ?sensor ?sensorLabel ?validation
+    Select Distinct ?label ?description ?website ?image ?markdown ?contact ?sensor ?sensorLabel ?validation
                      WHERE {
                         {
                             ${{ s: iri }} rdfs:label ?label
@@ -135,9 +135,13 @@ module.exports.getDevice = function (iri) {
                         UNION
                         {
                             ${{ s: iri }} s:isValid ?validation.
+                        }
+                        UNION
+                        {
+                            ${{ s: iri }} s:markdown ?markdown.
                         }   
                      }
-                Group BY ?label ?description ?website ?image ?contact ?sensor ?sensorLabel ?validation
+                Group BY ?label ?description ?website ?image ?markdown ?contact ?sensor ?sensorLabel ?validation
                 ORDER BY ?sensor
           `)
     .execute()
@@ -379,7 +383,6 @@ module.exports.editDevice = function (device, role) {
     console.log("User has no verification rights!");
     device.validation = false;
   }
-  console.log(device);
   // create SPARQL Query: 
   var bindingsText = 'DELETE {?a ?b ?c}' +
     'INSERT {' +
@@ -388,7 +391,8 @@ module.exports.editDevice = function (device, role) {
     '?deviceURI s:website ?website.' +
     '?deviceURI s:image ?image.' +
     '?deviceURI s:hasContact ?contact.' +
-    '?deviceURI s:isValid ?validation.';
+    '?deviceURI s:isValid ?validation.' +
+    '?deviceURI s:markdown ?markdown.';
 
   // create insert ;line for each sensor 
   device.sensor.forEach(element => {
@@ -403,7 +407,6 @@ module.exports.editDevice = function (device, role) {
   // add WHERE statement 
   bindingsText = bindingsText.concat('} WHERE {?a ?b ?c. FILTER (?a = ?deviceURI || ?c = ?deviceURI)}');
   console.log(bindingsText);
-
   return client
     .query(bindingsText)
     // bind values to variable names
@@ -414,7 +417,8 @@ module.exports.editDevice = function (device, role) {
       website: device.website,
       image: device.image,
       contact: device.contact,
-      validation: { value: device.validation, type: 'boolean' }
+      validation: { value: device.validation, type: 'boolean' },
+      markdown: {value: device.markdown, type: 'string'}
     })
     .execute()
 }
@@ -512,7 +516,8 @@ module.exports.createNewDevice = function (device, role) {
     '?deviceURI s:website ?website.' +
     '?deviceURI s:image ?image.' +
     '?deviceURI s:hasContact ?contact.' +
-    '?deviceURI s:isValid ?validation.';
+    '?deviceURI s:isValid ?validation.' +
+    '?deviceURI s:markdown ?markdown.';
 
   // create insert ;line for each sensor 
   device.sensor.forEach(element => {
@@ -538,7 +543,8 @@ module.exports.createNewDevice = function (device, role) {
       website: device.website,
       image: device.image,
       contact: device.contact,
-      validation: { value: device.validation, type: 'boolean' }
+      validation: { value: device.validation, type: 'boolean' },
+      markdown: {value: device.markdown, type: 'string'}
     })
     .execute()
 }
