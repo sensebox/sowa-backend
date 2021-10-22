@@ -201,7 +201,7 @@ console.log("Oh no, error!")
 module.exports.getSensor = function (iri) {
   var senphurl = 'http://www.opensensemap.org/SENPH#';
 
-  var bindingsText = `Select Distinct ?label ?description  ?manufacturer ?price ?datasheet  ?lifeperiod ?image ?device ?deviceLabel ?sensorElement ?phenomenon  ?unit ?accVal ?validation
+  var bindingsText = `Select Distinct ?label ?description ?manufacturer ?price ?datasheet ?lifeperiod ?image ?markdown ?device ?deviceLabel ?sensorElement ?phenomenon ?unit ?accVal ?validation
   WHERE {   
      {   
        ?iri  rdfs:label ?label.
@@ -247,8 +247,12 @@ module.exports.getSensor = function (iri) {
      {
          ?iri s:isValid ?validation.
      } 
+     UNION
+     {
+         ?iri s:markdown ?markdown.
+     }
   }
-Group BY ?label ?description ?datasheet ?image ?lifeperiod ?manufacturer ?price ?device ?deviceLabel ?sensorElement ?phenomenon  ?unit ?accVal ?validation
+Group BY ?label ?description ?datasheet ?image ?markdown ?lifeperiod ?manufacturer ?price ?device ?deviceLabel ?sensorElement ?phenomenon  ?unit ?accVal ?validation
 ORDER BY ?phenomenon ?device ?sensorElement`;
   return client
     .query(bindingsText)
@@ -414,7 +418,8 @@ module.exports.editSensor = function (sensor, role) {
     '?sensorURI s:priceInEuro   ?price.' +
     '?sensorURI s:lifePeriod    ?life.' +
     '?sensorURI s:image         ?image.' +
-    '?sensorURI s:isValid       ?validation.';
+    '?sensorURI s:isValid       ?validation.' +
+    '?sensorURI s:markdown      ?markdown.';
 
 
   sensor.label.forEach(element => {
@@ -463,7 +468,8 @@ module.exports.editSensor = function (sensor, role) {
       price: { value: sensor.price, type: 'decimal' },
       life: { value: sensor.lifeperiod, type: 'integer' },
       image: { value: sensor.image, type: 'string' },
-      validation: { value: sensor.validation, type: 'boolean' }
+      validation: { value: sensor.validation, type: 'boolean' },
+      markdown: { value: sensor.markdown, type: 'string'}
     })
     .execute();
 }
@@ -580,7 +586,8 @@ module.exports.createNewSensor = function (sensor, role) {
     '?sensorURI s:priceInEuro   ?price.' +
     '?sensorURI s:lifePeriod    ?life.' +
     '?sensorURI s:image         ?image.' +
-    '?sensorURI s:isValid       ?validation.';
+    '?sensorURI s:isValid       ?validation.' +
+    '?sensorURI s:markdown      ?markdown.';
 
   sensor.label.forEach(element => {
     bindingsText = bindingsText.concat(
@@ -616,7 +623,8 @@ module.exports.createNewSensor = function (sensor, role) {
       price: { value: sensor.price, type: 'decimal' },
       life: { value: sensor.lifeperiod, type: 'integer' },
       image: { value: sensor.image, type: 'string' },
-      validation: { value: sensor.validation, type: 'boolean' }
+      validation: { value: sensor.validation, type: 'boolean' },
+      markdown: { value: sensor.markdown, type: 'string'}
     })
     .execute();
 }

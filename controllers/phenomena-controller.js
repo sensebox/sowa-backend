@@ -192,7 +192,7 @@ module.exports.getPhenomenon = function (iri) {
   var senphurl = 'http://www.opensensemap.org/SENPH#';
 
   var bindingsText = `
-  Select Distinct ?label ?description ?sensors ?domain ?rov ?min ?max ?unit ?sensorlabel ?unitLabel ?domainLabel ?validation
+  Select Distinct ?label ?description ?markdown ?sensors ?domain ?rov ?min ?max ?unit ?sensorlabel ?unitLabel ?domainLabel ?validation
                    WHERE {   
                       {   
                           ?iri rdfs:label ?label
@@ -223,9 +223,13 @@ module.exports.getPhenomenon = function (iri) {
                       UNION 
                       {   
                           ?iri s:isValid ?validation.
+                      }
+                      UNION 
+                      {   
+                          ?iri s:markdown ?markdown.
                       }            
                    }
-              Group BY ?sensors  ?domain ?rov ?min ?max ?unit ?label ?description ?sensorlabel ?domainLabel ?unitLabel ?validation
+              Group BY ?sensors ?domain ?rov ?min ?max ?unit ?label ?description ?markdown ?sensorlabel ?domainLabel ?unitLabel ?validation
               ORDER BY ?sensors ?domain ?unit
         `;
   return client
@@ -391,7 +395,8 @@ module.exports.editPhenomenon = function (phenomenon, role) {
     'INSERT {' +
     '?phenomenonURI rdf:type     s:phenomenon.' +
     '?phenomenonURI rdfs:comment ?desc.' +
-    '?phenomenonURI s:isValid ?validation.';
+    '?phenomenonURI s:isValid ?validation.' +
+    '?phenomenonURI s:markdown ?markdown.';
   // create insert ;line for each unit 
   phenomenon.label.forEach(element => {
     bindingsText = bindingsText.concat(
@@ -429,7 +434,8 @@ module.exports.editPhenomenon = function (phenomenon, role) {
       // phenomenonLabel:      {value: phenomenon.name, lang: "en"},
       // +++ FIXME +++ language hardcoded, make it dynamic
       desc: { value: phenomenon.description, lang: "en" },
-      validation: { value: phenomenon.validation, type: 'boolean' }
+      validation: { value: phenomenon.validation, type: 'boolean' },
+      markdown: { value: phenomenon.markdown, type: 'string'}
     })
     .execute();
 }
@@ -525,7 +531,8 @@ module.exports.createNewPhenomenon = function (phenomenon, role) {
   var bindingsText = 'INSERT DATA {' +
     '?phenomenonURI rdf:type     s:phenomenon.' +
     '?phenomenonURI rdfs:comment ?desc.' +
-    '?phenomenonURI s:isValid ?validation.';
+    '?phenomenonURI s:isValid ?validation.' +
+    '?phenomenonURI s:markdown ?markdown.';
   // create insert ;line for each label 
   phenomenon.label.forEach(element => {
     bindingsText = bindingsText.concat(
@@ -560,7 +567,8 @@ module.exports.createNewPhenomenon = function (phenomenon, role) {
       rov: {value: senphurl + Math.random().toString().split(".")[1], type: "uri"},
       // +++ FIXME +++ language hardcoded, make it dynamic
       desc: { value: phenomenon.description, lang: "en" },
-      validation: { value: phenomenon.validation, type: 'boolean' }
+      validation: { value: phenomenon.validation, type: 'boolean' },
+      markdown: { value: phenomenon.markdown, type: 'string'}
     })
     .execute();
 }
