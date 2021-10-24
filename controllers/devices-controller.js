@@ -230,12 +230,13 @@ module.exports.getSensorsOfDevice = function (iri) {
   console.log("IRI",iri);
   return client
     .query(SPARQL`
-                     SELECT ?sensor ?label ?description ?sensorElement
+                     SELECT ?sensor ?label ?description ?sensorElement ?image
                      WHERE {
                         ?sensor s:isSensorOf ${{ s: iri }}.
                         ?sensor rdfs:label ?label.
                         ?sensor rdfs:comment ?description.
                         ?sensor s:hasElement ?sensorElement.
+                        ?sensor s:image ?image.
                     }`)
     .execute({ format: { resource: 'sensor' } })
     .then(async res => {
@@ -274,12 +275,13 @@ module.exports.getAllSensorsOfAllDevices = function () {
   var senphurl = 'http://www.opensensemap.org/SENPH#';
   return client
     .query(SPARQL`
-                     SELECT ?sensor ?label ?description ?sensorElement
+                     SELECT ?sensor ?label ?description ?sensorElement ?image
                      WHERE {
                         ?sensor rdf:type s:sensor.
                         ?sensor rdfs:label ?label.
                         ?sensor rdfs:comment ?description.
                         ?sensor s:hasElement ?sensorElement.
+                        ?sensor s:image ?image.
                     }`)
     .execute({ format: { resource: 'sensor' } })
     .then(async res => {
