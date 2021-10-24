@@ -10,6 +10,7 @@ var Sensors = class {
         this.label = resSensor.sensorLabel;
         this.sensorElement = resSensor.sensorElement;
         this.validation = resSensor.validation;
+        this.image = resSensor.image;
     }
 };
 
