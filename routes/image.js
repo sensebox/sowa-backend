@@ -25,8 +25,7 @@ let markdownStorage = multer.diskStorage({
         cb(null, './public/images/markdown/');
     },
     filename: (req, file, cb) => {
-        console.log("storage", req.body);
-        cb(null, file.originalname)
+        cb(null, req.body.random + file.originalname);
     }
 });
 
@@ -80,7 +79,6 @@ router.delete('/delete/:name', (req, res) => {
 })
 
 router.post('/upload/markdown', markdownUpload.array('files', 5), (req,res) => {
-    console.log(req);
     if(!req.files) {
         console.log('no file available');
         return res.send({
