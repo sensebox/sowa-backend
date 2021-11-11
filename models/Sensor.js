@@ -47,6 +47,10 @@ var Sensor = class {
           break;
         }
 
+        case "markdown": {
+          Object.assign(this, element);
+          break;
+        }
 
         case "validation": {
           Object.assign(this, element);
