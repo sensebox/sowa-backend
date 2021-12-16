@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 //var bodyParser = require("body-parser");
+var Filter = require('../middleware/filter');
 
 const DomainsController = require('../controllers/domains-controller');
 const AuthController = require('../controllers/auth-controller');
@@ -20,6 +21,9 @@ router.get('/domain/:iri', function (req, res) {
   console.log(req);
   DomainsController.getDomain(req.params.iri)
     .then(data => {
+      if (req.query.lang) {
+        data = Filter.filterData(data, req.query.lang);
+      }
       if(req.query.format === 'json'){
         return res.json(DomainsController.convertDomainToJson(data))
       } else {
