@@ -25,7 +25,7 @@ const client = new SparqlClient(endpoint, {
   .register({
     owl: 'http://www.w3.org/2002/07/owl#',
     rdfs: 'http://www.w3.org/2000/01/rdf-schema#',
-    s: 'http://www.opensensemap.org/SENPH#',
+    s: 'http://sensor.wiki/#',
     uo: 'http://purl.obolibrary.org/obo/',
     rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
     xsd: 'http://www.w3.org/2001/XMLSchema#'
@@ -37,7 +37,7 @@ const client = new SparqlClient(endpoint, {
   .register({
     owl: 'http://www.w3.org/2002/07/owl#',
     rdfs: 'http://www.w3.org/2000/01/rdf-schema#',
-    s: 'http://www.opensensemap.org/SENPH#',
+    s: 'http://sensor.wiki/#',
     uo: 'http://purl.obolibrary.org/obo/',
     rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
     xsd: 'http://www.w3.org/2001/XMLSchema#'
@@ -49,7 +49,7 @@ const client = new SparqlClient(endpoint, {
   .register({
     owl: 'http://www.w3.org/2002/07/owl#',
     rdfs: 'http://www.w3.org/2000/01/rdf-schema#',
-    s: 'http://www.opensensemap.org/SENPH#',
+    s: 'http://sensor.wiki/#',
     uo: 'http://purl.obolibrary.org/obo/',
     rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
     xsd: 'http://www.w3.org/2001/XMLSchema#'
@@ -169,7 +169,7 @@ module.exports.getPhenomenon = function (iri) {
 
 //update/add a new phenomenon @inputs required: label +language, description + language, unit; optional: domain 
 module.exports.updatePhenomenon = function (phenomenon) {
-  var senphurl = 'http://www.opensensemap.org/SENPH#';
+  var senphurl = 'http://sensor.wiki/#';
   var bindingsText = 'INSERT DATA {' +
     '?phenoname rdf:type      s:phenomenon. ' +
     '?phenoname rdfs:label    ?phenolabel. ' +
@@ -195,7 +195,7 @@ module.exports.updatePhenomenon = function (phenomenon) {
 
 //get a single device identified by its iri @returns the device's labels, descriptions, website, image, contact and compatible sensors
 module.exports.editPhenomenon = function (phenomenon) {
-  var senphurl = 'http://www.opensensemap.org/SENPH#';
+  var senphurl = 'http://sensor.wiki/#';
   console.log(phenomenon);
 
   // create SPARQL Query: 
@@ -406,7 +406,7 @@ module.exports.getSensorIRI = function (iri) {
 
 //update/add a new sensor @inputs required: label +language, description + language, a phenomenon that is meaured with according accuracy value; optional: manufacturer, data sheet, price in Euro, life period (currently not available because of datatype issue) and an image  
 module.exports.updateSensor = function (sensor) {
-  var senphurl = 'http://www.opensensemap.org/SENPH#';
+  var senphurl = 'http://sensor.wiki/#';
   var sElem = sensor.sensorElement[0].phenomenon + "_" + sensor.name.label;
   if (sensor.image == undefined) { sensor.image = "" }
   var bindingsText = 'INSERT DATA {' +
@@ -590,7 +590,7 @@ module.exports.getDevice = function (iri) {
 
 //update/add a new device @inputs required: label + language, description + language; optional: website, image, contact, compatible sensor
 module.exports.updateDevice = function (device) {
-  var senphurl = 'http://www.opensensemap.org/SENPH#';
+  var senphurl = 'http://sensor.wiki/#';
   console.log(device);
   var bindingsText = 'INSERT DATA {' +
     '?deviceURI rdf:type     s:device.' +
@@ -622,7 +622,7 @@ module.exports.updateDevice = function (device) {
 
 //get a single device identified by its iri @returns the device's labels, descriptions, website, image, contact and compatible sensors
 module.exports.editDevice = function (device) {
-  var senphurl = 'http://www.opensensemap.org/SENPH#';
+  var senphurl = 'http://sensor.wiki/#';
   console.log(device);
 
   // create SPARQL Query: 

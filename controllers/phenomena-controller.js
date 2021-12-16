@@ -28,7 +28,7 @@ const client = new SparqlClient(endpoint, {
   .register({
     owl: 'http://www.w3.org/2002/07/owl#',
     rdfs: 'http://www.w3.org/2000/01/rdf-schema#',
-    s: 'http://www.opensensemap.org/SENPH#',
+    s: 'http://sensor.wiki/#',
     uo: 'http://purl.obolibrary.org/obo/',
     rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
     xsd: 'http://www.w3.org/2001/XMLSchema#'
@@ -41,7 +41,7 @@ const historyClient = new SparqlClient(history_endpoint, {
   .register({
     owl: 'http://www.w3.org/2002/07/owl#',
     rdfs: 'http://www.w3.org/2000/01/rdf-schema#',
-    s: 'http://www.opensensemap.org/SENPH#',
+    s: 'http://sensor.wiki/#',
     uo: 'http://purl.obolibrary.org/obo/',
     rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
     xsd: 'http://www.w3.org/2001/XMLSchema#'
@@ -115,7 +115,7 @@ module.exports.getPhenomenaAllLabels = function () {
 
 //get history of a phenomenon
 module.exports.getPhenomenonHistory = function (iri) {
-  var senphurl = 'http://www.opensensemap.org/SENPH#';
+  var senphurl = 'http://sensor.wiki/#';
   var bindingsText = `
   SELECT ?phenomenon ?dateTime ?user
                      WHERE {
@@ -189,7 +189,7 @@ module.exports.getPhenomenonHistory = function (iri) {
 //get a single phenomenon identified by its iri @returns the phenomenon's labels, descriptions, units it is described by, domains, sensors it can be measured by  
 module.exports.getPhenomenon = function (iri) {
   //still missing: ?domains rdfs:label ?domainsLabel.
-  var senphurl = 'http://www.opensensemap.org/SENPH#';
+  var senphurl = 'http://sensor.wiki/#';
 
   var bindingsText = `
   Select Distinct ?label ?description ?markdown ?sensors ?domain ?rov ?min ?max ?unit ?sensorlabel ?unitLabel ?domainLabel ?validation
@@ -258,7 +258,7 @@ module.exports.getPhenomenon = function (iri) {
 module.exports.getROV = function (iri) {
   console.log(iri)
   //still missing: ?domains rdfs:label ?domainsLabel.
-  // var senphurl = 'http://www.opensensemap.org/SENPH#';
+  // var senphurl = 'http://sensor.wiki/#';
 
   var bindingsText = `
   Select Distinct ?unit ?min ?max
@@ -287,7 +287,7 @@ module.exports.getROV = function (iri) {
 //get a single historic phenomenon entry identified by its iri @returns the phenomenon's labels, descriptions, units it is described by, domains, sensors it can be measured by  
 module.exports.getHistoricPhenomenon = function (iri) {
   //still missing: ?domains rdfs:label ?domainsLabel.
-  var senphurl = 'http://www.opensensemap.org/SENPH#';
+  var senphurl = 'http://sensor.wiki/#';
 
   var bindingsText = `
   Select Distinct ?label ?description ?sensors ?domain ?unit ?sensorlabel ?unitLabel ?domainLabel ?validation
@@ -355,7 +355,7 @@ module.exports.getHistoricPhenomenon = function (iri) {
 
 //update/add a new phenomenon @inputs required: label +language, description + language, unit; optional: domain 
 // module.exports.updatePhenomenon = function (phenomenon) {
-//   var senphurl = 'http://www.opensensemap.org/SENPH#';
+//   var senphurl = 'http://sensor.wiki/#';
 //   var bindingsText = 'INSERT DATA {' +
 //     '?phenoname rdf:type      s:phenomenon. ' +
 //     '?phenoname rdfs:label    ?phenolabel. ' +
@@ -384,7 +384,7 @@ module.exports.getHistoricPhenomenon = function (iri) {
 
 //get a single device identified by its iri @returns the device's labels, descriptions, website, image, contact and compatible sensors
 module.exports.editPhenomenon = function (phenomenon, role) {
-  var senphurl = 'http://www.opensensemap.org/SENPH#';
+  var senphurl = 'http://sensor.wiki/#';
   console.log(phenomenon);
   if (role != 'expert' && role != 'admin') {
     console.log("User has no verification rights!");
@@ -442,7 +442,7 @@ module.exports.editPhenomenon = function (phenomenon, role) {
 
 //delete a single device identified by its iri 
 module.exports.deletePhenomenon = function (phenomenon, role) {
-  var senphurl = 'http://www.opensensemap.org/SENPH#';
+  var senphurl = 'http://sensor.wiki/#';
   console.log(phenomenon);
   // create SPARQL Query: 
   var bindingsText =
@@ -472,7 +472,7 @@ module.exports.createHistoryPhenomenon = function (phenomenon, user) {
     console.log("User has no verification rights!");
     phenomenon.validation = false;
   }
-  var senphurl = 'http://www.opensensemap.org/SENPH#';
+  var senphurl = 'http://sensor.wiki/#';
 
   // DELETE {...} INSERT{...}
   var bindingsText = 'INSERT DATA {' +
@@ -525,7 +525,7 @@ module.exports.createNewPhenomenon = function (phenomenon, role) {
     console.log("User has no verification rights!");
     phenomenon.validation = false;
   }
-  var senphurl = 'http://www.opensensemap.org/SENPH#';
+  var senphurl = 'http://sensor.wiki/#';
 
   // DELETE {...} INSERT{...}
   var bindingsText = 'INSERT DATA {' +
