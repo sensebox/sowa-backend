@@ -68,7 +68,7 @@ router.get('/sensor-history/:iri', function (req, res) {
 //   const start = async () => {
 //     await asyncForEach(elements, async (selem) => {
 //       var elem = await SensorsController.getSensorElement(selem.selement.value);
-//       // elem[0][phenoShort] = elem[0].phenomena.value.slice(34);
+//       // elem[0][phenoShort] = elem[0].phenomena.value.slice(senphurl.length);
 //       console.log(elem);
 //       firstReq.push({sensorElements: elem[0]});
 //     });

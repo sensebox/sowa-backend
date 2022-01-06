@@ -172,7 +172,7 @@ module.exports.getSensorHistory = function (iri) {
 
 //get a single sensorelment identified by its iri @returns phenomena it can measueres and accuracy values
 module.exports.getSensorElement = function (iri) {
-  iri = iri.slice(34);
+  iri = iri.slice(senphurl.length);
   return client
     .query(SPARQL`
     Select Distinct ?sensorElement ?phenomenon ?unit ?accVal
@@ -405,7 +405,7 @@ module.exports.editSensor = function (sensor, role) {
   //   sensor.validation = false;
   // }
   sensor.sensorElement.forEach(element => {
-    element['uri'] = "sensorElement_" + sensor.uri + "_" + element.phenomenonUri.slice(34);
+    element['uri'] = "sensorElement_" + sensor.uri + "_" + element.phenomenonUri.slice(senphurl.length);
   })
 
   // DELETE {...} INSERT{...}
@@ -430,13 +430,13 @@ module.exports.editSensor = function (sensor, role) {
 
   sensor.device.forEach(element => {
     bindingsText = bindingsText.concat(
-      '?sensorURI s:isSensorOf s:' + element.deviceUri.slice(34) + '. '
+      '?sensorURI s:isSensorOf s:' + element.deviceUri.slice(senphurl.length) + '. '
     );
   });
 
   sensor.sensorElement.forEach(element => {
     var string = '?sensorURI s:hasElement s:' + element.uri + '. ' +
-      's:' + element.uri + ' s:canMeasure s:' + element.phenomenonUri.slice(34) + '. ' +
+      's:' + element.uri + ' s:canMeasure s:' + element.phenomenonUri.slice(senphurl.length) + '. ' +
       's:' + element.uri + ' s:hasAccuracyUnit <' + element.unitOfAccuracy + '>. ' +
       's:' + element.uri + ' s:accuracyValue ' + JSON.stringify(element.accuracyValue) + '.';
     bindingsText = bindingsText.concat(string)
@@ -508,7 +508,7 @@ module.exports.createHistorySensor = function (sensor, user) {
   // }
   var senphurl = 'http://sensor.wiki/SENPH#';
   sensor.sensorElement.forEach(element => {
-    element['uri'] = "sensorElement_" + sensor.uri + "_" + element.phenomenonUri.slice(34) + '_' + sensor.dateTime;
+    element['uri'] = "sensorElement_" + sensor.uri + "_" + element.phenomenonUri.slice(senphurl.length) + '_' + sensor.dateTime;
   })
 
   // DELETE {...} INSERT{...}
@@ -533,13 +533,13 @@ module.exports.createHistorySensor = function (sensor, user) {
 
   sensor.device.forEach(element => {
     bindingsText = bindingsText.concat(
-      '?sensorURI s:isSensorOf s:' + element.deviceUri.slice(34) + '. '
+      '?sensorURI s:isSensorOf s:' + element.deviceUri.slice(senphurl.length) + '. '
     );
   });
 
   sensor.sensorElement.forEach(element => {
     var string = '?sensorURI s:hasElement s:' + element.uri + '. ' +
-      's:' + element.uri + ' s:canMeasure s:' + element.phenomenonUri.slice(34) + '. ' +
+      's:' + element.uri + ' s:canMeasure s:' + element.phenomenonUri.slice(senphurl.length) + '. ' +
       's:' + element.uri + ' s:hasAccuracyUnit <' + element.unitOfAccuracy + '>. ' +
       's:' + element.uri + ' s:accuracyValue ' + JSON.stringify(element.accuracyValue) + '.';
     bindingsText = bindingsText.concat(string)
@@ -574,7 +574,7 @@ module.exports.createNewSensor = function (sensor, role) {
   // }
   var senphurl = 'http://sensor.wiki/SENPH#';
   sensor.sensorElement.forEach(element => {
-    element['uri'] = "sensorElement_" + sensor.uri + "_" + element.phenomenonUri.slice(34);
+    element['uri'] = "sensorElement_" + sensor.uri + "_" + element.phenomenonUri.slice(senphurl.length);
   })
 
   // DELETE {...} INSERT{...}
@@ -597,13 +597,13 @@ module.exports.createNewSensor = function (sensor, role) {
 
   sensor.device.forEach(element => {
     bindingsText = bindingsText.concat(
-      '?sensorURI s:isSensorOf s:' + element.deviceUri.slice(34) + '. '
+      '?sensorURI s:isSensorOf s:' + element.deviceUri.slice(senphurl.length) + '. '
     );
   });
 
   sensor.sensorElement.forEach(element => {
     var string = '?sensorURI s:hasElement s:' + element.uri + '. ' +
-      's:' + element.uri + ' s:canMeasure s:' + element.phenomenonUri.slice(34) + '. ' +
+      's:' + element.uri + ' s:canMeasure s:' + element.phenomenonUri.slice(senphurl.length) + '. ' +
       's:' + element.uri + ' s:hasAccuracyUnit <' + element.unitOfAccuracy + '>. ' +
       's:' + element.uri + ' s:accuracyValue ' + JSON.stringify(element.accuracyValue) + '.';
     bindingsText = bindingsText.concat(string)
@@ -657,7 +657,7 @@ module.exports.createNewSensor = function (sensor, role) {
 //   // create insert ;line for each domain 
 //   phenomenon.domain.forEach(element => {
 //     console.log(element);
-//     var string = '?phenomenonURI s:hasDomain s:' + element.domainUri.slice(34) + '. ';
+//     var string = '?phenomenonURI s:hasDomain s:' + element.domainUri.slice(senphurl.length) + '. ';
 //     bindingsText = bindingsText.concat(string)
 //   });
 //   // add WHERE statement 

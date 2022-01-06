@@ -417,7 +417,7 @@ module.exports.editPhenomenon = function (phenomenon, role) {
   // create insert ;line for each domain 
   phenomenon.domain.forEach(element => {
     bindingsText = bindingsText.concat(
-      '?phenomenonURI s:hasDomain s:' + element.domainUri.slice(34) + '. '
+      '?phenomenonURI s:hasDomain s:' + element.domainUri.slice(senphurl.length) + '. '
     );
   });
   // add WHERE statement 
@@ -499,7 +499,7 @@ module.exports.createHistoryPhenomenon = function (phenomenon, user) {
   // create insert ;line for each domain 
   phenomenon.domain.forEach(element => {
     bindingsText = bindingsText.concat(
-      '?phenomenonURI s:hasDomain s:' + element.domainUri.slice(34) + '. '
+      '?phenomenonURI s:hasDomain s:' + element.domainUri.slice(senphurl.length) + '. '
     );
   });
   bindingsText = bindingsText.concat('}')
@@ -553,7 +553,7 @@ module.exports.createNewPhenomenon = function (phenomenon, role) {
   // create insert ;line for each domain 
   phenomenon.domain.forEach(element => {
     bindingsText = bindingsText.concat(
-      '?phenomenonURI s:hasDomain s:' + element.domainUri.slice(34) + '. '
+      '?phenomenonURI s:hasDomain s:' + element.domainUri.slice(senphurl.length) + '. '
     );
   });
   bindingsText = bindingsText.concat('}')

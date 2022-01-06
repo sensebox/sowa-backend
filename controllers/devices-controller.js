@@ -396,7 +396,7 @@ module.exports.editDevice = function (device, role) {
 
   // create insert ;line for each sensor 
   device.sensor.forEach(element => {
-    var string = '?deviceURI s:hasSensor s:' + element.sensorUri.slice(34) + '. ';
+    var string = '?deviceURI s:hasSensor s:' + element.sensorUri.slice(senphurl.length) + '. ';
     bindingsText = bindingsText.concat(string)
   });
   device.label.forEach(element => {
@@ -471,7 +471,7 @@ module.exports.createHistoryDevice = function (device, user) {
 
   // create insert ;line for each sensor 
   device.sensor.forEach(element => {
-    var string = '?deviceURI s:hasSensor s:' + element.sensorUri.slice(34) + '. ';
+    var string = '?deviceURI s:hasSensor s:' + element.sensorUri.slice(senphurl.length) + '. ';
     bindingsText = bindingsText.concat(string)
   });
   device.label.forEach(element => {
@@ -521,7 +521,7 @@ module.exports.createNewDevice = function (device, role) {
 
   // create insert ;line for each sensor 
   device.sensor.forEach(element => {
-    var string = '?deviceURI s:hasSensor s:' + element.sensorUri.slice(34) + '. ';
+    var string = '?deviceURI s:hasSensor s:' + element.sensorUri.slice(senphurl.length) + '. ';
     bindingsText = bindingsText.concat(string)
   });
   device.label.forEach(element => {
@@ -572,7 +572,7 @@ module.exports.convertDevicesToJson = function (devices){
 //     (device.contact ? '?deviceURI s:hasContact ?contact.' : '');
 //   // create insert ;line for each sensor 
 //   device.sensor.forEach(element => {
-//     var string = '?deviceURI s:hasSensor s:' + element.sensorUri.slice(34) + '. ';
+//     var string = '?deviceURI s:hasSensor s:' + element.sensorUri.slice(senphurl.length) + '. ';
 //     bindingsText = bindingsText.concat(string)
 //   });
 //   // add WHERE statement 

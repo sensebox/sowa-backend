@@ -220,7 +220,7 @@ module.exports.editPhenomenon = function (phenomenon) {
   // create insert ;line for each domain 
   phenomenon.domain.forEach(element => {
     console.log(element);
-    var string = '?phenomenonURI s:hasDomain s:' + element.domainUri.slice(34) + '. ';
+    var string = '?phenomenonURI s:hasDomain s:' + element.domainUri.slice(senphurl.length) + '. ';
     bindingsText = bindingsText.concat(string)
   });
   // add WHERE statement 
@@ -323,7 +323,7 @@ module.exports.getSensor = function (iri) {
 
 //get a single sensorelment identified by its iri @returns phenomena it can measueres and accuracy values
 module.exports.getSensorElement = function (iri) {
-  iri = iri.slice(34);
+  iri = iri.slice(senphurl.length);
   return client
     .query(SPARQL`
     Select Distinct ?phenomena ?unit ?accVal
@@ -636,7 +636,7 @@ module.exports.editDevice = function (device) {
     (device.contact ? '?deviceURI s:hasContact ?contact.' : '');
   // create insert ;line for each sensor 
   device.sensor.forEach(element => {
-    var string = '?deviceURI s:hasSensor s:' + element.sensorUri.slice(34) + '. ';
+    var string = '?deviceURI s:hasSensor s:' + element.sensorUri.slice(senphurl.length) + '. ';
     bindingsText = bindingsText.concat(string)
   });
   // add WHERE statement 
