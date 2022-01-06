@@ -26,7 +26,7 @@ const client = new SparqlClient(endpoint, {
   .register({
     owl: 'http://www.w3.org/2002/07/owl#',
     rdfs: 'http://www.w3.org/2000/01/rdf-schema#',
-    s: 'http://sensor.wiki/#',
+    s: 'http://sensor.wiki/SENPH#',
     uo: 'http://purl.obolibrary.org/obo/',
     rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
     xsd: 'http://www.w3.org/2001/XMLSchema#'
@@ -39,7 +39,7 @@ const historyClient = new SparqlClient(history_endpoint, {
   .register({
     owl: 'http://www.w3.org/2002/07/owl#',
     rdfs: 'http://www.w3.org/2000/01/rdf-schema#',
-    s: 'http://sensor.wiki/#',
+    s: 'http://sensor.wiki/SENPH#',
     uo: 'http://purl.obolibrary.org/obo/',
     rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
     xsd: 'http://www.w3.org/2001/XMLSchema#'
@@ -73,7 +73,7 @@ module.exports.getDomains = function () {
 
 //get history of a domain
 module.exports.getDomainHistory = function (iri) {
-  var senphurl = 'http://sensor.wiki/#';
+  var senphurl = 'http://sensor.wiki/SENPH#';
   var bindingsText = `
   SELECT ?domain ?dateTime ?user
                      WHERE {
@@ -105,7 +105,7 @@ module.exports.getDomainHistory = function (iri) {
 
 //get a single domain identified by its iri @returns the domain's labels, descriptions and phenomena it is domain of
 module.exports.getDomain = function (iri) {
-  var senphurl = 'http://sensor.wiki/#';
+  var senphurl = 'http://sensor.wiki/SENPH#';
 
   return client
     .query(SPARQL`
@@ -154,7 +154,7 @@ module.exports.getDomain = function (iri) {
 
 //get a single domain identified by its iri @returns the domain's labels, descriptions and phenomena it is domain of
 module.exports.getHistoricDomain = function (iri) {
-  var senphurl = 'http://sensor.wiki/#';
+  var senphurl = 'http://sensor.wiki/SENPH#';
 
   return historyClient
     .query(SPARQL`
@@ -224,7 +224,7 @@ module.exports.getHistoricDomain = function (iri) {
 
 //edit a domain
 module.exports.editDomain = function (domain, role) {
-  var senphurl = 'http://sensor.wiki/#';
+  var senphurl = 'http://sensor.wiki/SENPH#';
   console.log(domain);
   if (role != ('expert' || 'admin')) {
     console.log("User has no verification rights!");
@@ -268,7 +268,7 @@ module.exports.editDomain = function (domain, role) {
 }
 
 module.exports.deleteDomain = function (domain, role) {
-  var senphurl = 'http://sensor.wiki/#';
+  var senphurl = 'http://sensor.wiki/SENPH#';
     var bindingsText =
       ` DELETE {?a ?b ?c}
     WHERE { ?a ?b ?c .
@@ -293,7 +293,7 @@ module.exports.createHistoryDomain = function (domain, user) {
     console.log("User has no verification rights!");
     domain.validation = false;
   }
-  var senphurl = 'http://sensor.wiki/#';
+  var senphurl = 'http://sensor.wiki/SENPH#';
 
   // create SPARQL Query: 
   var bindingsText = 'INSERT DATA {' +
@@ -342,7 +342,7 @@ module.exports.createNewDomain = function (domain, role) {
     console.log("User has no verification rights!");
     domain.validation = false;
   }
-  var senphurl = 'http://sensor.wiki/#';
+  var senphurl = 'http://sensor.wiki/SENPH#';
 
   // create SPARQL Query: 
   var bindingsText = 'INSERT DATA {' +
