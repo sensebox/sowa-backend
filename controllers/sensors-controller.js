@@ -27,7 +27,7 @@ const client = new SparqlClient(endpoint, {
   .register({
     owl: 'http://www.w3.org/2002/07/owl#',
     rdfs: 'http://www.w3.org/2000/01/rdf-schema#',
-    s: 'http://www.opensensemap.org/SENPH#',
+    s: 'http://sensors.wiki/SENPH#',
     uo: 'http://purl.obolibrary.org/obo/',
     rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
     xsd: 'http://www.w3.org/2001/XMLSchema#'
@@ -40,7 +40,7 @@ const historyClient = new SparqlClient(history_endpoint, {
   .register({
     owl: 'http://www.w3.org/2002/07/owl#',
     rdfs: 'http://www.w3.org/2000/01/rdf-schema#',
-    s: 'http://www.opensensemap.org/SENPH#',
+    s: 'http://sensors.wiki/SENPH#',
     uo: 'http://purl.obolibrary.org/obo/',
     rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
     xsd: 'http://www.w3.org/2001/XMLSchema#'
@@ -73,7 +73,7 @@ module.exports.getSensors = function () {
 
 //get history of a sensors
 module.exports.getSensorHistory = function (iri) {
-  var senphurl = 'http://www.opensensemap.org/SENPH#';
+  var senphurl = 'http://sensors.wiki/SENPH#';
   var bindingsText = `
   SELECT ?sensor ?dateTime ?user
                       WHERE {
@@ -172,7 +172,7 @@ module.exports.getSensorHistory = function (iri) {
 
 //get a single sensorelment identified by its iri @returns phenomena it can measueres and accuracy values
 module.exports.getSensorElement = function (iri) {
-  iri = iri.slice(34);
+  iri = iri.slice(senphurl.length);
   return client
     .query(SPARQL`
     Select Distinct ?sensorElement ?phenomenon ?unit ?accVal
@@ -199,7 +199,7 @@ console.log("Oh no, error!")
 
 //get a single sensor identified by its iri @returns the sensor's labels, descriptions, datasheet, image, lifeperiod, manufacturer, price, phenomena it can measueres and accuracy values, devices it is part of
 module.exports.getSensor = function (iri) {
-  var senphurl = 'http://www.opensensemap.org/SENPH#';
+  var senphurl = 'http://sensors.wiki/SENPH#';
 
   var bindingsText = `Select Distinct ?label ?description ?manufacturer ?price ?datasheet ?lifeperiod ?image ?markdown ?device ?deviceLabel ?sensorElement ?phenomenon ?unit ?accVal ?validation
   WHERE {   
@@ -279,7 +279,7 @@ ORDER BY ?phenomenon ?device ?sensorElement`;
 
 //get a single historic sensor entry identified by its iri @returns the sensor's labels, descriptions, datasheet, image, lifeperiod, manufacturer, price, phenomena it can measueres and accuracy values, devices it is part of
 module.exports.getHistoricSensor = function (iri) {
-  var senphurl = 'http://www.opensensemap.org/SENPH#';
+  var senphurl = 'http://sensors.wiki/SENPH#';
 
   var bindingsText = `Select Distinct ?label ?description  ?manufacturer ?price ?datasheet  ?lifeperiod ?image ?device ?deviceLabel ?sensorElement ?phenomenon  ?unit ?accVal ?validation
   WHERE {   
@@ -356,7 +356,7 @@ ORDER BY ?phenomenon ?device ?sensorElement`;
 
 //update/add a new sensor @inputs required: label +language, description + language, a phenomenon that is meaured with according accuracy value; optional: manufacturer, data sheet, price in Euro, life period (currently not available because of datatype issue) and an image  
 // module.exports.updateSensor = function (sensor) {
-//   var senphurl = 'http://www.opensensemap.org/SENPH#';
+//   var senphurl = 'http://sensors.wiki/SENPH#';
 //   var sElem = sensor.sensorElement[0].phenomenon + "_" + sensor.name.label;
 //   if (sensor.image == undefined) { sensor.image = "" }
 //   var bindingsText = 'INSERT DATA {' +
@@ -399,13 +399,13 @@ ORDER BY ?phenomenon ?device ?sensorElement`;
 
 
 module.exports.editSensor = function (sensor, role) {
-  var senphurl = 'http://www.opensensemap.org/SENPH#';
+  var senphurl = 'http://sensors.wiki/SENPH#';
   // if (role != 'expert' && role != 'admin') {
   //   console.log("User has no verification rights!");
   //   sensor.validation = false;
   // }
   sensor.sensorElement.forEach(element => {
-    element['uri'] = "sensorElement_" + sensor.uri + "_" + element.phenomenonUri.slice(34);
+    element['uri'] = "sensorElement_" + sensor.uri + "_" + element.phenomenonUri.slice(senphurl.length);
   })
 
   // DELETE {...} INSERT{...}
@@ -430,13 +430,13 @@ module.exports.editSensor = function (sensor, role) {
 
   sensor.device.forEach(element => {
     bindingsText = bindingsText.concat(
-      '?sensorURI s:isSensorOf s:' + element.deviceUri.slice(34) + '. '
+      '?sensorURI s:isSensorOf s:' + element.deviceUri.slice(senphurl.length) + '. '
     );
   });
 
   sensor.sensorElement.forEach(element => {
     var string = '?sensorURI s:hasElement s:' + element.uri + '. ' +
-      's:' + element.uri + ' s:canMeasure s:' + element.phenomenonUri.slice(34) + '. ' +
+      's:' + element.uri + ' s:canMeasure s:' + element.phenomenonUri.slice(senphurl.length) + '. ' +
       's:' + element.uri + ' s:hasAccuracyUnit <' + element.unitOfAccuracy + '>. ' +
       's:' + element.uri + ' s:accuracyValue ' + JSON.stringify(element.accuracyValue) + '.';
     bindingsText = bindingsText.concat(string)
@@ -475,7 +475,7 @@ module.exports.editSensor = function (sensor, role) {
 }
 
 module.exports.deleteSensor = function (sensor, role) {
-  var senphurl = 'http://www.opensensemap.org/SENPH#';
+  var senphurl = 'http://sensors.wiki/SENPH#';
   // if (role != 'expert' && role != 'user') {
   //   console.log("User has no verification rights!");
   // }
@@ -506,9 +506,9 @@ module.exports.createHistorySensor = function (sensor, user) {
   //   console.log("User has no verification rights!");
   //   sensor.validation = false;
   // }
-  var senphurl = 'http://www.opensensemap.org/SENPH#';
+  var senphurl = 'http://sensors.wiki/SENPH#';
   sensor.sensorElement.forEach(element => {
-    element['uri'] = "sensorElement_" + sensor.uri + "_" + element.phenomenonUri.slice(34) + '_' + sensor.dateTime;
+    element['uri'] = "sensorElement_" + sensor.uri + "_" + element.phenomenonUri.slice(senphurl.length) + '_' + sensor.dateTime;
   })
 
   // DELETE {...} INSERT{...}
@@ -533,13 +533,13 @@ module.exports.createHistorySensor = function (sensor, user) {
 
   sensor.device.forEach(element => {
     bindingsText = bindingsText.concat(
-      '?sensorURI s:isSensorOf s:' + element.deviceUri.slice(34) + '. '
+      '?sensorURI s:isSensorOf s:' + element.deviceUri.slice(senphurl.length) + '. '
     );
   });
 
   sensor.sensorElement.forEach(element => {
     var string = '?sensorURI s:hasElement s:' + element.uri + '. ' +
-      's:' + element.uri + ' s:canMeasure s:' + element.phenomenonUri.slice(34) + '. ' +
+      's:' + element.uri + ' s:canMeasure s:' + element.phenomenonUri.slice(senphurl.length) + '. ' +
       's:' + element.uri + ' s:hasAccuracyUnit <' + element.unitOfAccuracy + '>. ' +
       's:' + element.uri + ' s:accuracyValue ' + JSON.stringify(element.accuracyValue) + '.';
     bindingsText = bindingsText.concat(string)
@@ -572,9 +572,9 @@ module.exports.createNewSensor = function (sensor, role) {
   //   console.log("User has no verification rights!");
   //   sensor.validation = false;
   // }
-  var senphurl = 'http://www.opensensemap.org/SENPH#';
+  var senphurl = 'http://sensors.wiki/SENPH#';
   sensor.sensorElement.forEach(element => {
-    element['uri'] = "sensorElement_" + sensor.uri + "_" + element.phenomenonUri.slice(34);
+    element['uri'] = "sensorElement_" + sensor.uri + "_" + element.phenomenonUri.slice(senphurl.length);
   })
 
   // DELETE {...} INSERT{...}
@@ -597,13 +597,13 @@ module.exports.createNewSensor = function (sensor, role) {
 
   sensor.device.forEach(element => {
     bindingsText = bindingsText.concat(
-      '?sensorURI s:isSensorOf s:' + element.deviceUri.slice(34) + '. '
+      '?sensorURI s:isSensorOf s:' + element.deviceUri.slice(senphurl.length) + '. '
     );
   });
 
   sensor.sensorElement.forEach(element => {
     var string = '?sensorURI s:hasElement s:' + element.uri + '. ' +
-      's:' + element.uri + ' s:canMeasure s:' + element.phenomenonUri.slice(34) + '. ' +
+      's:' + element.uri + ' s:canMeasure s:' + element.phenomenonUri.slice(senphurl.length) + '. ' +
       's:' + element.uri + ' s:hasAccuracyUnit <' + element.unitOfAccuracy + '>. ' +
       's:' + element.uri + ' s:accuracyValue ' + JSON.stringify(element.accuracyValue) + '.';
     bindingsText = bindingsText.concat(string)
@@ -632,7 +632,7 @@ module.exports.createNewSensor = function (sensor, role) {
 
 // //get a single device identified by its iri @returns the device's labels, descriptions, website, image, contact and compatible sensors
 // module.exports.editPhenomenon = function (phenomenon) {
-//   var senphurl = 'http://www.opensensemap.org/SENPH#';
+//   var senphurl = 'http://sensors.wiki/SENPH#';
 //   console.log(phenomenon);
 
 //   // create SPARQL Query: 
@@ -657,7 +657,7 @@ module.exports.createNewSensor = function (sensor, role) {
 //   // create insert ;line for each domain 
 //   phenomenon.domain.forEach(element => {
 //     console.log(element);
-//     var string = '?phenomenonURI s:hasDomain s:' + element.domainUri.slice(34) + '. ';
+//     var string = '?phenomenonURI s:hasDomain s:' + element.domainUri.slice(senphurl.length) + '. ';
 //     bindingsText = bindingsText.concat(string)
 //   });
 //   // add WHERE statement 
