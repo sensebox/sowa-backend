@@ -44,6 +44,11 @@ var Device = class Device {
                     break;
                 }
 
+                case "markdown": {
+                    Object.assign(this, element);
+                    break;
+                }
+
                 case "contact": {
                     Object.assign(this, element);
                     break;

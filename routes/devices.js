@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 //var bodyParser = require("body-parser");
+var Filter = require('../middleware/filter');
 
 const DevicesController = require('../controllers/devices-controller');
 const SensorsController = require('../controllers/sensors-controller');
@@ -25,6 +26,9 @@ router.get('/all', function (req, res) {
 router.get('/device/:iri', function (req, res) {
   DevicesController.getDevice(req.params.iri)
     .then(data => {
+      if (req.query.lang) {
+        data = Filter.filterData(data, req.query.lang);
+      }
       if(req.query.format === 'json'){
         return res.json(DevicesController.convertDeviceToJson(data))
       } else {

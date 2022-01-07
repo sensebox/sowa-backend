@@ -37,8 +37,12 @@ const Phenomenon = class {
         }
 
         case "rov": {
-          console.log("ELEMENT", element)
           this.rovs.push(element);
+          break;
+        }
+
+        case "markdown": {
+          Object.assign(this, element);
           break;
         }
 

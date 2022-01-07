@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
-//var bodyParser = require("body-parser");
+
+var Filter = require('../middleware/filter');
 
 const SensorsController = require('../controllers/sensors-controller');
 /* GET users listing. */
@@ -13,7 +14,7 @@ router.get('/', function (req, res, next) {
 router.get('/all', function (req, res) {
   SensorsController.getSensors()
     .then(data => {
-      if(req.query.format === 'json'){
+      if (req.query.format === 'json') {
         res.json(SensorsController.convertSensorsToJson(data));
       } else {
         res.json(data)
@@ -39,11 +40,14 @@ router.get('/all', function (req, res) {
 //     }
 //   });
 
-router.get('/sensor/:iri', function (req, res) {
+router.get('/sensor/:iri', function (req, res, next) {
   console.log(req.params.iri);
   SensorsController.getSensor(req.params.iri)
-    .then(data =>  {
-      if(req.query.format === 'json'){
+    .then(data => {
+      if (req.query.lang) {
+        data = Filter.filterData(data, req.query.lang);
+      }
+      if (req.query.format === 'json') {
         res.json(SensorsController.convertSensorToJson(data));
       } else {
         res.json(data)
