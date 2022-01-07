@@ -19,6 +19,7 @@ var Devices = class Devices {
         this.device = resDevice.device;
         this.deviceLabel = resDevice.label;
         this.validation = resDevice.validation;
+        this.image = resDevice.image;
     }
 }
 
