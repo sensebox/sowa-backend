@@ -24,7 +24,7 @@ const client = new SparqlClient(endpoint, {
   .register({
     owl: 'http://www.w3.org/2002/07/owl#',
     rdfs: 'http://www.w3.org/2000/01/rdf-schema#',
-    s: 'http://sensor.wiki/SENPH#',
+    s: 'http://sensors.wiki/SENPH#',
     uo: 'http://purl.obolibrary.org/obo/',
     rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
     xsd: 'http://www.w3.org/2001/XMLSchema#'
@@ -37,7 +37,7 @@ const historyClient = new SparqlClient(history_endpoint, {
   .register({
     owl: 'http://www.w3.org/2002/07/owl#',
     rdfs: 'http://www.w3.org/2000/01/rdf-schema#',
-    s: 'http://sensor.wiki/SENPH#',
+    s: 'http://sensors.wiki/SENPH#',
     uo: 'http://purl.obolibrary.org/obo/',
     rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
     xsd: 'http://www.w3.org/2001/XMLSchema#'
@@ -72,7 +72,7 @@ module.exports.getDevices = function () {
 
 //get history of a device
 module.exports.getDeviceHistory = function (iri) {
-  var senphurl = 'http://sensor.wiki/SENPH#';
+  var senphurl = 'http://sensors.wiki/SENPH#';
   var bindingsText = `
   SELECT ?device ?dateTime ?user
                     WHERE {
@@ -103,7 +103,7 @@ module.exports.getDeviceHistory = function (iri) {
 
 //get a single device identified by its iri @returns the device's labels, descriptions, website, image, contact and compatible sensors
 module.exports.getDevice = function (iri) {
-  var senphurl = 'http://sensor.wiki/SENPH#';
+  var senphurl = 'http://sensors.wiki/SENPH#';
 
   return client
     .query(SPARQL`
@@ -167,7 +167,7 @@ module.exports.getDevice = function (iri) {
 
 //get a single historic device version identified by its iri @returns the device's labels, descriptions, website, image, contact and compatible sensors
 module.exports.getHistoricDevice = function (iri) {
-  var senphurl = 'http://sensor.wiki/SENPH#';
+  var senphurl = 'http://sensors.wiki/SENPH#';
 
   return historyClient
     .query(SPARQL`
@@ -226,7 +226,7 @@ module.exports.getHistoricDevice = function (iri) {
 
 
 module.exports.getSensorsOfDevice = function (iri) {
-  var senphurl = 'http://sensor.wiki/SENPH#';
+  var senphurl = 'http://sensors.wiki/SENPH#';
   console.log("IRI",iri);
   return client
     .query(SPARQL`
@@ -271,7 +271,7 @@ module.exports.getSensorsOfDevice = function (iri) {
 
 //TODO: maybe move this function to sensors
 module.exports.getAllSensorsOfAllDevices = function () {
-  var senphurl = 'http://sensor.wiki/SENPH#';
+  var senphurl = 'http://sensors.wiki/SENPH#';
   return client
     .query(SPARQL`
                      SELECT ?sensor ?label ?description ?sensorElement
@@ -316,7 +316,7 @@ module.exports.getAllSensorsOfAllDevices = function () {
 module.exports.getSensorElement = function (iri) {
   console.log(iri)
   //still missing: ?domains rdfs:label ?domainsLabel.
-  // var senphurl = 'http://sensor.wiki/SENPH#';
+  // var senphurl = 'http://sensors.wiki/SENPH#';
 
   var bindingsText = `
   Select Distinct ?phenomenon ?unit ?accuracy
@@ -345,7 +345,7 @@ module.exports.getSensorElement = function (iri) {
 
 // //update/add a new device @inputs required: label + language, description + language; optional: website, image, contact, compatible sensor
 // module.exports.updateDevice = function (device) {
-//   var senphurl = 'http://sensor.wiki/SENPH#';
+//   var senphurl = 'http://sensors.wiki/SENPH#';
 //   console.log(device);
 //   var bindingsText = 'INSERT DATA {' +
 //     '?deviceURI rdf:type     s:device.' +
@@ -377,7 +377,7 @@ module.exports.getSensorElement = function (iri) {
 
 //edit a device
 module.exports.editDevice = function (device, role) {
-  var senphurl = 'http://sensor.wiki/SENPH#';
+  var senphurl = 'http://sensors.wiki/SENPH#';
   console.log(device);
   if (role != 'expert' && role != 'admin') {
     console.log("User has no verification rights!");
@@ -424,7 +424,7 @@ module.exports.editDevice = function (device, role) {
 }
 
 module.exports.deleteDevice = function (device, role) {
-  var senphurl = 'http://sensor.wiki/SENPH#';
+  var senphurl = 'http://sensors.wiki/SENPH#';
   if (role != 'expert' && role != 'admin') {
     console.log("User has no verification rights!");
   }
@@ -455,7 +455,7 @@ module.exports.createHistoryDevice = function (device, user) {
     console.log("User has no verification rights!");
     device.validation = false;
   }
-  var senphurl = 'http://sensor.wiki/SENPH#';
+  var senphurl = 'http://sensors.wiki/SENPH#';
 
   // create SPARQL Query: 
   var bindingsText = 'INSERT DATA {' +
@@ -507,7 +507,7 @@ module.exports.createNewDevice = function (device, role) {
     console.log("User has no verification rights!");
     device.validation = false;
   }
-  var senphurl = 'http://sensor.wiki/SENPH#';
+  var senphurl = 'http://sensors.wiki/SENPH#';
 
   // create SPARQL Query: 
   var bindingsText = 'INSERT DATA {' +
@@ -559,7 +559,7 @@ module.exports.convertDevicesToJson = function (devices){
 
 // //get a single device identified by its iri @returns the device's labels, descriptions, website, image, contact and compatible sensors
 // module.exports.addDevice = function (device) {
-//   var senphurl = 'http://sensor.wiki/SENPH#';
+//   var senphurl = 'http://sensors.wiki/SENPH#';
 //   console.log(device);
 
 //   // create SPARQL Query: 
