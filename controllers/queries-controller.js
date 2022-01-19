@@ -750,16 +750,20 @@ module.exports.getUnitsForPhenomenon = function (iri) {
 }
 
 module.exports.getUnits = function (iri) {
-  return unitClient
+  return localUnitClient
     .query(SPARQL`
     SELECT DISTINCT ?y ?label
     WHERE
     {
-    ?y <http://www.geneontology.org/formats/oboInOwl#inSubset>  <http://purl.obolibrary.org/obo/uo#unit_slim>.
-    ?y rdfs:label ?label
+    ?y <oboInOwl:hasExactSynonym>  ?z.
+    ?y rdfs:label ?label.
+    FILTER NOT EXISTS {
+  		?q rdfs:subClassOf ?y .
+    }
+
     }`)
     .execute()
-    .then(res => res.results.bindings)
+    .then(res => {console.log(res); return res.results.bindings})
     .catch(function (error) {
       console.dir(arguments, { depth: null })
       console.log("Oh no, error!")
@@ -767,16 +771,37 @@ module.exports.getUnits = function (iri) {
     });
 }
 
+// module.exports.getUnitLabel = function (iri) {
+//   console.log(iri)
+//   return localUnitClient
+//     .query(SPARQL`
+//     SELECT DISTINCT ?label
+//     from <http://purl.obolibrary.org/obo/merged/UO>
+//     WHERE
+//       { 
+//         ${{ uo: iri }} <http://www.geneontology.org/formats/oboInOwl#inSubset>  <http://purl.obolibrary.org/obo/uo#unit_slim>.
+//         ${{ uo: iri }} rdfs:label ?label
+//     }`)
+//     .execute()
+//     .then(res => res.results.bindings)
+//     .catch(function (error) {
+//       console.log(error.httpStatus);
+//       console.log(error);
+//     });
+// }
 module.exports.getUnitLabel = function (iri) {
   console.log(iri)
-  return unitClient
+  return localUnitClient
     .query(SPARQL`
     SELECT DISTINCT ?label
     from <http://purl.obolibrary.org/obo/merged/UO>
     WHERE
       { 
-        ${{ uo: iri }} <http://www.geneontology.org/formats/oboInOwl#inSubset>  <http://purl.obolibrary.org/obo/uo#unit_slim>.
-        ${{ uo: iri }} rdfs:label ?label
+        ${{ uo: iri }} <oboInOwl:hasExactSynonym>  ?z.
+        ${{ uo: iri }} rdfs:label ?label.
+        FILTER NOT EXISTS {
+          ?q rdfs:subClassOf ${{ uo: iri }} .
+        }
     }`)
     .execute()
     .then(res => res.results.bindings)
