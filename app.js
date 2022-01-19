@@ -17,16 +17,16 @@ var cors = require('cors')
 
 var app = express();
 
-var whitelist = ['http://api.sensors.wiki', 'https://api.sensors.wiki', 'https://sensors.wiki', '*']
-var corsOptions = {
-  origin: function (origin, callback) { 
-    if (whitelist.indexOf(origin) !== -1 || whitelist.indexOf('*') !== -1) {
-      callback(null, true)
-    } else {
-      callback(new Error('Not allowed by CORS'))
-    }
-  }
-}
+// var whitelist = ['http://api.sensors.wiki', 'https://api.sensors.wiki', 'https://sensors.wiki', '*']
+// var corsOptions = {
+//   origin: function (origin, callback) { 
+//     if (whitelist.indexOf(origin) !== -1 || whitelist.indexOf('*') !== -1) {
+//       callback(null, true)
+//     } else {
+//       callback(new Error('Not allowed by CORS'))
+//     }
+//   }
+// }
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -40,9 +40,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.use('/*', cors(corsOptions), function (req, res, next) {
-  next();
-});
+// app.use('/*', cors(corsOptions), function (req, res, next) {
+//   next();
+// });
 
 app.post('*', AuthController.isAuthenticated, function (req, res, next) {
   console.log("LOCALS", res.locals.user.role);
