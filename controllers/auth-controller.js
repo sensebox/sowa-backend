@@ -1,7 +1,7 @@
 var request = require('request');
 
 const AUTH_API_URL = 'https://api.testing.opensensemap.org/'
- 
+
 module.exports.isAuthenticated = async function isAuthenticated(req, res, next){
   const token = req.headers.authorization;
   const options = {

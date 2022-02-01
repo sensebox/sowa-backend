@@ -10,17 +10,49 @@ router.get('/', function (req, res, next) {
   res.send('respond with a resource');
 });
 
+const prisma = require('../lib/prisma')
 
 /* ---------- All device funtions: -----------------*/
-router.get('/all', function (req, res) {
-  DevicesController.getDevices()
-    .then(data => {
-      if(req.query.format === 'json'){
-        return res.json(DevicesController.convertDevicesToJson(data))
-      } else {
-        return res.json(data);
+router.get('/all', async function (req, res) {
+  const languages = await prisma.language.findMany({
+    where: {
+      code: req.query.language || "en"
+    }
+  });
+  const result = await prisma.device.findMany({
+    select: {
+      description: true,
+      sensors: true,
+      markdown: true,
+      validation: true,
+      label: {
+        select: {
+          TranslationItem: {
+            select: {
+              text: true,
+              language: {
+                select: {
+                  code: true
+                }
+              }
+            },
+            where: {
+              languageId: languages[0].id
+            }
+          }
+        }
       }
-    })
+    }
+  });
+  return res.json(result);
+  // DevicesController.getDevices()
+  //   .then(data => {
+  //     if(req.query.format === 'json'){
+  //       return res.json(DevicesController.convertDevicesToJson(data))
+  //     } else {
+  //       return res.json(data);
+  //     }
+  //   })
 });
 
 router.get('/device/:iri', function (req, res) {
