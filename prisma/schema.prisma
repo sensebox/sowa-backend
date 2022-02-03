@@ -11,73 +11,108 @@ datasource db {
 }
 
 model Device {
-  id          Int           @id @default(autoincrement())
-  label       Translation[]
-  sensors     Sensor[]      @relation(references: [id])
-  description String?       @db.VarChar(4096)
-  markdown    String?       @db.VarChar(4096)
-  validation  Boolean       @default(false)
+  id            Int          @id @default(autoincrement())
+  label         Translation? @relation("labelDevice", fields: [labelId], references: [id])
+  description   Translation? @relation("descriptionDevice", fields: [descriptionId], references: [id])
+  markdown      Translation? @relation("markdownDevice", fields: [markdownId], references: [id])
+  sensors       Sensor[]     @relation(references: [id])
+  validation    Boolean      @default(false)
+  labelId       Int?         @unique
+  descriptionId Int?         @unique
+  markdownId    Int?         @unique
 }
 
 model Sensor {
-  id         Int          @id @default(autoincrement())
-  name       String       @db.VarChar(255)
-  devices    Device[]
-  phenomena  Phenomenon[]
-  validation Boolean      @default(false)
+  id            Int          @id @default(autoincrement())
+  label         Translation? @relation("labelSensor", fields: [labelId], references: [id])
+  description   Translation? @relation("descriptionSensor", fields: [descriptionId], references: [id])
+  devices       Device[]
+  elements      Element[]
+  manufacturer  String?
+  lifePeriod    Int?
+  validation    Boolean      @default(false)
+  labelId       Int?         @unique
+  descriptionId Int?         @unique
+}
+
+model Element {
+  id           Int        @id @default(autoincrement())
+  phenomena    Phenomenon @relation(fields: [phenomenonId], references: [id])
+  sensor       Sensor     @relation(fields: [sensorId], references: [id])
+  accuracy     Float?
+  accuracyUnit Unit?      @relation(fields: [unitId], references: [id])
+  sensorId     Int
+  phenomenonId Int
+  unitId       Int?
 }
 
 model Phenomenon {
-  id          Int             @id @default(autoincrement())
-  description String?         @db.VarChar(255)
-  label       String
-  markdown    String?         @db.VarChar(4096)
-  validation  Boolean         @default(false)
-  domains     Domain[]        @relation(references: [id])
-  sensors     Sensor[]        @relation(references: [id])
-  rov         RangeOfValues[]
+  id            Int             @id @default(autoincrement())
+  label         Translation?    @relation("labelPhenomenon", fields: [labelId], references: [id])
+  description   Translation?    @relation("descriptionPhenomenon", fields: [descriptionId], references: [id])
+  markdown      Translation?    @relation("markdownPhenomenon", fields: [markdownId], references: [id])
+  validation    Boolean         @default(false)
+  domains       Domain[]        @relation(references: [id])
+  rov           RangeOfValues[]
+  Element       Element[]
+  labelId       Int?            @unique
+  descriptionId Int?            @unique
+  markdownId    Int?            @unique
 }
 
 model RangeOfValues {
-  min          Int
-  max          Int
+  id           Int        @id @default(autoincrement())
+  min          Int?
+  max          Int?
   unit         Unit       @relation(fields: [unitId], references: [id])
   unitId       Int
   phenomenon   Phenomenon @relation(fields: [phenomenonId], references: [id])
   phenomenonId Int
-
-  @@unique([min, max])
 }
 
 model Unit {
-  id   Int             @id @default(autoincrement())
-  name String          @db.VarChar(255)
-  rov  RangeOfValues[]
+  id      Int             @id @default(autoincrement())
+  name    String          @db.VarChar(255)
+  rov     RangeOfValues[]
+  Element Element[]
 }
 
 model Domain {
-  id        Int          @id @default(autoincrement())
-  phenomena Phenomenon[]
+  id            Int          @id @default(autoincrement())
+  label         Translation? @relation("labelDomain", fields: [labelId], references: [id])
+  description   Translation? @relation("descriptionDomain", fields: [descriptionId], references: [id])
+  phenomenon    Phenomenon[]
+  labelId       Int?         @unique
+  descriptionId Int?         @unique
 }
 
 model Language {
-  id              Int               @id @default(autoincrement())
-  code            String            @db.VarChar(2)
+  code            String            @id @db.VarChar(2)
   TranslationItem TranslationItem[]
 }
 
 model Translation {
-  id              Int               @id @default(autoincrement())
-  Device          Device?           @relation(fields: [deviceId], references: [id])
-  deviceId        Int?
-  TranslationItem TranslationItem[]
+  id Int @id @default(autoincrement())
+
+  item                  TranslationItem[]
+  labelDevice           Device?           @relation("labelDevice")
+  descriptionDevice     Device?           @relation("descriptionDevice")
+  markdownDevice        Device?           @relation("markdownDevice")
+  labelSensor           Sensor?           @relation("labelSensor")
+  descriptionSensor     Sensor?           @relation("descriptionSensor")
+  labelPhenomeon        Phenomenon?       @relation("labelPhenomenon")
+  descriptionPhenomenon Phenomenon?       @relation("descriptionPhenomenon")
+  markdownPhenomenon    Phenomenon?       @relation("markdownPhenomenon")
+  labelDomain           Domain?           @relation("labelDomain")
+  descriptionDomain     Domain?           @relation("descriptionDomain")
 }
 
 model TranslationItem {
-  id            Int         @id @default(autoincrement())
-  translation   Translation @relation(fields: [translationId], references: [id])
+  language     Language @relation(fields: [languageCode], references: [code])
+  languageCode String
+  text         String   @db.VarChar(4096)
+
+  Translation   Translation @relation(fields: [translationId], references: [id])
   translationId Int
-  language      Language    @relation(fields: [languageId], references: [id])
-  languageId    Int
-  text          String      @db.VarChar(4096)
+  @@unique([translationId, languageCode])
 }

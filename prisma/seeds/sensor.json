@@ -1,0 +1,9 @@
+[{
+  "manufacturer": "Bosch",
+  "lifePeriod": 365,
+  "devices": {
+    "connect": {
+      "id": 1
+    }
+  }
+}]

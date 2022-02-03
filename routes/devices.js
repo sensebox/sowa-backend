@@ -14,45 +14,34 @@ const prisma = require('../lib/prisma')
 
 /* ---------- All device funtions: -----------------*/
 router.get('/all', async function (req, res) {
-  const languages = await prisma.language.findMany({
-    where: {
-      code: req.query.language || "en"
-    }
-  });
+
+  let languageFilter = true;
+  if (req.query.language) {
+    languageFilter = {
+      where: {
+        languageCode: req.query.language,
+      },
+    };
+  }
+
   const result = await prisma.device.findMany({
     select: {
-      description: true,
-      sensors: true,
       markdown: true,
-      validation: true,
       label: {
         select: {
-          TranslationItem: {
-            select: {
-              text: true,
-              language: {
-                select: {
-                  code: true
-                }
-              }
-            },
-            where: {
-              languageId: languages[0].id
-            }
-          }
-        }
-      }
-    }
+          item: languageFilter,
+        },
+      },
+      description: {
+        select: {
+          item: languageFilter,
+        },
+      },
+      sensors: true,
+      validation: true,
+    },
   });
   return res.json(result);
-  // DevicesController.getDevices()
-  //   .then(data => {
-  //     if(req.query.format === 'json'){
-  //       return res.json(DevicesController.convertDevicesToJson(data))
-  //     } else {
-  //       return res.json(data);
-  //     }
-  //   })
 });
 
 router.get('/device/:iri', function (req, res) {
