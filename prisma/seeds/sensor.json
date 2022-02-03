@@ -1,4 +1,5 @@
 [{
+  "id": 1,
   "manufacturer": "Bosch",
   "lifePeriod": 365,
   "devices": {

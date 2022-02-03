@@ -27,66 +27,119 @@ async function main() {
     console.log(`Created language with code: ${language.code}`)
   }
   for (const u of translationData) {
-    const translation = await prisma.translation.create({
-      data: u
+    const translation = await prisma.translation.upsert({
+      where: {
+        id: u.id
+      },
+      update: {
+        ...u,
+      },
+      create: u
     })
     console.log(`Created translation with id: ${translation.id}`)
   }
 
   for (const u of translationItemData) {
-    const translationItem = await prisma.translationItem.create({
-      data: u
-    })
+    const translationItem = await prisma.translationItem.upsert({
+      where: {
+        translationId_languageCode: {
+          translationId: u.translationId,
+          languageCode: u.languageCode
+        }
+      },
+      update: {
+        ...u
+      },
+      create: u
+    });
     console.log(`Created translationItem with id: ${translationItem.id}`)
   }
 
   for (const u of deviceData) {
-    const device = await prisma.device.create({
-      data: u
-    })
+    const device = await prisma.device.upsert({
+      where: {
+        id: u.id,
+      },
+      update: {
+        ...u
+      },
+      create: u,
+    });
     console.log(`Created device with id: ${device.id}`)
   }
 
   for (const u of sensorData) {
-    const device = await prisma.sensor.create({
-      data: {
-        ...u
-      }
+    const {id, ...rest} = u;
+    const device = await prisma.sensor.upsert({
+      where: {
+        id: id
+      },
+      update: rest,
+      create: rest,
     });
     console.log(`Created sensor with id: ${device.id}`);
   }
 
   for (const u of phenomenonData) {
-    const device = await prisma.phenomenon.create({
-      data: u
+    const device = await prisma.phenomenon.upsert({
+      where: {
+        id: u.id,
+      },
+      update: {
+        ...u
+      },
+      create: u,
     });
     console.log(`Created phenomenon with id: ${device.id}`);
   }
 
   for (const u of unitData) {
-    const device = await prisma.unit.create({
-      data: u,
+    const device = await prisma.unit.upsert({
+      where: {
+        id: u.id
+      },
+      update: {
+        ...u
+      },
+      create: u
     });
     console.log(`Created unit with id: ${device.id}`);
   }
 
   for (const u of elementData) {
-    const device = await prisma.element.create({
-      data: u,
+    const device = await prisma.element.upsert({
+      where: {
+        id: u.id,
+      },
+      update: {
+        ...u
+      },
+      create: u,
     });
     console.log(`Created element with id: ${device.id}`);
   }
 
   for (const u of rovData) {
-    const device = await prisma.rangeOfValues.create({
-      data: u,
+    const device = await prisma.rangeOfValues.upsert({
+      where: {
+        id: u.id
+      },
+      update: {
+        ...u
+      },
+      create: u
     });
     console.log(`Created rov with id: ${device.id}`);
   }
 
   for (const u of domainData) {
-    const device = await prisma.domain.create({
-      data: u,
+    const { id, ...rest } = u;
+    const device = await prisma.domain.upsert({
+      where: {
+        id: id
+      },
+      update: rest,
+      create: rest
     });
     console.log(`Created domain with id: ${device.id}`);
   }
