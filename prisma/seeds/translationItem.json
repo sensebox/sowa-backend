@@ -1,9 +1,37 @@
 [{
     "languageCode": "de",
-    "text": "wissensStation",
+    "text": "senseBox:home",
     "translationId" : 1
 },{
     "languageCode": "en",
-    "text": "senseBox",
+    "text": "senseBox:home",
     "translationId" : 1
+},{
+    "languageCode": "de",
+    "text": "Die senseBox:Home ist ein Toolkit für Umweltmessungen.",
+    "translationId" : 2
+},{
+    "languageCode": "en",
+    "text": "The sensebox:Home is a kit for environmental sensing.",
+    "translationId" : 2
+},{
+    "languageCode": "de",
+    "text": "senseBox:edu",
+    "translationId" : 4
+},{
+    "languageCode": "en",
+    "text": "senseBox:edu",
+    "translationId" : 4
+ },{
+    "languageCode": "de",
+    "text": "Die senseBox:Edu ist ein Toolkit für Umweltmessungen.",
+    "translationId" : 5
+},{
+    "languageCode": "en",
+    "text": "The senseBox:Edu is a kit for environmental sensing.",
+    "translationId" : 5
+},{
+    "languageCode": "de",
+    "text": "Bosch",
+    "translationId" : 7
 }]
