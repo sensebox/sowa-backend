@@ -4,9 +4,5 @@
   "lifePeriod": 365,
   "labelId": 7,
   "descriptionId": 8,
-  "devices": {
-    "connect": {
-      "id": 1
-    }
-  }
+  "deviceConnectId": 1
 }]
