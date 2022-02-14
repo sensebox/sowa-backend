@@ -8,11 +8,11 @@
     "translationId" : 1
 },{
     "languageCode": "de",
-    "text": "Die senseBox:Home ist ein Toolkit für Umweltmessungen.",
+    "text": "Die senseBox:home ist ein Toolkit für Umweltmessungen.",
     "translationId" : 2
 },{
     "languageCode": "en",
-    "text": "The sensebox:Home is a kit for environmental sensing.",
+    "text": "The sensebox:home is a kit for environmental sensing.",
     "translationId" : 2
 },{
     "languageCode": "de",
@@ -24,14 +24,138 @@
     "translationId" : 4
  },{
     "languageCode": "de",
-    "text": "Die senseBox:Edu ist ein Toolkit für Umweltmessungen.",
+    "text": "Die senseBox:edu ist ein Toolkit für Umweltmessungen.",
     "translationId" : 5
 },{
     "languageCode": "en",
-    "text": "The senseBox:Edu is a kit for environmental sensing.",
+    "text": "The senseBox:edu is a kit for environmental sensing.",
     "translationId" : 5
 },{
     "languageCode": "de",
-    "text": "Bosch",
+    "text": "LuftdatenInfo Gerät",
     "translationId" : 7
+},{
+    "languageCode": "en",
+    "text": "AirdataInfo Device",
+    "translationId" : 7
+},{
+    "languageCode": "de",
+    "text": "Gerät zur Messung der Lufqualität.",
+    "translationId" : 8
+},{
+    "languageCode": "en",
+    "text": "Device to measure Airquality.",
+    "translationId" : 8
+},{
+    "languageCode": "de",
+    "text": "BME680",
+    "translationId" : 9
+},{
+    "languageCode": "en",
+    "text": "BME680",
+    "translationId" : 9
+},{
+    "languageCode": "de",
+    "text": "Der BME680 ist ein Gassensor, der hochlineare und hochgenaue Gas-, Druck-, Feuchte- und Temperatursensoren integriert.",
+    "translationId" : 10
+},{
+    "languageCode": "en",
+    "text": "The BME680 is a gas sensor that integrates high-linearity and high-accuracy gas, pressure, humidity and temperature sensors.",
+    "translationId" : 10
+},{
+    "languageCode": "de",
+    "text": "BMP280",
+    "translationId" : 11
+},{
+    "languageCode": "en",
+    "text": "BMP280",
+    "translationId" : 11
+},{
+    "languageCode": "de",
+    "text": "Der barometrische Drucksensor BMP280 von Bosch Sensortec ist ein absoluter Drucksensor, der speziell für mobile Anwendungen entwickelt wurde. Er kann auch die Lufttemperatur messen.",
+    "translationId" : 12
+},{
+    "languageCode": "en",
+    "text": "Bosch Sensortec Barometric Pressure Sensor BMP280 is an absolute barometric pressure sensor especially designed for mobile applications. Also able to measure air temperature.",
+    "translationId" : 12
+},{
+    "languageCode": "de",
+    "text": "HDC1080",
+    "translationId" : 13
+},{
+    "languageCode": "en",
+    "text": "HDC1080",
+    "translationId" : 13
+},{
+    "languageCode": "de",
+    "text": "Der Sensor HDC1080 von Texas Instruments ist ein digitaler Feuchtigkeitssensor. Er misst die relative Luftfeuchtigkeit und die Temperatur.",
+    "translationId" : 14
+},{
+    "languageCode": "en",
+    "text": "The Texas Instruments' HDC1080 sensor is a digital humidity sensor. It measures relative humidity and and temperature.",
+    "translationId" : 14
+},{
+    "languageCode": "de",
+    "text": "SCD30",
+    "translationId" : 15
+},{
+    "languageCode": "en",
+    "text": "SCD30",
+    "translationId" : 15
+},{
+    "languageCode": "de",
+    "text": "Der SCD30 von Sensirion ist ein hochwertiger, auf nicht-dispersivem Infrarot (NDIR) basierender CO₂-Sensor, der 400 bis 10000ppm mit einer Genauigkeit von ±(30ppm+3%) erfassen kann.",
+    "translationId" : 16
+},{
+    "languageCode": "en",
+    "text": "The SCD30 from Sensirion is a high quality Nondispersive Infrared (NDIR) based CO₂ sensor capable of detecting 400 to 10000ppm with an accuracy of ±(30ppm+3%).",
+    "translationId" : 16
+},{
+    "languageCode": "de",
+    "text": "SMT50",
+    "translationId" : 17
+},{
+    "languageCode": "en",
+    "text": "SMT50",
+    "translationId" : 17
+},{
+    "languageCode": "de",
+    "text": "Der SMT50 wird von TRUEBNER entwickelt und hergestellt. Er ist ein FDR-Bodenfeuchtesensor. Das Gehäuse und das Kabel sind wasserdicht.",
+    "translationId" : 18
+},{
+    "languageCode": "en",
+    "text": "The SMT50 is designed and manufactured by TRUEBNER. It is a FDR soil moisture sensor. The casing and cable is water sealed.",
+    "translationId" : 18
+},{
+    "languageCode": "de",
+    "text": "TSL4531",
+    "translationId" : 19
+},{
+    "languageCode": "en",
+    "text": "TSL4531",
+    "translationId" : 19
+},{
+    "languageCode": "de",
+    "text": "Der AMS TSL4531 Lichtsensor ist ein Umgebungslichtsensor. Er erkennt also die Helligkeit des Umgebungslichts.",
+    "translationId" : 20
+},{
+    "languageCode": "en",
+    "text": "The AMS TSL4531 Light Sensor is an ambient light sensor. Therefore, it detects the brightness of ambient light.",
+    "translationId" : 20
+},{
+    "languageCode": "de",
+    "text": "VEML6070V2",
+    "translationId" : 21
+},{
+    "languageCode": "en",
+    "text": "VEML6070V2",
+    "translationId" : 21
+},{
+    "languageCode": "de",
+    "text": "VEML6070 is an advanced ultraviolet (UV) light sensor withI2C protocol interface and designed by the CMOS process.",
+    "translationId" : 22
+},{
+    "languageCode": "en",
+    "text": "VEML6070 is an advanced ultraviolet (UV) light sensor withI2C protocol interface and designed by the CMOS process.",
+    "translationId" : 22
 }]

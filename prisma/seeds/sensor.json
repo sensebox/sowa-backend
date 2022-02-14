@@ -2,11 +2,49 @@
   "id": 1,
   "manufacturer": "Bosch",
   "lifePeriod": 365,
-  "labelId": 7,
-  "descriptionId": 8,
-  "devices": {
-    "connect": {
-      "id": 1
-    }
-  }
+  "price": 0.0,
+  "labelId": 9,
+  "descriptionId": 10
+},{
+  "id": 2,
+  "manufacturer": "Bosch Sensortec",
+  "lifePeriod": 360,
+  "price": 23.70,
+  "labelId": 11,
+  "descriptionId": 12
+},{
+  "id": 3,
+  "manufacturer": "Texas Instruments",
+  "lifePeriod": 364,
+  "price": 2.03,
+  "labelId": 13,
+  "descriptionId": 14
+},{
+  "id": 4,
+  "manufacturer": "Sensirion",
+  "lifePeriod": 5475,
+  "price": 0.0,
+  "labelId": 15,
+  "descriptionId": 16
+},{
+  "id": 5,
+  "manufacturer": "TRUEBNER GmbH",
+  "lifePeriod": 365,
+  "price": 0.0,
+  "labelId": 17,
+  "descriptionId": 18
+},{
+  "id": 6,
+  "manufacturer": "ams",
+  "lifePeriod": 50,
+  "price": 0.50,
+  "labelId": 19,
+  "descriptionId": 20
+},{
+  "id": 7,
+  "manufacturer": "Vishay",
+  "lifePeriod": 2,
+  "price": 1.00,
+  "labelId": 21,
+  "descriptionId": 22
 }]
