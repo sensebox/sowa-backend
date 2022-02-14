@@ -158,4 +158,116 @@
     "languageCode": "en",
     "text": "VEML6070 is an advanced ultraviolet (UV) light sensor withI2C protocol interface and designed by the CMOS process.",
     "translationId" : 22
+},{
+    "languageCode": "de",
+    "text": "barometrischer Druck",
+    "translationId" : 23
+},{
+    "languageCode": "en",
+    "text": "barometric pressure",
+    "translationId" : 23
+},{
+    "languageCode": "de",
+    "text": "Der barometrische Druck ist der Druck in der Atmosphäre der Erde. Er wird auch als atmosphärischer Druck bezeichnet.",
+    "translationId" : 24
+},{
+    "languageCode": "en",
+    "text": "Barometric pressure is the pressure within the atmosphere of the Earth. It is also called atmospheric pressure.",
+    "translationId" : 24
+},{
+    "languageCode": "de",
+    "text": "relative Luftfeuchte",
+    "translationId" : 26
+},{
+    "languageCode": "en",
+    "text": "relative Humidity",
+    "translationId" : 26
+},{
+    "languageCode": "de",
+    "text": "Die relative Luftfeuchtigkeit (RH) ist das Verhältnis zwischen dem Partialdruck von Wasserdampf und dem Gleichgewichtsdampfdruck von Wasser bei einer bestimmten Temperatur. (Quelle: Wikipedia)",
+    "translationId" : 27
+},{
+    "languageCode": "en",
+    "text": "Relative humidity (RH) is the ratio of the partial pressure of water vapor to the equilibrium vapor pressure of water at a given temperature. (Source: Wikipedia)",
+    "translationId" : 27
+},{
+    "languageCode": "de",
+    "text": "Temperatur",
+    "translationId" : 29
+},{
+    "languageCode": "en",
+    "text": "Temperature",
+    "translationId" : 29
+},{
+    "languageCode": "de",
+    "text": "Beschreibt die Wärme eines Mediums.",
+    "translationId" : 30
+},{
+    "languageCode": "en",
+    "text": "Describes the warmness of a medium.",
+    "translationId" : 30
+},{
+    "languageCode": "de",
+    "text": "CO2",
+    "translationId" : 32
+},{
+    "languageCode": "en",
+    "text": "CO2",
+    "translationId" : 32
+},{
+    "languageCode": "de",
+    "text": "Kohlendioxid (CO2) wird in parts-per-per-million (ppm) gemessen.",
+    "translationId" : 33
+},{
+    "languageCode": "en",
+    "text": "Carbon Dioxide (CO2) is measured in parts-per-million (ppm).",
+    "translationId" : 33
+},{
+    "languageCode": "de",
+    "text": "Bodenfeuchte",
+    "translationId" : 35
+},{
+    "languageCode": "en",
+    "text": "Soil Moisture",
+    "translationId" : 35
+},{
+    "languageCode": "de",
+    "text": "Bodenfeuchtesensoren messen den volumetrischen Wassergehalt im Boden.",
+    "translationId" : 36
+},{
+    "languageCode": "en",
+    "text": "Soil moisture sensors measure the volumetric water content in soil.",
+    "translationId" : 36
+},{
+    "languageCode": "de",
+    "text": "Umgebungslicht",
+    "translationId" : 38
+},{
+    "languageCode": "en",
+    "text": "Ambient light",
+    "translationId" : 38
+},{
+    "languageCode": "de",
+    "text": "Die Intensität des Umgebungslichts entspricht der Reaktion des menschlichen Auges auf Licht unter verschiedenen Lichtverhältnissen.",
+    "translationId" : 39
+},{
+    "languageCode": "en",
+    "text": "Ambient light intensity matches the human eye's response to light under a variety of lighting conditions.",
+    "translationId" : 39
+},{
+    "languageCode": "de",
+    "text": "Ultraviolett A Licht",
+    "translationId" : 41
+},{
+    "languageCode": "en",
+    "text": "Ultraviolet A light",
+    "translationId" : 41
+},{
+    "languageCode": "de",
+    "text": "Ultraviolettes Licht mit einer Wellenlänge zwischen 315 und 380 nm.",
+    "translationId" : 42
+},{
+    "languageCode": "en",
+    "text": "Ultraviolet light with wavelength between 315 and 380 nm.",
+    "translationId" : 42
 }]
