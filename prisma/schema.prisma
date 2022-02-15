@@ -15,7 +15,7 @@ model Device {
   label         Translation? @relation("labelDevice", fields: [labelId], references: [id])
   description   Translation? @relation("descriptionDevice", fields: [descriptionId], references: [id])
   markdown      Translation? @relation("markdownDevice", fields: [markdownId], references: [id])
-  sensors       Sensor[]     @relation(references: [id])
+  sensors       Sensor[]
   validation    Boolean      @default(false)
   labelId       Int?         @unique
   descriptionId Int?         @unique
