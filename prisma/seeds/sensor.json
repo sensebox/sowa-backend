@@ -2,7 +2,19 @@
   "id": 1,
   "manufacturer": "Bosch",
   "lifePeriod": 365,
-  "labelId": 7,
-  "descriptionId": 8,
-  "deviceConnectId": 1
+  "label": {
+    "connect": {
+      "id": 7
+    }
+  },
+  "description": {
+    "connect": {
+      "id": 8
+    }
+  },
+  "devices": {
+    "connect": {
+      "id": 1
+    }
+  }
 }]
