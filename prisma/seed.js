@@ -72,10 +72,10 @@ async function main() {
     const {id, ...rest} = u;
     const device = await prisma.sensor.upsert({
       where: {
-        id: id
+        id: id,
       },
-      update: rest,
       create: rest,
+      update: rest,
     });
     console.log(`Created sensor with id: ${device.id}`);
   }

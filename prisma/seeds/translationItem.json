@@ -270,4 +270,52 @@
     "languageCode": "en",
     "text": "Ultraviolet light with wavelength between 315 and 380 nm.",
     "translationId" : 42
+},{
+    "languageCode": "de",
+    "text": "Luftqualität",
+    "translationId" : 44
+},{
+    "languageCode": "en",
+    "text": "airQuality",
+    "translationId" : 44
+},{
+    "languageCode": "de",
+    "text": "Phänomene, die mit der Qualität der Luft zusammenhängen. Zum Beispiel können sie uns sagen, aktualisieren Luftverschmutzung Ebene.",
+    "translationId" : 45
+},{
+    "languageCode": "en",
+    "text": "Phenomenona that are related to the quality of air. For instance, they can tell us update air pollution level.",
+    "translationId" : 45
+},{
+    "languageCode": "de",
+    "text": "Klimaphänomen",
+    "translationId" : 46
+},{
+    "languageCode": "en",
+    "text": "Climate Phenomena",
+    "translationId" : 46
+},{
+    "languageCode": "de",
+    "text": "Phänomene, die mit dem Klima und/oder klimatischen Veränderungen zusammenhängen.",
+    "translationId" : 47
+},{
+    "languageCode": "en",
+    "text": "Phenomenona that are related to climate and/or climatic changes.",
+    "translationId" : 47
+},{
+    "languageCode": "de",
+    "text": "Bodenphänomene",
+    "translationId" : 48
+},{
+    "languageCode": "en",
+    "text": "Ground Phenomena",
+    "translationId" : 48
+},{
+    "languageCode": "de",
+    "text": "Phänomene, die im Boden gemessen werden können.",
+    "translationId" : 49
+},{
+    "languageCode": "en",
+    "text": "Phenomena that can be measured in the ground.",
+    "translationId" : 49
 }]
