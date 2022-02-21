@@ -30,6 +30,7 @@ model Sensor {
   elements      Element[]
   manufacturer  String?
   lifePeriod    Int?
+  price         Float?
   validation    Boolean      @default(false)
   labelId       Int?         @unique
   descriptionId Int?         @unique

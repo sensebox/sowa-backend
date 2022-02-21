@@ -1,8 +1,75 @@
 [
   {
     "id": 1,
-    "unitId": 1,
+    "accuracy": 0.12,
+    "unitId": 3,
     "sensorId": 1,
     "phenomenonId": 1
+  },{
+    "id": 2,
+    "accuracy": 3,
+    "unitId": 4,
+    "sensorId": 1,
+    "phenomenonId": 2
+  },{
+    "id": 3,
+    "accuracy": 0.0,
+    "unitId": 2,
+    "sensorId": 1,
+    "phenomenonId": 3
+  },{
+    "id": 4,
+    "accuracy": 0.12,
+    "unitId": 3,
+    "sensorId": 2,
+    "phenomenonId": 1
+  },{
+    "id": 5,
+    "accuracy": 2.0,
+    "unitId": 4,
+    "sensorId": 3,
+    "phenomenonId": 2
+  },{
+    "id": 6,
+    "accuracy": 30,
+    "unitId": 5,
+    "sensorId": 4,
+    "phenomenonId": 4
+  },{
+    "id": 7,
+    "accuracy": 3.0,
+    "unitId": 4,
+    "sensorId": 4,
+    "phenomenonId": 2
+  },{
+    "id": 8,
+    "accuracy": 0.4,
+    "unitId": 2,
+    "sensorId": 4,
+    "phenomenonId": 3
+  },{
+    "id": 9,
+    "accuracy": 3.0,
+    "unitId": 4,
+    "sensorId": 5,
+    "phenomenonId": 5
+  },{
+    "id": 10,
+    "accuracy": 0.8,
+    "unitId": 2,
+    "sensorId": 5,
+    "phenomenonId": 3
+  },{
+    "id": 11,
+    "accuracy": 1.0,
+    "unitId": 6,
+    "sensorId": 7,
+    "phenomenonId": 6
+  },{
+    "id": 12,
+    "accuracy": 0.0,
+    "unitId": 7,
+    "sensorId": 7,
+    "phenomenonId": 7
   }
 ]

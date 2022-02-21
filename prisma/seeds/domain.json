@@ -1,8 +1,53 @@
 [{
   "id": 1,
+  "label": {
+    "connect": {
+      "id": 44
+    }
+  },"description": {
+    "connect": {
+      "id": 45
+    }
+  },
+  "phenomenon": {
+    "connect": [{
+      "id": 1
+    },{
+      "id": 2
+    },{
+      "id": 3
+    }]
+  }
+},{
+  "id": 2,
+  "label": {
+    "connect": {
+      "id": 46
+    }
+  },"description": {
+    "connect": {
+      "id": 47
+    }
+  },
   "phenomenon": {
     "connect": {
-      "id": 1
+      "id": 4
+    }
+  }
+},{
+  "id": 3,
+  "label": {
+    "connect": {
+      "id": 48
+    }
+  },"description": {
+    "connect": {
+      "id": 49
+    }
+  },
+  "phenomenon": {
+    "connect": {
+      "id": 5
     }
   }
 }]

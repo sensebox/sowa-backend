@@ -1,7 +1,22 @@
 [{
   "id": 1,
-  "name": "Celsius"
+  "name": "Not specified."
 },{
   "id": 2,
-  "name": "Fahrenheit"
+  "name": "Celsius"
+},{
+  "id": 3,
+  "name": "Pascal"
+},{
+  "id": 4,
+  "name": "%"
+},{
+  "id": 5,
+  "name": "parts per million (ppm)"
+},{
+  "id": 6,
+  "name": "lux"
+},{
+  "id": 7,
+  "name": "watt per sqare meter"
 }]

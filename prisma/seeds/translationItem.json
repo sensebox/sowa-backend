@@ -8,11 +8,11 @@
     "translationId" : 1
 },{
     "languageCode": "de",
-    "text": "Die senseBox:Home ist ein Toolkit für Umweltmessungen.",
+    "text": "Die senseBox:home ist ein Toolkit für Umweltmessungen.",
     "translationId" : 2
 },{
     "languageCode": "en",
-    "text": "The sensebox:Home is a kit for environmental sensing.",
+    "text": "The sensebox:home is a kit for environmental sensing.",
     "translationId" : 2
 },{
     "languageCode": "de",
@@ -24,14 +24,298 @@
     "translationId" : 4
  },{
     "languageCode": "de",
-    "text": "Die senseBox:Edu ist ein Toolkit für Umweltmessungen.",
+    "text": "Die senseBox:edu ist ein Toolkit für Umweltmessungen.",
     "translationId" : 5
 },{
     "languageCode": "en",
-    "text": "The senseBox:Edu is a kit for environmental sensing.",
+    "text": "The senseBox:edu is a kit for environmental sensing.",
     "translationId" : 5
 },{
     "languageCode": "de",
-    "text": "Bosch",
+    "text": "LuftdatenInfo Gerät",
     "translationId" : 7
+},{
+    "languageCode": "en",
+    "text": "AirdataInfo Device",
+    "translationId" : 7
+},{
+    "languageCode": "de",
+    "text": "Gerät zur Messung der Lufqualität.",
+    "translationId" : 8
+},{
+    "languageCode": "en",
+    "text": "Device to measure Airquality.",
+    "translationId" : 8
+},{
+    "languageCode": "de",
+    "text": "BME680",
+    "translationId" : 9
+},{
+    "languageCode": "en",
+    "text": "BME680",
+    "translationId" : 9
+},{
+    "languageCode": "de",
+    "text": "Der BME680 ist ein Gassensor, der hochlineare und hochgenaue Gas-, Druck-, Feuchte- und Temperatursensoren integriert.",
+    "translationId" : 10
+},{
+    "languageCode": "en",
+    "text": "The BME680 is a gas sensor that integrates high-linearity and high-accuracy gas, pressure, humidity and temperature sensors.",
+    "translationId" : 10
+},{
+    "languageCode": "de",
+    "text": "BMP280",
+    "translationId" : 11
+},{
+    "languageCode": "en",
+    "text": "BMP280",
+    "translationId" : 11
+},{
+    "languageCode": "de",
+    "text": "Der barometrische Drucksensor BMP280 von Bosch Sensortec ist ein absoluter Drucksensor, der speziell für mobile Anwendungen entwickelt wurde. Er kann auch die Lufttemperatur messen.",
+    "translationId" : 12
+},{
+    "languageCode": "en",
+    "text": "Bosch Sensortec Barometric Pressure Sensor BMP280 is an absolute barometric pressure sensor especially designed for mobile applications. Also able to measure air temperature.",
+    "translationId" : 12
+},{
+    "languageCode": "de",
+    "text": "HDC1080",
+    "translationId" : 13
+},{
+    "languageCode": "en",
+    "text": "HDC1080",
+    "translationId" : 13
+},{
+    "languageCode": "de",
+    "text": "Der Sensor HDC1080 von Texas Instruments ist ein digitaler Feuchtigkeitssensor. Er misst die relative Luftfeuchtigkeit und die Temperatur.",
+    "translationId" : 14
+},{
+    "languageCode": "en",
+    "text": "The Texas Instruments' HDC1080 sensor is a digital humidity sensor. It measures relative humidity and and temperature.",
+    "translationId" : 14
+},{
+    "languageCode": "de",
+    "text": "SCD30",
+    "translationId" : 15
+},{
+    "languageCode": "en",
+    "text": "SCD30",
+    "translationId" : 15
+},{
+    "languageCode": "de",
+    "text": "Der SCD30 von Sensirion ist ein hochwertiger, auf nicht-dispersivem Infrarot (NDIR) basierender CO₂-Sensor, der 400 bis 10000ppm mit einer Genauigkeit von ±(30ppm+3%) erfassen kann.",
+    "translationId" : 16
+},{
+    "languageCode": "en",
+    "text": "The SCD30 from Sensirion is a high quality Nondispersive Infrared (NDIR) based CO₂ sensor capable of detecting 400 to 10000ppm with an accuracy of ±(30ppm+3%).",
+    "translationId" : 16
+},{
+    "languageCode": "de",
+    "text": "SMT50",
+    "translationId" : 17
+},{
+    "languageCode": "en",
+    "text": "SMT50",
+    "translationId" : 17
+},{
+    "languageCode": "de",
+    "text": "Der SMT50 wird von TRUEBNER entwickelt und hergestellt. Er ist ein FDR-Bodenfeuchtesensor. Das Gehäuse und das Kabel sind wasserdicht.",
+    "translationId" : 18
+},{
+    "languageCode": "en",
+    "text": "The SMT50 is designed and manufactured by TRUEBNER. It is a FDR soil moisture sensor. The casing and cable is water sealed.",
+    "translationId" : 18
+},{
+    "languageCode": "de",
+    "text": "TSL4531",
+    "translationId" : 19
+},{
+    "languageCode": "en",
+    "text": "TSL4531",
+    "translationId" : 19
+},{
+    "languageCode": "de",
+    "text": "Der AMS TSL4531 Lichtsensor ist ein Umgebungslichtsensor. Er erkennt also die Helligkeit des Umgebungslichts.",
+    "translationId" : 20
+},{
+    "languageCode": "en",
+    "text": "The AMS TSL4531 Light Sensor is an ambient light sensor. Therefore, it detects the brightness of ambient light.",
+    "translationId" : 20
+},{
+    "languageCode": "de",
+    "text": "VEML6070V2",
+    "translationId" : 21
+},{
+    "languageCode": "en",
+    "text": "VEML6070V2",
+    "translationId" : 21
+},{
+    "languageCode": "de",
+    "text": "VEML6070 is an advanced ultraviolet (UV) light sensor withI2C protocol interface and designed by the CMOS process.",
+    "translationId" : 22
+},{
+    "languageCode": "en",
+    "text": "VEML6070 is an advanced ultraviolet (UV) light sensor withI2C protocol interface and designed by the CMOS process.",
+    "translationId" : 22
+},{
+    "languageCode": "de",
+    "text": "barometrischer Druck",
+    "translationId" : 23
+},{
+    "languageCode": "en",
+    "text": "barometric pressure",
+    "translationId" : 23
+},{
+    "languageCode": "de",
+    "text": "Der barometrische Druck ist der Druck in der Atmosphäre der Erde. Er wird auch als atmosphärischer Druck bezeichnet.",
+    "translationId" : 24
+},{
+    "languageCode": "en",
+    "text": "Barometric pressure is the pressure within the atmosphere of the Earth. It is also called atmospheric pressure.",
+    "translationId" : 24
+},{
+    "languageCode": "de",
+    "text": "relative Luftfeuchte",
+    "translationId" : 26
+},{
+    "languageCode": "en",
+    "text": "relative Humidity",
+    "translationId" : 26
+},{
+    "languageCode": "de",
+    "text": "Die relative Luftfeuchtigkeit (RH) ist das Verhältnis zwischen dem Partialdruck von Wasserdampf und dem Gleichgewichtsdampfdruck von Wasser bei einer bestimmten Temperatur. (Quelle: Wikipedia)",
+    "translationId" : 27
+},{
+    "languageCode": "en",
+    "text": "Relative humidity (RH) is the ratio of the partial pressure of water vapor to the equilibrium vapor pressure of water at a given temperature. (Source: Wikipedia)",
+    "translationId" : 27
+},{
+    "languageCode": "de",
+    "text": "Temperatur",
+    "translationId" : 29
+},{
+    "languageCode": "en",
+    "text": "Temperature",
+    "translationId" : 29
+},{
+    "languageCode": "de",
+    "text": "Beschreibt die Wärme eines Mediums.",
+    "translationId" : 30
+},{
+    "languageCode": "en",
+    "text": "Describes the warmness of a medium.",
+    "translationId" : 30
+},{
+    "languageCode": "de",
+    "text": "CO2",
+    "translationId" : 32
+},{
+    "languageCode": "en",
+    "text": "CO2",
+    "translationId" : 32
+},{
+    "languageCode": "de",
+    "text": "Kohlendioxid (CO2) wird in parts-per-per-million (ppm) gemessen.",
+    "translationId" : 33
+},{
+    "languageCode": "en",
+    "text": "Carbon Dioxide (CO2) is measured in parts-per-million (ppm).",
+    "translationId" : 33
+},{
+    "languageCode": "de",
+    "text": "Bodenfeuchte",
+    "translationId" : 35
+},{
+    "languageCode": "en",
+    "text": "Soil Moisture",
+    "translationId" : 35
+},{
+    "languageCode": "de",
+    "text": "Bodenfeuchtesensoren messen den volumetrischen Wassergehalt im Boden.",
+    "translationId" : 36
+},{
+    "languageCode": "en",
+    "text": "Soil moisture sensors measure the volumetric water content in soil.",
+    "translationId" : 36
+},{
+    "languageCode": "de",
+    "text": "Umgebungslicht",
+    "translationId" : 38
+},{
+    "languageCode": "en",
+    "text": "Ambient light",
+    "translationId" : 38
+},{
+    "languageCode": "de",
+    "text": "Die Intensität des Umgebungslichts entspricht der Reaktion des menschlichen Auges auf Licht unter verschiedenen Lichtverhältnissen.",
+    "translationId" : 39
+},{
+    "languageCode": "en",
+    "text": "Ambient light intensity matches the human eye's response to light under a variety of lighting conditions.",
+    "translationId" : 39
+},{
+    "languageCode": "de",
+    "text": "Ultraviolett A Licht",
+    "translationId" : 41
+},{
+    "languageCode": "en",
+    "text": "Ultraviolet A light",
+    "translationId" : 41
+},{
+    "languageCode": "de",
+    "text": "Ultraviolettes Licht mit einer Wellenlänge zwischen 315 und 380 nm.",
+    "translationId" : 42
+},{
+    "languageCode": "en",
+    "text": "Ultraviolet light with wavelength between 315 and 380 nm.",
+    "translationId" : 42
+},{
+    "languageCode": "de",
+    "text": "Luftqualität",
+    "translationId" : 44
+},{
+    "languageCode": "en",
+    "text": "airQuality",
+    "translationId" : 44
+},{
+    "languageCode": "de",
+    "text": "Phänomene, die mit der Qualität der Luft zusammenhängen. Zum Beispiel können sie uns sagen, aktualisieren Luftverschmutzung Ebene.",
+    "translationId" : 45
+},{
+    "languageCode": "en",
+    "text": "Phenomenona that are related to the quality of air. For instance, they can tell us update air pollution level.",
+    "translationId" : 45
+},{
+    "languageCode": "de",
+    "text": "Klimaphänomen",
+    "translationId" : 46
+},{
+    "languageCode": "en",
+    "text": "Climate Phenomena",
+    "translationId" : 46
+},{
+    "languageCode": "de",
+    "text": "Phänomene, die mit dem Klima und/oder klimatischen Veränderungen zusammenhängen.",
+    "translationId" : 47
+},{
+    "languageCode": "en",
+    "text": "Phenomenona that are related to climate and/or climatic changes.",
+    "translationId" : 47
+},{
+    "languageCode": "de",
+    "text": "Bodenphänomene",
+    "translationId" : 48
+},{
+    "languageCode": "en",
+    "text": "Ground Phenomena",
+    "translationId" : 48
+},{
+    "languageCode": "de",
+    "text": "Phänomene, die im Boden gemessen werden können.",
+    "translationId" : 49
+},{
+    "languageCode": "en",
+    "text": "Phenomena that can be measured in the ground.",
+    "translationId" : 49
 }]
