@@ -56,6 +56,7 @@ module.exports.getDevices = async function (lang) {
 
   const result = await prisma.device.findMany({
     select: {
+      id: true,
       markdown: true,
       label: {
         select: {
@@ -156,6 +157,7 @@ module.exports.getDevice = async function (iri,lang) {
       id: parseInt(iri),
     },
     select: {
+      id: true,
       markdown: true,
       label: {
         select: {

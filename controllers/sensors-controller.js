@@ -9,6 +9,9 @@ const endpoint = `${fuseki_endpoint}/senph/sparql`;
 const updatepoint = `${fuseki_endpoint}/senph/update`;
 const history_endpoint = `${fuseki_endpoint}/senph-history/sparql`;
 const history_updatepoint = `${fuseki_endpoint}/senph-history/update`;
+
+const prisma = require('../lib/prisma');
+
 // const unitpoint = 'http://localhost:3030/uo/sparql';
 
 
@@ -51,23 +54,38 @@ const historyClient = new SparqlClient(history_endpoint, {
 /* ---------- All sensor funtions: -----------------*/
 
 //get all sensors @returns iris and labels
-module.exports.getSensors = function () {
-  return client
-    .query(SPARQL`
-                     SELECT ?sensorLabel ?sensor ?validation
-                     WHERE {
-                       ?sensor rdf:type s:sensor.
-                       ?sensor rdfs:label ?sensorLabel.
-                       OPTIONAL{
-                       ?sensor s:isValid ?validation.
-                       }
-                    }`)
-    .execute({ format: { resource: 'sensor' } })
-    .then(res => res.results.bindings)
-    .catch(function (error) {
-      console.log(error);
-      console.log("Oh no, error!")
-    });
+module.exports.getSensors = async function (lang) {
+  let languageFilter = true;
+  if (lang) {
+    languageFilter = {
+      where: {
+        languageCode: lang,
+      },
+    };
+  }
+
+  const result = await prisma.sensor.findMany({
+    select: {
+      // markdown: true,
+      id: true,
+      label: {
+        select: {
+          item: languageFilter,
+        },
+      },
+      description: {
+        select: {
+          item: languageFilter,
+        },
+      },
+      price: true,
+      lifePeriod: true,
+      manufacturer: true,
+      validation: true,
+    },
+  });
+
+  return result;
 }
 
 
@@ -189,7 +207,7 @@ module.exports.getSensorElement = function (iri) {
     .then(res => res.results.bindings)
     .catch(function (error) {
       console.log(error);
-console.log("Oh no, error!")
+      console.log("Oh no, error!")
     });
 }
 
@@ -198,82 +216,41 @@ console.log("Oh no, error!")
 
 
 //get a single sensor identified by its iri @returns the sensor's labels, descriptions, datasheet, image, lifeperiod, manufacturer, price, phenomena it can measueres and accuracy values, devices it is part of
-module.exports.getSensor = function (iri) {
-  var senphurl = 'http://sensors.wiki/SENPH#';
-
-  var bindingsText = `Select Distinct ?label ?description ?manufacturer ?price ?datasheet ?lifeperiod ?image ?markdown ?device ?deviceLabel ?sensorElement ?phenomenon ?unit ?accVal ?validation
-  WHERE {   
-     {   
-       ?iri  rdfs:label ?label.
-     }
-     UNION 
-     {   
-         ?iri rdfs:comment ?description.
-     }
-     UNION
-     {
-         ?iri s:hasElement ?sensorElement.
-           ?sensorElement s:canMeasure ?phenomenon.
-           ?sensorElement s:hasAccuracyUnit ?unit.
-           ?sensorElement s:accuracyValue ?accVal.
-     }
-     UNION
-     {
-         ?iri s:isSensorOf ?device.
-         OPTIONAL
-         { ?device rdfs:label ?deviceLabel.}
-     }  
-     UNION
-     {
-         ?iri s:manufacturer ?manufacturer.
-     }
-     UNION
-     {
-         ?iri s:priceInEuro ?price.
-     }
-     UNION
-     {	
-         ?iri s:dataSheet ?datasheet.
-     }
-     UNION
-     {
-         ?iri s:lifePeriod ?lifeperiod.
-     } 
-     UNION
-     {
-         ?iri s:image ?image.
-     } 
-     UNION
-     {
-         ?iri s:isValid ?validation.
-     } 
-     UNION
-     {
-         ?iri s:markdown ?markdown.
-     }
+module.exports.getSensor = async function (iri, lang) {
+  let languageFilter = true;
+  if (lang) {
+    languageFilter = {
+      where: {
+        languageCode: lang,
+      },
+    };
   }
-Group BY ?label ?description ?datasheet ?image ?markdown ?lifeperiod ?manufacturer ?price ?device ?deviceLabel ?sensorElement ?phenomenon  ?unit ?accVal ?validation
-ORDER BY ?phenomenon ?device ?sensorElement`;
-  return client
-    .query(bindingsText)
-    .bind('iri', { s: iri })
-    .execute()
-    .then(res => {
-      res.results.bindings.push({
-        'iri':
-        {
-          type: 'uri',
-          value: senphurl + iri
-        }
-      })
-      console.log(res.results.bindings)
-      return res.results.bindings
-    })
-    .catch(function (error) {
-      console.dir(arguments, { depth: null })
-      console.log("Oh no, error!")
-      console.log(error)
-    });
+
+  const result = await prisma.sensor.findUnique({
+    where: {
+      id: parseInt(iri)
+    },
+    select: {
+      // markdown: true,
+      id: true,
+      label: {
+        select: {
+          item: languageFilter,
+        },
+      },
+      description: {
+        select: {
+          item: languageFilter,
+        },
+      },
+      price: true,
+      lifePeriod: true,
+      manufacturer: true,
+      validation: true,
+    },
+  });
+
+  return result;
 }
 
 
