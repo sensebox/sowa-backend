@@ -3,72 +3,42 @@ const SPARQL = SparqlClient.SPARQL;
 const config = require('config');
 const Domain = require('../models/Domain');
 
-const fuseki_endpoint = config.get('fuseki_endpoint');
-const endpoint = `${fuseki_endpoint}/senph/sparql`;
-const updatepoint = `${fuseki_endpoint}/senph/update`;
-const history_endpoint = `${fuseki_endpoint}/senph-history/sparql`;
-const history_updatepoint = `${fuseki_endpoint}/senph-history/update`;
-// const unitpoint = 'http://localhost:3030/uo/sparql';
-
-
-
-// const unitsClient = new SparqlClient(unitpoint)
-//     .register({   owl: 'http://www.w3.org/2002/07/owl#',
-//                 rdfs: 'http://www.w3.org/2000/01/rdf-schema#',
-//                 uo: 'http://purl.obolibrary.org/obo/',
-//                 rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#'
-//     })  
-
-
-const client = new SparqlClient(endpoint, {
-  updateEndpoint: updatepoint
-})
-  .register({
-    owl: 'http://www.w3.org/2002/07/owl#',
-    rdfs: 'http://www.w3.org/2000/01/rdf-schema#',
-    s: 'http://sensors.wiki/SENPH#',
-    uo: 'http://purl.obolibrary.org/obo/',
-    rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
-    xsd: 'http://www.w3.org/2001/XMLSchema#'
-
-  })
-
-const historyClient = new SparqlClient(history_endpoint, {
-  updateEndpoint: history_updatepoint
-})
-  .register({
-    owl: 'http://www.w3.org/2002/07/owl#',
-    rdfs: 'http://www.w3.org/2000/01/rdf-schema#',
-    s: 'http://sensors.wiki/SENPH#',
-    uo: 'http://purl.obolibrary.org/obo/',
-    rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
-    xsd: 'http://www.w3.org/2001/XMLSchema#'
-
-  })
-
+const prisma = require('../lib/prisma');
 
 
 /* ---------- All domain funtions: -----------------*/
 
 //get all domains @returns iris and labels
-module.exports.getDomains = function () {
-  return client
-    .query(SPARQL`
-                    SELECT ?label ?domain ?validation
-                    WHERE {
-                      ?domain rdf:type s:domain.
-                      ?domain rdfs:label ?label.
-                      OPTIONAL{
-                      ?domain s:isValid ?validation.
-                      }
-                    }`)
-    .execute({ format: { resource: 'domain' } })
-    .then(res => res.results.bindings)
-    .catch(function (error) {
-      console.dir(arguments, { depth: null })
-      console.log("Oh no, error!")
-      console.log(error)
-    });
+module.exports.getDomains = async function (lang) {
+
+  let languageFilter = true;
+  if (lang) {
+    languageFilter = {
+      where: {
+        languageCode: lang,
+      },
+    };
+  }
+
+  const result = await prisma.domain.findMany({
+    select: {
+      id: true,
+      phenomenon: true,
+      label: {
+        select: {
+          item: languageFilter,
+        },
+      },
+      description: {
+        select: {
+          item: languageFilter,
+        },
+      },
+    },
+  });
+
+  return result;
+
 }
 
 //get history of a domain
@@ -104,51 +74,39 @@ module.exports.getDomainHistory = function (iri) {
 
 
 //get a single domain identified by its iri @returns the domain's labels, descriptions and phenomena it is domain of
-module.exports.getDomain = function (iri) {
-  var senphurl = 'http://sensors.wiki/SENPH#';
+module.exports.getDomain = async function (iri, lang) {
 
-  return client
-    .query(SPARQL`
-    Select Distinct ?label ?description ?phenomenon ?phenomenonLabel ?validation
-                     WHERE {
-                        {   
-                            ${{ s: iri }} rdfs:label ?label.
-                        }
-                        UNION 
-                        {   
-                            ${{ s: iri }} rdfs:comment ?description.
-                        }
-                        UNION
-                        {
-                            ${{ s: iri }} s:isDomainOf ?phenomenon.
-                        }  
-                        UNION
-                        {
-                            ${{ s: iri }} s:isValid ?validation.
-                        }  
+  let languageFilter = true;
+  if (lang) {
+    languageFilter = {
+      where: {
+        languageCode: lang,
+      },
+    };
+  }
 
-                     }
-                Group BY ?label ?description ?phenomenon ?phenomenonLabel ?validation
-                ORDER BY ?phenomenon
-          `)
-    .execute()
-    .then(res => {
-      console.log(res.results.bindings);
-      res.results.bindings.push({
-        'iri':
-        {
-          type: 'uri',
-          value: senphurl + iri
-        }
-      })
-      console.log(res.results.bindings);
-      return res.results.bindings;
-    })
-    .catch(function (error) {
-      console.dir(arguments, { depth: null })
-      console.log("Oh no, error!")
-      console.log(error)
-    });
+  const result = await prisma.domain.findUnique({
+    where: {
+      id: parseInt(iri),
+    },
+    select: {
+      id: true,
+      phenomenon: true,
+      label: {
+        select: {
+          item: languageFilter,
+        },
+      },
+      description: {
+        select: {
+          item: languageFilter,
+        },
+      },
+    },
+  });
+
+  return result;
+
 }
 
 
