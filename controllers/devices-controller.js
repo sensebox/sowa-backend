@@ -8,14 +8,8 @@ const endpoint = `${fuseki_endpoint}/senph/sparql`;
 const updatepoint = `${fuseki_endpoint}/senph/update`;
 const history_endpoint = `${fuseki_endpoint}/senph-history/sparql`;
 const history_updatepoint = `${fuseki_endpoint}/senph-history/update`;
-// const unitpoint = 'http://localhost:3030/uo/sparql';
 
-// const unitsClient = new SparqlClient(unitpoint)
-//     .register({   owl: 'http://www.w3.org/2002/07/owl#',
-//                 rdfs: 'http://www.w3.org/2000/01/rdf-schema#',
-//                 uo: 'http://purl.obolibrary.org/obo/',
-//                 rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#'
-//     })  
+const prisma = require('../lib/prisma');
 
 
 const client = new SparqlClient(endpoint, {
@@ -49,25 +43,69 @@ const historyClient = new SparqlClient(history_endpoint, {
 /* ---------- All device funtions: -----------------*/
 
 //get all devices @returns iris and labels
-module.exports.getDevices = function () {
-  return client
-    .query(SPARQL`
-                     SELECT ?label ?device ?image ?validation
-                     WHERE {
-                        ?device rdf:type s:device.
-                        ?device rdfs:label ?label.
-                        ?device s:image ?image.
-                        OPTIONAL{
-                          ?device s:isValid ?validation.
-                          }
-                    }`)
-    .execute({ format: { resource: 'device' } })
-    .then(res => res.results.bindings)
-    .catch(function (error) {
-      console.dir(arguments, { depth: null })
-      console.log("Oh no, error!")
-      console.log(error)
-    });
+module.exports.getDevices = async function (lang) {
+
+  let languageFilter = true;
+  if (lang) {
+    languageFilter = {
+      where: {
+        languageCode: lang,
+      },
+    };
+  }
+
+  const result = await prisma.device.findMany({
+    select: {
+      markdown: true,
+      label: {
+        select: {
+          item: languageFilter,
+        },
+      },
+      description: {
+        select: {
+          item: languageFilter,
+        },
+      },
+      sensors: true,
+      validation: true,
+    },
+  });
+
+
+  // const result = await prisma.device.findMany({
+  //   select: {
+  //     markdown: true,
+  //     label: {
+  //       select: {
+  //         item: {
+  //           where: {
+  //             languageCode: lang || {contains : ''}
+  //           }
+  //         },
+  //       },
+  //     },
+  //     description: {
+  //       select: {
+  //         item: {
+  //           select: {
+  //             text: true,
+  //             language: {
+  //               select: {
+  //                 code: true,
+  //               },
+  //             },
+  //           },
+  //         },
+  //       },
+  //     },
+  //     sensors: true,
+  //     validation: true,
+  //   }  
+  // });
+
+  return result;
+
 }
 
 //get history of a device
@@ -102,65 +140,38 @@ module.exports.getDeviceHistory = function (iri) {
 
 
 //get a single device identified by its iri @returns the device's labels, descriptions, website, image, contact and compatible sensors
-module.exports.getDevice = function (iri) {
-  var senphurl = 'http://sensors.wiki/SENPH#';
+module.exports.getDevice = async function (iri,lang) {
 
-  return client
-    .query(SPARQL`
-    Select Distinct ?label ?description ?website ?image ?markdown ?contact ?sensor ?sensorLabel ?validation
-                     WHERE {
-                        {
-                            ${{ s: iri }} rdfs:label ?label
-                        }
-                        UNION 
-                        {   
-                            ${{ s: iri }} rdfs:comment ?description
-                        }
-                        UNION
-                        {
-                            ${{ s: iri }} s:website ?website.
-                        }  
-                        UNION
-                        {
-                            ${{ s: iri }} s:image ?image.
-                        } 
-                        UNION
-                        {
-                            ${{ s: iri }} s:hasContact ?contact.
-                        }   
-                        UNION
-                        {
-                            ${{ s: iri }} s:hasSensor ?sensor.
-                        }
-                        UNION
-                        {
-                            ${{ s: iri }} s:isValid ?validation.
-                        }
-                        UNION
-                        {
-                            ${{ s: iri }} s:markdown ?markdown.
-                        }   
-                     }
-                Group BY ?label ?description ?website ?image ?markdown ?contact ?sensor ?sensorLabel ?validation
-                ORDER BY ?sensor
-          `)
-    .execute()
-    .then(res => {
-      res.results.bindings.push({
-        'iri':
-        {
-          type: 'uri',
-          value: senphurl + iri
-        }
-      })
-      console.log(res.results.bindings);
-      return res.results.bindings;
-    })
-    .catch(function (error) {
-      console.dir(arguments, { depth: null })
-      console.log("Oh no, error!")
-      console.log(error)
-    });
+  let languageFilter = true;
+  if (lang) {
+    languageFilter = {
+      where: {
+        languageCode: lang,
+      },
+    };
+  }
+
+  const result = await prisma.device.findUnique({
+    where: {
+      id: parseInt(iri),
+    },
+    select: {
+      markdown: true,
+      label: {
+        select: {
+          item: languageFilter,
+        },
+      },
+      description: {
+        select: {
+          item: languageFilter,
+        },
+      },
+      sensors: true,
+      validation: true,
+    },
+  })
+  return result;
 }
 
 
