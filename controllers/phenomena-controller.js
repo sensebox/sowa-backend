@@ -84,6 +84,7 @@ module.exports.getPhenomena = async function (lang) {
           item: languageFilter,
         },
       },
+      validation: true,
     },
   });
 

@@ -34,6 +34,7 @@ module.exports.getDomains = async function (lang) {
           item: languageFilter,
         },
       },
+      validation: true,
     },
   });
 

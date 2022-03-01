@@ -82,6 +82,7 @@ model Domain {
   id            Int          @id @default(autoincrement())
   label         Translation? @relation("labelDomain", fields: [labelId], references: [id])
   description   Translation? @relation("descriptionDomain", fields: [descriptionId], references: [id])
+  validation    Boolean      @default(false)
   phenomenon    Phenomenon[]
   labelId       Int?         @unique
   descriptionId Int?         @unique
