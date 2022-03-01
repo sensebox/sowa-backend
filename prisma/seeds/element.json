@@ -71,5 +71,23 @@
     "unitId": 7,
     "sensorId": 7,
     "phenomenonId": 7
+  },{
+    "id": 13,
+    "accuracy": null,
+    "unitId": null,
+    "sensorId": 8,
+    "phenomenonId": 8
+  },{
+    "id": 14,
+    "accuracy": null,
+    "unitId": null,
+    "sensorId": 25,
+    "phenomenonId": 9
+  },{
+    "id": 15,
+    "accuracy": null,
+    "unitId": null,
+    "sensorId": 25,
+    "phenomenonId": 10
   }
 ]

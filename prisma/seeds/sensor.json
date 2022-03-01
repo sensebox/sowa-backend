@@ -2,7 +2,7 @@
   "id": 1,
   "manufacturer": "Bosch",
   "lifePeriod": 365,
-  "price": 0.0,
+  "price": 0.00,
   "label": {
     "connect": {
       "id": 9
@@ -14,9 +14,14 @@
     }
   },
   "devices": {
-    "connect": {
-      "id": 1
-    }
+    "connect": [
+      {
+        "id": 1
+      },
+      {
+        "id": 2
+      }
+    ]
   }
 },{
   "id": 2,
@@ -34,9 +39,17 @@
     }
   },
   "devices": {
-    "connect": {
-      "id": 1
-    }
+    "connect": [
+      {
+        "id": 1
+      },
+      {
+        "id": 2
+      },
+      {
+        "id": 3
+      }
+    ]
   }
 },{
   "id": 3,
@@ -54,15 +67,20 @@
     }
   },
   "devices": {
-    "connect": {
-      "id": 1
-    }
+    "connect": [
+      {
+        "id": 1
+      },
+      {
+        "id": 2
+      }
+    ]
   }
 },{
   "id": 4,
   "manufacturer": "Sensirion",
   "lifePeriod": 5475,
-  "price": 0.0,
+  "price": 0.00,
   "label": {
     "connect": {
       "id": 15
@@ -74,15 +92,23 @@
     }
   },
   "devices": {
-    "connect": {
-      "id": 1
-    }
+    "connect": [
+      {
+        "id": 1
+      },
+      {
+        "id": 2
+      },
+      {
+        "id": 3
+      }
+    ]
   }
 },{
   "id": 5,
   "manufacturer": "TRUEBNER GmbH",
   "lifePeriod": 365,
-  "price": 0.0,
+  "price": 0.00,
   "label": {
     "connect": {
       "id": 17
@@ -94,9 +120,14 @@
     }
   },
   "devices": {
-    "connect": {
-      "id": 1
-    }
+    "connect": [
+      {
+        "id": 1
+      },
+      {
+        "id": 2
+      }
+    ]
   }
 },{
   "id": 6,
@@ -114,9 +145,14 @@
     }
   },
   "devices": {
-    "connect": {
-      "id": 1
-    }
+    "connect": [
+      {
+        "id": 1
+      },
+      {
+        "id": 2
+      }
+    ]
   }
 },{
   "id": 7,
@@ -134,8 +170,607 @@
     }
   },
   "devices": {
+    "connect": [
+      {
+        "id": 1
+      },
+      {
+        "id": 2
+      }
+    ]
+  }
+},{
+  "id": 8,
+  "manufacturer": null,
+  "lifePeriod": null,
+  "price": null,
+  "label": {
     "connect": {
-      "id": 1
+      "id": 50
     }
+  },
+  "description": {
+    "connect": {
+      "id": 51
+    }
+  },
+  "devices": {
+    "connect": [
+      {
+        "id": 3
+      }
+    ]
+  }
+},{
+  "id": 9,
+  "manufacturer": null,
+  "lifePeriod": null,
+  "price": null,
+  "label": {
+    "connect": {
+      "id": 52
+    }
+  },
+  "description": {
+    "connect": {
+      "id": 53
+    }
+  },
+  "devices": {
+    "connect": [
+      {
+        "id": 3
+      }
+    ]
+  }
+},{
+  "id": 10,
+  "manufacturer": null,
+  "lifePeriod": null,
+  "price": null,
+  "label": {
+    "connect": {
+      "id": 54
+    }
+  },
+  "description": {
+    "connect": {
+      "id": 55
+    }
+  },
+  "devices": {
+    "connect": [
+      {
+        "id": 3
+      }
+    ]
+  }
+},{
+  "id": 11,
+  "manufacturer": null,
+  "lifePeriod": null,
+  "price": null,
+  "label": {
+    "connect": {
+      "id": 56
+    }
+  },
+  "description": {
+    "connect": {
+      "id": 57
+    }
+  },
+  "devices": {
+    "connect": [
+      {
+        "id": 3
+      }
+    ]
+  }
+},{
+  "id": 12,
+  "manufacturer": null,
+  "lifePeriod": null,
+  "price": null,
+  "label": {
+    "connect": {
+      "id": 58
+    }
+  },
+  "description": {
+    "connect": {
+      "id": 59
+    }
+  },
+  "devices": {
+    "connect": [
+      {
+        "id": 3
+      }
+    ]
+  }
+},{
+  "id": 13,
+  "manufacturer": null,
+  "lifePeriod": null,
+  "price": null,
+  "label": {
+    "connect": {
+      "id": 60
+    }
+  },
+  "description": {
+    "connect": {
+      "id": 61
+    }
+  },
+  "devices": {
+    "connect": [
+      {
+        "id": 3
+      }
+    ]
+  }
+},{
+  "id": 14,
+  "manufacturer": null,
+  "lifePeriod": null,
+  "price": null,
+  "label": {
+    "connect": {
+      "id": 62
+    }
+  },
+  "description": {
+    "connect": {
+      "id": 63
+    }
+  },
+  "devices": {
+    "connect": [
+      {
+        "id": 3
+      }
+    ]
+  }
+},{
+  "id": 15,
+  "manufacturer": null,
+  "lifePeriod": null,
+  "price": null,
+  "label": {
+    "connect": {
+      "id": 64
+    }
+  },
+  "description": {
+    "connect": {
+      "id": 65
+    }
+  },
+  "devices": {
+    "connect": [
+      {
+        "id": 3
+      }
+    ]
+  }
+},{
+  "id": 16,
+  "manufacturer": null,
+  "lifePeriod": null,
+  "price": null,
+  "label": {
+    "connect": {
+      "id": 66
+    }
+  },
+  "description": {
+    "connect": {
+      "id": 67
+    }
+  },
+  "devices": {
+    "connect": [
+      {
+        "id": 3
+      }
+    ]
+  }
+},{
+  "id": 17,
+  "manufacturer": null,
+  "lifePeriod": null,
+  "price": null,
+  "label": {
+    "connect": {
+      "id": 68
+    }
+  },
+  "description": {
+    "connect": {
+      "id": 69
+    }
+  },
+  "devices": {
+    "connect": [
+      {
+        "id": 3
+      }
+    ]
+  }
+},{
+  "id": 18,
+  "manufacturer": null,
+  "lifePeriod": null,
+  "price": null,
+  "label": {
+    "connect": {
+      "id": 70
+    }
+  },
+  "description": {
+    "connect": {
+      "id": 71
+    }
+  },
+  "devices": {
+    "connect": [
+      {
+        "id": 3
+      }
+    ]
+  }
+},{
+  "id": 19,
+  "manufacturer": null,
+  "lifePeriod": null,
+  "price": null,
+  "label": {
+    "connect": {
+      "id": 72
+    }
+  },
+  "description": {
+    "connect": {
+      "id": 73
+    }
+  },
+  "devices": {
+    "connect": [
+      {
+        "id": 3
+      }
+    ]
+  }
+},{
+  "id": 20,
+  "manufacturer": null,
+  "lifePeriod": null,
+  "price": null,
+  "label": {
+    "connect": {
+      "id": 74
+    }
+  },
+  "description": {
+    "connect": {
+      "id": 75
+    }
+  },
+  "devices": {
+    "connect": [
+      {
+        "id": 3
+      }
+    ]
+  }
+},{
+  "id": 21,
+  "manufacturer": null,
+  "lifePeriod": null,
+  "price": null,
+  "label": {
+    "connect": {
+      "id": 76
+    }
+  },
+  "description": {
+    "connect": {
+      "id": 77
+    }
+  },
+  "devices": {
+    "connect": [
+      {
+        "id": 3
+      }
+    ]
+  }
+},{
+  "id": 22,
+  "manufacturer": null,
+  "lifePeriod": null,
+  "price": null,
+  "label": {
+    "connect": {
+      "id": 78
+    }
+  },
+  "description": {
+    "connect": {
+      "id": 79
+    }
+  },
+  "devices": {
+    "connect": [
+      {
+        "id": 3
+      }
+    ]
+  }
+},{
+  "id": 23,
+  "manufacturer": null,
+  "lifePeriod": null,
+  "price": null,
+  "label": {
+    "connect": {
+      "id": 80
+    }
+  },
+  "description": {
+    "connect": {
+      "id": 81
+    }
+  },
+  "devices": {
+    "connect": [
+      {
+        "id": 3
+      }
+    ]
+  }
+},{
+  "id": 24,
+  "manufacturer": null,
+  "lifePeriod": null,
+  "price": null,
+  "label": {
+    "connect": {
+      "id": 82
+    }
+  },
+  "description": {
+    "connect": {
+      "id": 83
+    }
+  },
+  "devices": {
+    "connect": [
+      {
+        "id": 3
+      }
+    ]
+  }
+},{
+  "id": 25,
+  "manufacturer": null,
+  "lifePeriod": null,
+  "price": null,
+  "label": {
+    "connect": {
+      "id": 84
+    }
+  },
+  "description": {
+    "connect": {
+      "id": 85
+    }
+  },
+  "devices": {
+    "connect": [
+      {
+        "id": 3
+      }
+    ]
+  }
+},{
+  "id": 26,
+  "manufacturer": null,
+  "lifePeriod": null,
+  "price": null,
+  "label": {
+    "connect": {
+      "id": 86
+    }
+  },
+  "description": {
+    "connect": {
+      "id": 87
+    }
+  },
+  "devices": {
+    "connect": [
+      {
+        "id": 3
+      }
+    ]
+  }
+},{
+  "id": 27,
+  "manufacturer": null,
+  "lifePeriod": null,
+  "price": null,
+  "label": {
+    "connect": {
+      "id": 88
+    }
+  },
+  "description": {
+    "connect": {
+      "id": 89
+    }
+  },
+  "devices": {
+    "connect": [
+      {
+        "id": 3
+      }
+    ]
+  }
+},{
+  "id": 28,
+  "manufacturer": null,
+  "lifePeriod": null,
+  "price": null,
+  "label": {
+    "connect": {
+      "id": 90
+    }
+  },
+  "description": {
+    "connect": {
+      "id": 91
+    }
+  },
+  "devices": {
+    "connect": [
+      {
+        "id": 3
+      }
+    ]
+  }
+},{
+  "id": 29,
+  "manufacturer": null,
+  "lifePeriod": null,
+  "price": null,
+  "label": {
+    "connect": {
+      "id": 92
+    }
+  },
+  "description": {
+    "connect": {
+      "id": 93
+    }
+  },
+  "devices": {
+    "connect": [
+      {
+        "id": 3
+      }
+    ]
+  }
+},{
+  "id": 30,
+  "manufacturer": null,
+  "lifePeriod": null,
+  "price": null,
+  "label": {
+    "connect": {
+      "id": 94
+    }
+  },
+  "description": {
+    "connect": {
+      "id": 95
+    }
+  },
+  "devices": {
+    "connect": [
+      {
+        "id": 3
+      }
+    ]
+  }
+},{
+  "id": 31,
+  "manufacturer": null,
+  "lifePeriod": null,
+  "price": null,
+  "label": {
+    "connect": {
+      "id": 96
+    }
+  },
+  "description": {
+    "connect": {
+      "id": 97
+    }
+  },
+  "devices": {
+    "connect": [
+      {
+        "id": 3
+      }
+    ]
+  }
+},{
+  "id": 32,
+  "manufacturer": null,
+  "lifePeriod": null,
+  "price": null,
+  "label": {
+    "connect": {
+      "id": 98
+    }
+  },
+  "description": {
+    "connect": {
+      "id": 99
+    }
+  },
+  "devices": {
+    "connect": [
+      {
+        "id": 3
+      }
+    ]
+  }
+},{
+  "id": 33,
+  "manufacturer": null,
+  "lifePeriod": null,
+  "price": null,
+  "label": {
+    "connect": {
+      "id": 100
+    }
+  },
+  "description": {
+    "connect": {
+      "id": 101
+    }
+  },
+  "devices": {
+    "connect": [
+      {
+        "id": 3
+      }
+    ]
+  }
+},{
+  "id": 34,
+  "manufacturer": null,
+  "lifePeriod": null,
+  "price": null,
+  "label": {
+    "connect": {
+      "id": 102
+    }
+  },
+  "description": {
+    "connect": {
+      "id": 103
+    }
+  },
+  "devices": {
+    "connect": [
+      {
+        "id": 3
+      }
+    ]
   }
 }]
