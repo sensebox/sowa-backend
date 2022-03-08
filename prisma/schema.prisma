@@ -17,6 +17,7 @@ model Device {
   markdown      Translation? @relation("markdownDevice", fields: [markdownId], references: [id])
   sensors       Sensor[]
   validation    Boolean      @default(false)
+  image         String?      
   labelId       Int?         @unique
   descriptionId Int?         @unique
   markdownId    Int?         @unique
@@ -32,6 +33,8 @@ model Sensor {
   lifePeriod    Int?
   price         Float?
   validation    Boolean      @default(false)
+  image         String?
+  datasheet     String?
   labelId       Int?         @unique
   descriptionId Int?         @unique
 }

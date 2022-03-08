@@ -231,7 +231,6 @@ module.exports.getSensor = async function (iri, lang) {
       id: parseInt(iri)
     },
     select: {
-      // markdown: true,
       id: true,
       label: {
         select: {
@@ -243,9 +242,28 @@ module.exports.getSensor = async function (iri, lang) {
           item: languageFilter,
         },
       },
+      elements: {
+        select: {
+          id: true,
+          accuracy: true,
+          accuracyUnit: true,
+          phenomena: {
+            select: {
+              id: true,
+              label: {
+                select: {
+                  item: languageFilter,
+                },
+              }
+            }
+          },
+        }
+      },
       price: true,
-      lifePeriod: true,
+      image: true,
       manufacturer: true,
+      lifePeriod: true,
+      datasheet: true,
       validation: true,
     },
   });

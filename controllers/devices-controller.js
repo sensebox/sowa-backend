@@ -158,7 +158,6 @@ module.exports.getDevice = async function (iri,lang) {
     },
     select: {
       id: true,
-      markdown: true,
       label: {
         select: {
           item: languageFilter,
@@ -169,7 +168,19 @@ module.exports.getDevice = async function (iri,lang) {
           item: languageFilter,
         },
       },
-      sensors: true,
+      markdown: true,
+      image: true,
+      sensors: {
+        select: {
+          id: true,
+          label: {
+            select: {
+              item: languageFilter,
+            },
+          },
+          validation: true,
+        }
+      },
       validation: true,
     },
   })
