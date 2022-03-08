@@ -92,7 +92,6 @@ module.exports.getDomain = async function (iri, lang) {
     },
     select: {
       id: true,
-      phenomenon: true,
       label: {
         select: {
           item: languageFilter,
@@ -103,6 +102,18 @@ module.exports.getDomain = async function (iri, lang) {
           item: languageFilter,
         },
       },
+      validation: true,
+      phenomenon: {
+        select: {
+          id: true,
+          label: {
+            select: {
+              item: languageFilter,
+            }
+          },
+          validation: true,
+        }
+      }
     },
   });
 

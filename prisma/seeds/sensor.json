@@ -62,6 +62,7 @@
   "price": 2.03,
   "image": null,
   "datasheet": null,
+  "validation": true,
   "label": {
     "connect": {
       "id": 13

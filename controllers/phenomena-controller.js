@@ -199,11 +199,6 @@ module.exports.getPhenomenon = async function (iri, lang) {
     },
     select: {
       id: true,
-      markdown: {
-        select: {
-          item: languageFilter,
-        },
-      },
       label: {
         select: {
           item: languageFilter,
@@ -213,6 +208,31 @@ module.exports.getPhenomenon = async function (iri, lang) {
         select: {
           item: languageFilter,
         },
+      },
+      markdown: {
+        select: {
+          item: languageFilter,
+        },
+      },
+      validation: true,
+      domains: {
+        select: {
+          id: true,
+          label: {
+            select: {
+              item: languageFilter,
+            }
+          },
+          validation: true,
+        }
+      },
+      rov: {
+        select: {
+          id: true,
+          min: true,
+          max: true,
+          unit: true,
+        }
       },
     },
   });
