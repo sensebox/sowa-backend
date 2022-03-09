@@ -1,17 +1,20 @@
 [{
     "id": 1,
+    "image": "sensebox_home.jpg",
     "labelId": 1,
     "descriptionId": 2,
     "markdownId": 3,
     "validation" : false
 },{
     "id": 2,
+    "image": "sensebox_edu.jpg",
     "labelId": 4,
     "descriptionId": 5,
     "markdownId": 6,
     "validation" : false
 },{
     "id": 3,
+    "image": "Luftdaten_Info.jpeg",
     "labelId": 7,
     "descriptionId": 8,
     "markdownId": 9,

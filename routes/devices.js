@@ -15,47 +15,54 @@ const prisma = require('../lib/prisma')
 /* ---------- All device funtions: -----------------*/
 router.get('/all', async function (req, res) {
 
-  let languageFilter = true;
-  if (req.query.language) {
-    languageFilter = {
-      where: {
-        languageCode: req.query.language,
-      },
-    };
-  }
-
-  const result = await prisma.device.findMany({
-    select: {
-      markdown: true,
-      label: {
-        select: {
-          item: languageFilter,
-        },
-      },
-      description: {
-        select: {
-          item: languageFilter,
-        },
-      },
-      sensors: true,
-      validation: true,
-    },
+  DevicesController.getDevices(req.query.language).then(data => {
+    return res.json(data);
   });
-  return res.json(result);
+
+  // let languageFilter = true;
+  // if (req.query.language) {
+  //   languageFilter = {
+  //     where: {
+  //       languageCode: req.query.language,
+  //     },
+  //   };
+  // }
+
+  // const result = await prisma.device.findMany({
+  //   select: {
+  //     markdown: true,
+  //     label: {
+  //       select: {
+  //         item: languageFilter,
+  //       },
+  //     },
+  //     description: {
+  //       select: {
+  //         item: languageFilter,
+  //       },
+  //     },
+  //     sensors: true,
+  //     validation: true,
+  //   },
+  // });
+  // return res.json(result);
 });
 
-router.get('/device/:iri', function (req, res) {
-  DevicesController.getDevice(req.params.iri)
-    .then(data => {
-      if (req.query.lang) {
-        data = Filter.filterData(data, req.query.lang);
-      }
-      if(req.query.format === 'json'){
-        return res.json(DevicesController.convertDeviceToJson(data))
-      } else {
-        return res.json(data);
-      }
-    })
+router.get('/device/:iri', async function (req, res) {
+  DevicesController.getDevice(req.params.iri, req.query.lang).then(data => {
+    return res.json(data);
+  })
+  // DevicesController.getDevice(req.params.iri)
+  //   .then(data => {
+  //     if (req.query.lang) {
+  //       data = Filter.filterData(data, req.query.lang);
+  //     }
+  //     if(req.query.format === 'json'){
+  //       return res.json(DevicesController.convertDeviceToJson(data))
+  //     } else {
+  //       return res.json(data);
+  //     }
+  //   })
 });
 
 router.get('/device/:iri/sensors', function (req, res) {

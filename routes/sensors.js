@@ -12,13 +12,9 @@ router.get('/', function (req, res, next) {
 
 /* ---------- All sensor funtions: -----------------*/
 router.get('/all', function (req, res) {
-  SensorsController.getSensors()
+  SensorsController.getSensors(req.query.lang)
     .then(data => {
-      if (req.query.format === 'json') {
-        res.json(SensorsController.convertSensorsToJson(data));
-      } else {
-        res.json(data)
-      }
+      return res.json(data);
     })
 });
 
@@ -41,18 +37,9 @@ router.get('/all', function (req, res) {
 //   });
 
 router.get('/sensor/:iri', function (req, res, next) {
-  console.log(req.params.iri);
-  SensorsController.getSensor(req.params.iri)
-    .then(data => {
-      if (req.query.lang) {
-        data = Filter.filterData(data, req.query.lang);
-      }
-      if (req.query.format === 'json') {
-        res.json(SensorsController.convertSensorToJson(data));
-      } else {
-        res.json(data)
-      }
-    })
+  SensorsController.getSensor(req.params.iri, req.query.lang).then(data => {
+    return res.json(data);
+  })
 });
 
 router.get('/historic-sensor/:iri', function (req, res) {

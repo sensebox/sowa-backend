@@ -10,6 +10,9 @@ const history_updatepoint = `${fuseki_endpoint}/senph-history/update`;
 
 const Phenomenon = require('../models/Phenomenon');
 const Phenomena = require('../models/Phenomena');
+
+const prisma = require('../lib/prisma');
+
 // const unitpoint = 'http://localhost:3030/uo/sparql';
 
 
@@ -52,48 +55,40 @@ const historyClient = new SparqlClient(history_endpoint, {
 /* ---------- All Phenomenon funtions: -----------------*/
 
 //get all phenomena @returns iris and labels
-module.exports.getPhenomena = function () {
-  return client
-    .query(SPARQL`
-                     SELECT ?phenomenonLabel ?phenomenon ?validation ?rovs ?unit
-                     WHERE {
-                     
-                      ?phenomenon rdf:type s:phenomenon.
+module.exports.getPhenomena = async function (lang) {
 
-                      ?phenomenon rdfs:label ?phenomenonLabel.
-                    
-                      
-                      OPTIONAL {
-                        ?phenomenon s:describedBy ?rovs.
-                        ?rovs s:describedBy ?unit.
-                      }
-                      OPTIONAL {
-                        ?phenomenon s:isValid ?validation.
-                        }
-                      } GROUP BY ?phenomenonLabel ?phenomenon ?validation ?rovs ?unit`)
-    .execute({ format: { resource: 'phenomenon' } })
-    .then(async res => {
-       let mappedRes = [];
-      for (let binding of res.results.bindings) {
-        let allrov = [];
-        for(let rov of binding.rovs){
-          let rovValue = await this.getROV(rov.value);
-          rovValue.forEach(value => {
-            if (value.unit){
-              let rov = {unit: value.unit.value, min: value.min.value, max: value.max.value};
-              console.log("ROV", rov);
-              allrov.push(rov);
-            }
-          })
-        }
-        binding.rovs = allrov;
-        mappedRes.push(binding);
-        }
-       return mappedRes;
-      })
-    .catch(function (error) {
-      console.log("Oh no, error!", error)
-    });
+  let languageFilter = true;
+  if (lang) {
+    languageFilter = {
+      where: {
+        languageCode: lang,
+      },
+    };
+  }
+
+  const result = await prisma.phenomenon.findMany({
+    select: {
+      id: true,
+      markdown: {
+        select: {
+          item: languageFilter,
+        },
+      },
+      label: {
+        select: {
+          item: languageFilter,
+        },
+      },
+      description: {
+        select: {
+          item: languageFilter,
+        },
+      },
+      validation: true,
+    },
+  });
+
+  return result;
 }
 
 //get all phenomena @returns iris and labels
@@ -187,72 +182,63 @@ module.exports.getPhenomenonHistory = function (iri) {
 
 
 //get a single phenomenon identified by its iri @returns the phenomenon's labels, descriptions, units it is described by, domains, sensors it can be measured by  
-module.exports.getPhenomenon = function (iri) {
-  //still missing: ?domains rdfs:label ?domainsLabel.
-  var senphurl = 'http://sensors.wiki/SENPH#';
+module.exports.getPhenomenon = async function (iri, lang) {
+  
+  let languageFilter = true;
+  if (lang) {
+    languageFilter = {
+      where: {
+        languageCode: lang,
+      },
+    };
+  }
 
-  var bindingsText = `
-  Select Distinct ?label ?description ?markdown ?sensors ?domain ?rov ?min ?max ?unit ?sensorlabel ?unitLabel ?domainLabel ?validation
-                   WHERE {   
-                      {   
-                          ?iri rdfs:label ?label
-                      }
-                      UNION 
-                      {   
-                          ?iri rdfs:comment ?description.
-                      }
-                      UNION
-                      {	
-                          ?iri s:describedBy ?rov.
-                          ?rov s:describedBy ?unit.
-                          ?rov s:min ?min.
-                          ?rov s:max ?max.
-                      }
-                      UNION
-                      {
-                          ?iri s:hasDomain ?domain.
-                        OPTIONAL
-                          {?domain rdfs:label ?domainLabel.}
-                      } 
-                      UNION
-                      {
-                          ?iri s:measurableBy ?selement.
-                          ?selement   s:isElementOf ?sensors.
-                          ?sensors rdfs:label ?sensorlabel.    
-                      }
-                      UNION 
-                      {   
-                          ?iri s:isValid ?validation.
-                      }
-                      UNION 
-                      {   
-                          ?iri s:markdown ?markdown.
-                      }            
-                   }
-              Group BY ?sensors ?domain ?rov ?min ?max ?unit ?label ?description ?markdown ?sensorlabel ?domainLabel ?unitLabel ?validation
-              ORDER BY ?sensors ?domain ?unit
-        `;
-  return client
-    .query(bindingsText)
-    .bind('iri', { s: iri })
-    .execute()
-    .then(res => {
-      console.log(res);
-      res.results.bindings.push({
-        'iri':
-        {
-          type: 'uri',
-          value: senphurl + iri
+  const result = await prisma.phenomenon.findUnique({
+    where: {
+      id: parseInt(iri)
+    },
+    select: {
+      id: true,
+      label: {
+        select: {
+          item: languageFilter,
+        },
+      },
+      description: {
+        select: {
+          item: languageFilter,
+        },
+      },
+      markdown: {
+        select: {
+          item: languageFilter,
+        },
+      },
+      validation: true,
+      domains: {
+        select: {
+          id: true,
+          label: {
+            select: {
+              item: languageFilter,
+            }
+          },
+          validation: true,
         }
-      })
-      console.log(res.results.bindings);
-      return res.results.bindings;
-    })
-    .catch(function (error) {
-      console.dir(arguments, { depth: null })
-      console.log("Oh no, error!")
-      console.log(error)
-    });
+      },
+      rov: {
+        select: {
+          id: true,
+          min: true,
+          max: true,
+          unit: true,
+        }
+      },
+    },
+  });
+
+  return result;
+
 }
 
 module.exports.getROV = function (iri) {

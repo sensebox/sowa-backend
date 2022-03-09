@@ -11,15 +11,12 @@ router.get('/', function (req, res, next) {
 
 
 /* ---------- All phenomenon funtions: -----------------*/
-router.get('/all', function (req, res) {
-  PhenomenaController.getPhenomena()
-    .then(data => {
-      if(req.query.format === 'json'){
-        res.json(PhenomenaController.convertPhenomenaToJson(data));
-      } else {
-        res.json(data)
-      }
-    })
+router.get('/all', async function (req, res) {
+
+  PhenomenaController.getPhenomena(req.query.language).then(data => {
+    return res.json(data);
+  });
+
 });
 
 router.get('/all/labels', function (req, res) {

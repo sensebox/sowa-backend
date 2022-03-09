@@ -3,6 +3,8 @@
   "manufacturer": "Bosch",
   "lifePeriod": 365,
   "price": 0.00,
+  "image": null,
+  "datasheet": null,
   "label": {
     "connect": {
       "id": 9
@@ -28,6 +30,8 @@
   "manufacturer": "Bosch Sensortec",
   "lifePeriod": 360,
   "price": 23.70,
+  "image": null,
+  "datasheet": null,
   "label": {
     "connect": {
       "id": 11
@@ -56,6 +60,9 @@
   "manufacturer": "Texas Instruments",
   "lifePeriod": 364,
   "price": 2.03,
+  "image": null,
+  "datasheet": null,
+  "validation": true,
   "label": {
     "connect": {
       "id": 13
@@ -81,6 +88,8 @@
   "manufacturer": "Sensirion",
   "lifePeriod": 5475,
   "price": 0.00,
+  "image": null,
+  "datasheet": null,
   "label": {
     "connect": {
       "id": 15
@@ -109,6 +118,8 @@
   "manufacturer": "TRUEBNER GmbH",
   "lifePeriod": 365,
   "price": 0.00,
+  "image": null,
+  "datasheet": null,
   "label": {
     "connect": {
       "id": 17
@@ -134,6 +145,8 @@
   "manufacturer": "ams",
   "lifePeriod": 50,
   "price": 0.50,
+  "image": null,
+  "datasheet": null,
   "label": {
     "connect": {
       "id": 19
@@ -159,6 +172,8 @@
   "manufacturer": "Vishay",
   "lifePeriod": 2,
   "price": 1.00,
+  "image": null,
+  "datasheet": null,
   "label": {
     "connect": {
       "id": 21
@@ -184,6 +199,8 @@
   "manufacturer": null,
   "lifePeriod": null,
   "price": null,
+  "image": null,
+  "datasheet": null,
   "label": {
     "connect": {
       "id": 50
@@ -206,6 +223,8 @@
   "manufacturer": null,
   "lifePeriod": null,
   "price": null,
+  "image": null,
+  "datasheet": null,
   "label": {
     "connect": {
       "id": 52
@@ -228,6 +247,8 @@
   "manufacturer": null,
   "lifePeriod": null,
   "price": null,
+  "image": null,
+  "datasheet": null,
   "label": {
     "connect": {
       "id": 54
@@ -250,6 +271,8 @@
   "manufacturer": null,
   "lifePeriod": null,
   "price": null,
+  "image": null,
+  "datasheet": null,
   "label": {
     "connect": {
       "id": 56
@@ -272,6 +295,8 @@
   "manufacturer": null,
   "lifePeriod": null,
   "price": null,
+  "image": null,
+  "datasheet": null,
   "label": {
     "connect": {
       "id": 58
@@ -294,6 +319,8 @@
   "manufacturer": null,
   "lifePeriod": null,
   "price": null,
+  "image": null,
+  "datasheet": null,
   "label": {
     "connect": {
       "id": 60
@@ -316,6 +343,8 @@
   "manufacturer": null,
   "lifePeriod": null,
   "price": null,
+  "image": null,
+  "datasheet": null,
   "label": {
     "connect": {
       "id": 62
@@ -338,6 +367,8 @@
   "manufacturer": null,
   "lifePeriod": null,
   "price": null,
+  "image": null,
+  "datasheet": null,
   "label": {
     "connect": {
       "id": 64
@@ -360,6 +391,8 @@
   "manufacturer": null,
   "lifePeriod": null,
   "price": null,
+  "image": null,
+  "datasheet": null,
   "label": {
     "connect": {
       "id": 66
@@ -382,6 +415,8 @@
   "manufacturer": null,
   "lifePeriod": null,
   "price": null,
+  "image": null,
+  "datasheet": null,
   "label": {
     "connect": {
       "id": 68
@@ -404,6 +439,8 @@
   "manufacturer": null,
   "lifePeriod": null,
   "price": null,
+  "image": null,
+  "datasheet": null,
   "label": {
     "connect": {
       "id": 70
@@ -426,6 +463,8 @@
   "manufacturer": null,
   "lifePeriod": null,
   "price": null,
+  "image": null,
+  "datasheet": null,
   "label": {
     "connect": {
       "id": 72
@@ -448,6 +487,8 @@
   "manufacturer": null,
   "lifePeriod": null,
   "price": null,
+  "image": null,
+  "datasheet": null,
   "label": {
     "connect": {
       "id": 74
@@ -470,6 +511,8 @@
   "manufacturer": null,
   "lifePeriod": null,
   "price": null,
+  "image": null,
+  "datasheet": null,
   "label": {
     "connect": {
       "id": 76
@@ -492,6 +535,8 @@
   "manufacturer": null,
   "lifePeriod": null,
   "price": null,
+  "image": null,
+  "datasheet": null,
   "label": {
     "connect": {
       "id": 78
@@ -514,6 +559,8 @@
   "manufacturer": null,
   "lifePeriod": null,
   "price": null,
+  "image": null,
+  "datasheet": null,
   "label": {
     "connect": {
       "id": 80
@@ -536,6 +583,8 @@
   "manufacturer": null,
   "lifePeriod": null,
   "price": null,
+  "image": null,
+  "datasheet": null,
   "label": {
     "connect": {
       "id": 82
@@ -558,6 +607,8 @@
   "manufacturer": null,
   "lifePeriod": null,
   "price": null,
+  "image": null,
+  "datasheet": null,
   "label": {
     "connect": {
       "id": 84
@@ -580,6 +631,8 @@
   "manufacturer": null,
   "lifePeriod": null,
   "price": null,
+  "image": null,
+  "datasheet": null,
   "label": {
     "connect": {
       "id": 86
@@ -602,6 +655,8 @@
   "manufacturer": null,
   "lifePeriod": null,
   "price": null,
+  "image": null,
+  "datasheet": null,
   "label": {
     "connect": {
       "id": 88
@@ -624,6 +679,8 @@
   "manufacturer": null,
   "lifePeriod": null,
   "price": null,
+  "image": null,
+  "datasheet": null,
   "label": {
     "connect": {
       "id": 90
@@ -646,6 +703,8 @@
   "manufacturer": null,
   "lifePeriod": null,
   "price": null,
+  "image": null,
+  "datasheet": null,
   "label": {
     "connect": {
       "id": 92
@@ -668,6 +727,8 @@
   "manufacturer": null,
   "lifePeriod": null,
   "price": null,
+  "image": null,
+  "datasheet": null,
   "label": {
     "connect": {
       "id": 94
@@ -690,6 +751,8 @@
   "manufacturer": null,
   "lifePeriod": null,
   "price": null,
+  "image": null,
+  "datasheet": null,
   "label": {
     "connect": {
       "id": 96
@@ -712,6 +775,8 @@
   "manufacturer": null,
   "lifePeriod": null,
   "price": null,
+  "image": null,
+  "datasheet": null,
   "label": {
     "connect": {
       "id": 98
@@ -734,6 +799,8 @@
   "manufacturer": null,
   "lifePeriod": null,
   "price": null,
+  "image": null,
+  "datasheet": null,
   "label": {
     "connect": {
       "id": 100
@@ -756,6 +823,8 @@
   "manufacturer": null,
   "lifePeriod": null,
   "price": null,
+  "image": null,
+  "datasheet": null,
   "label": {
     "connect": {
       "id": 102

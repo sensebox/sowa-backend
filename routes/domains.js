@@ -13,23 +13,15 @@ router.get('/', function (req, res, next) {
 
 /* ---------- All domain funtions: -----------------*/
 router.get('/all', function (req, res) {
-  DomainsController.getDomains()
-    .then(data => res.json(data))
+  DomainsController.getDomains(req.query.language).then(data => {
+    return res.json(data);
+  });
 });
 
 router.get('/domain/:iri', function (req, res) {
-  console.log(req);
-  DomainsController.getDomain(req.params.iri)
-    .then(data => {
-      if (req.query.lang) {
-        data = Filter.filterData(data, req.query.lang);
-      }
-      if(req.query.format === 'json'){
-        return res.json(DomainsController.convertDomainToJson(data))
-      } else {
-        return res.json(data);
-      }
-    })
+  DomainsController.getDomain(req.params.iri, req.query.lang).then(data => {
+    return res.json(data);
+  })
 });
 
 router.get('/historic-domain/:iri', function (req, res) {
