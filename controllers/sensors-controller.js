@@ -1,55 +1,9 @@
-const SparqlClient = require('sparql-client-2');
-const SPARQL = SparqlClient.SPARQL;
 const config = require('config');
+
 const Sensor = require('../models/Sensor');
 const Sensors = require('../models/Sensors');
 
-const fuseki_endpoint = config.get('fuseki_endpoint');
-const endpoint = `${fuseki_endpoint}/senph/sparql`;
-const updatepoint = `${fuseki_endpoint}/senph/update`;
-const history_endpoint = `${fuseki_endpoint}/senph-history/sparql`;
-const history_updatepoint = `${fuseki_endpoint}/senph-history/update`;
-
 const prisma = require('../lib/prisma');
-
-// const unitpoint = 'http://localhost:3030/uo/sparql';
-
-
-
-// const unitsClient = new SparqlClient(unitpoint)
-//     .register({   owl: 'http://www.w3.org/2002/07/owl#',
-//                 rdfs: 'http://www.w3.org/2000/01/rdf-schema#',
-//                 uo: 'http://purl.obolibrary.org/obo/',
-//                 rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#'
-//     })  
-
-
-const client = new SparqlClient(endpoint, {
-  updateEndpoint: updatepoint
-})
-  .register({
-    owl: 'http://www.w3.org/2002/07/owl#',
-    rdfs: 'http://www.w3.org/2000/01/rdf-schema#',
-    s: 'http://sensors.wiki/SENPH#',
-    uo: 'http://purl.obolibrary.org/obo/',
-    rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
-    xsd: 'http://www.w3.org/2001/XMLSchema#'
-
-  })
-
-const historyClient = new SparqlClient(history_endpoint, {
-  updateEndpoint: history_updatepoint
-})
-  .register({
-    owl: 'http://www.w3.org/2002/07/owl#',
-    rdfs: 'http://www.w3.org/2000/01/rdf-schema#',
-    s: 'http://sensors.wiki/SENPH#',
-    uo: 'http://purl.obolibrary.org/obo/',
-    rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
-    xsd: 'http://www.w3.org/2001/XMLSchema#'
-
-  })
-
 
 /* ---------- All sensor funtions: -----------------*/
 
