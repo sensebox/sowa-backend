@@ -306,48 +306,41 @@ module.exports.createHistoryDomain = function (domain, user) {
 }
 
 //create new domain 
-module.exports.createNewDomain = function (domain, role) {
+module.exports.createNewDomain = async function (domain, role) {
   console.log(domain);
   if (role != 'expert' && role != 'admin') {
     console.log("User has no verification rights!");
     domain.validation = false;
+  } else {
+    domain.validation = true;
   }
-  var senphurl = 'http://sensors.wiki/SENPH#';
 
-  // create SPARQL Query: 
-  var bindingsText = 'INSERT DATA {' +
-    '?domainURI rdf:type     s:domain.' +
-    '?domainURI rdfs:comment ?desc.' +
-    '?domainURI s:isValid    ?validation.';
+  const labelTranslation = await prisma.translation.create({data: {}})
+  const descTranslation = await prisma.translation.create({data: {}})
 
-
-  // create insert ;line for each label 
-  domain.label.forEach(element => {
-    bindingsText = bindingsText.concat(
-      '?domainURI rdfs:label ' + JSON.stringify(element.value) + '@' + element.lang + '. '
-    );
-  });
-
-  // create insert ;line for each phenomenon 
-  domain.phenomenon.forEach(element => {
-    bindingsText = bindingsText.concat(
-      '?domainURI s:isDomainOf ' + '<' + element.phenomenonURI + '>' + '.'
-    );
-  });
-  // add WHERE statement 
-  bindingsText = bindingsText.concat('}');
-  console.log(bindingsText);
-
-  return client
-    .query(bindingsText)
-    // bind values to variable names
-    .bind({
-      domainURI: { value: senphurl + domain.uri, type: 'uri' },
-      // +++ FIXME +++ language hardcoded, make it dynamic
-      desc: { value: domain.description, lang: "en" },
-      validation: { value: domain.validation, type: 'boolean' }
+  const phenomenaIds = domain.phenomenon.map(pheno => pheno.phenomenon.id);
+  console.log(phenomenaIds)
+  if(domain.label.length > 0) {
+    const mappedLabel = domain.label.map(label => {return {languageCode: label.lang, text: label.value, translationId: labelTranslation.id}});
+    const labels = await prisma.translationItem.createMany({data: mappedLabel
+      
     })
-    .execute()
+  }
+
+  // if(domain.description.length > 0) {
+  //   const mappedDesc = domain.description.map(label => {return {languageCode: label.lang, text: label.value, translationId: labelTranslation.id}});
+  //   const descs = await prisma.translationItem.createMany({data: mappedDesc      
+  //   })
+  // }
+
+  const domainItem = await prisma.domain.create({data: {
+    labelId: labelTranslation.id,
+    // descriptionId: descTranslation.id,
+    validation: domain.validation,
+    phenomenon: [phenomenaIds]
+  }})
+
+  return domainItem;
 }
 
 module.exports.convertDomainToJson = function(domain){
