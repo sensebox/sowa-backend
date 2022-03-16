@@ -318,7 +318,7 @@ module.exports.createNewDomain = async function (domain, role) {
   const labelTranslation = await prisma.translation.create({data: {}})
   const descTranslation = await prisma.translation.create({data: {}})
 
-  const phenomenaIds = domain.phenomenon.map(pheno => pheno.phenomenon.id);
+  const phenomenaIds = domain.phenomenon.map(pheno => {return {"id": pheno.phenomenon.id}});
   console.log(phenomenaIds)
   if(domain.label.length > 0) {
     const mappedLabel = domain.label.map(label => {return {languageCode: label.lang, text: label.value, translationId: labelTranslation.id}});
@@ -334,10 +334,14 @@ module.exports.createNewDomain = async function (domain, role) {
   // }
 
   const domainItem = await prisma.domain.create({data: {
-    labelId: labelTranslation.id,
+    label: {
+      connect: {id: labelTranslation.id },
+    },
     // descriptionId: descTranslation.id,
     validation: domain.validation,
-    phenomenon: [phenomenaIds]
+    phenomenon: {
+      connect: phenomenaIds
+    }
   }})
 
   return domainItem;
