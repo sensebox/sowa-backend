@@ -44,7 +44,7 @@
     "translationId" : 8
 },{
     "languageCode": "en",
-    "text": "Device to measure Airquality.",
+    "text": "Device to measure air quality.",
     "translationId" : 8
 },{
     "languageCode": "de",
@@ -76,7 +76,7 @@
     "translationId" : 12
 },{
     "languageCode": "en",
-    "text": "Bosch Sensortec Barometric Pressure Sensor BMP280 is an absolute barometric pressure sensor especially designed for mobile applications. Also able to measure air temperature.",
+    "text": "Bosch Sensortec barometric pressure Sensor BMP280 is an absolute barometric pressure sensor especially designed for mobile applications. Also able to measure air temperature.",
     "translationId" : 12
 },{
     "languageCode": "de",
@@ -108,7 +108,7 @@
     "translationId" : 16
 },{
     "languageCode": "en",
-    "text": "The SCD30 from Sensirion is a high quality Nondispersive Infrared (NDIR) based CO₂ sensor capable of detecting 400 to 10000ppm with an accuracy of ±(30ppm+3%).",
+    "text": "The SCD30 from Sensirion is a high quality non-dispersive infrared (NDIR) based CO₂ sensor capable of detecting 400 to 10000ppm with an accuracy of ±(30ppm+3%).",
     "translationId" : 16
 },{
     "languageCode": "de",
@@ -140,7 +140,7 @@
     "translationId" : 20
 },{
     "languageCode": "en",
-    "text": "The AMS TSL4531 Light Sensor is an ambient light sensor. Therefore, it detects the brightness of ambient light.",
+    "text": "The AMS TSL4531 light sensor is an ambient light sensor. Therefore, it detects the brightness of ambient light.",
     "translationId" : 20
 },{
     "languageCode": "de",
@@ -152,7 +152,7 @@
     "translationId" : 21
 },{
     "languageCode": "de",
-    "text": "VEML6070 is an advanced ultraviolet (UV) light sensor withI2C protocol interface and designed by the CMOS process.",
+    "text": "Der VEML6070 ist ein fortschrittlicher Ultraviolett (UV)-Lichtsensor mitI2C-Protokollschnittstelle und wurde im CMOS-Verfahren entwickelt.",
     "translationId" : 22
 },{
     "languageCode": "en",
@@ -160,11 +160,11 @@
     "translationId" : 22
 },{
     "languageCode": "de",
-    "text": "barometrischer Druck",
+    "text": "Barometrischer Druck",
     "translationId" : 23
 },{
     "languageCode": "en",
-    "text": "barometric pressure",
+    "text": "Barometric pressure",
     "translationId" : 23
 },{
     "languageCode": "de",
@@ -176,11 +176,11 @@
     "translationId" : 24
 },{
     "languageCode": "de",
-    "text": "relative Luftfeuchte",
+    "text": "Relative Luftfeuchte",
     "translationId" : 26
 },{
     "languageCode": "en",
-    "text": "relative Humidity",
+    "text": "Relative humidity",
     "translationId" : 26
 },{
     "languageCode": "de",
@@ -220,7 +220,7 @@
     "translationId" : 33
 },{
     "languageCode": "en",
-    "text": "Carbon Dioxide (CO2) is measured in parts-per-million (ppm).",
+    "text": "Carbon dioxide (CO2) is measured in parts-per-million (ppm).",
     "translationId" : 33
 },{
     "languageCode": "de",
@@ -228,7 +228,7 @@
     "translationId" : 35
 },{
     "languageCode": "en",
-    "text": "Soil Moisture",
+    "text": "Soil moisture",
     "translationId" : 35
 },{
     "languageCode": "de",
@@ -276,7 +276,7 @@
     "translationId" : 44
 },{
     "languageCode": "en",
-    "text": "airQuality",
+    "text": "Air quality",
     "translationId" : 44
 },{
     "languageCode": "de",
@@ -292,7 +292,7 @@
     "translationId" : 46
 },{
     "languageCode": "en",
-    "text": "Climate Phenomena",
+    "text": "Climate phenomena",
     "translationId" : 46
 },{
     "languageCode": "de",
@@ -308,7 +308,7 @@
     "translationId" : 48
 },{
     "languageCode": "en",
-    "text": "Ground Phenomena",
+    "text": "Ground phenomena",
     "translationId" : 48
 },{
     "languageCode": "de",
@@ -428,7 +428,7 @@
     "translationId" : 63
 },{
     "languageCode": "en",
-    "text": "Humidity Sensor",
+    "text": "Humidity sensor",
     "translationId" : 63
 },{
     "languageCode": "de",
@@ -456,11 +456,11 @@
     "translationId" : 66
 },{
     "languageCode": "de",
-    "text": "Gas Sensor",
+    "text": "Gassensor",
     "translationId" : 67
 },{
     "languageCode": "en",
-    "text": "Gas Sensor",
+    "text": "Gas sensor",
     "translationId" : 67
 },{
     "languageCode": "de",
@@ -476,7 +476,7 @@
     "translationId" : 69
 },{
     "languageCode": "en",
-    "text": "The PMS 1003 Sensor is a recent laser based Air Quality Sensor developped by plantower (chinese name: 攀藤 (pānténg)) and used inside a numerous number of air quality sensing devices.",
+    "text": "The PMS 1003 sensor is a recent laser based air quality sensor developped by plantower (chinese name: 攀藤 (pānténg)) and used inside a numerous number of air quality sensing devices.",
     "translationId" : 69
 },{
     "languageCode": "de",
@@ -488,7 +488,7 @@
     "translationId" :70
 },{
     "languageCode": "de",
-    "text": "Luftqualitäts Sensor",
+    "text": "Luftqualitätssensor",
     "translationId" : 71
 },{
     "languageCode": "en",
@@ -520,11 +520,11 @@
     "translationId" : 74
 },{
     "languageCode": "de",
-    "text": "Air quality",
+    "text": "Luftqualität",
     "translationId" : 75
 },{
     "languageCode": "en",
-    "text": "Luftqualität",
+    "text": "Air quality",
     "translationId" : 75
 },{
     "languageCode": "de",
@@ -604,7 +604,7 @@
     "translationId" : 85
 },{
     "languageCode": "en",
-    "text": " Particular Matter Sensor",
+    "text": " Particular matter sensor",
     "translationId" : 85
 },{
     "languageCode": "de",
@@ -748,7 +748,7 @@
     "translationId" : 103
 },{
     "languageCode": "en",
-    "text": "Particulate Matter Sensor",
+    "text": "Particulate matter sensor",
     "translationId" : 103
 },{
     "languageCode": "de",
@@ -800,7 +800,7 @@
     "translationId" : 109
 },{
     "languageCode": "de",
-    "text": "PM10 Konzentration",
+    "text": "PM10-Konzentration",
     "translationId" : 110
 },{
     "languageCode": "en",
