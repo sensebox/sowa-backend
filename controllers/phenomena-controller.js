@@ -472,7 +472,6 @@ module.exports.createNewPhenomenon = async function (phenomenon, role) {
     const mappedLabel = phenomenon.label.map(label => {return {languageCode: label.lang, text: label.value, translationId: labelTranslation.id}});
     const labels = await prisma.translationItem.createMany({data: mappedLabel})
   }
-  console.log(phenomenon)
 
   const units = phenomenon.unit.map(unit => {return {
     unit: {
