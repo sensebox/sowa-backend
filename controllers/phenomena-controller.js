@@ -459,57 +459,39 @@ module.exports.createHistoryPhenomenon = function (phenomenon, user) {
 }
 
 
-module.exports.createNewPhenomenon = function (phenomenon, role) {
+module.exports.createNewPhenomenon = async function (phenomenon, role) {
   if (role != 'expert' && role != 'admin') {
     console.log("User has no verification rights!");
     phenomenon.validation = false;
   }
-  var senphurl = 'http://sensors.wiki/SENPH#';
 
-  // DELETE {...} INSERT{...}
-  var bindingsText = 'INSERT DATA {' +
-    '?phenomenonURI rdf:type     s:phenomenon.' +
-    '?phenomenonURI rdfs:comment ?desc.' +
-    '?phenomenonURI s:isValid ?validation.' +
-    '?phenomenonURI s:markdown ?markdown.';
-  // create insert ;line for each label 
-  phenomenon.label.forEach(element => {
-    bindingsText = bindingsText.concat(
-      '?phenomenonURI rdfs:label ' + JSON.stringify(element.value) + '@' + element.lang + '. '
-    );
-  });
-  // create insert ;line for each unit 
-  phenomenon.unit.forEach(element => {
-    var rov = senphurl + Math.random().toString().split(".")[1];
-    bindingsText = bindingsText.concat(
-      '?phenomenonURI s:describedBy ' + '<' + rov + '>.' +
-      '<' + rov + '> s:describedBy ' + '<' + element.unitUri + '>' + '.' +
-      '<' + element.unitUri + '> rdfs:label "' + element.unitLabel + '".' +
-      '<' + rov + '> s:min "' + element.min + '".' +
-      '<' + rov + '> s:max "' + element.max + '".'
-    );
-  });
-  // create insert ;line for each domain 
-  phenomenon.domain.forEach(element => {
-    bindingsText = bindingsText.concat(
-      '?phenomenonURI s:hasDomain s:' + element.domainUri.slice(senphurl.length) + '. '
-    );
-  });
-  bindingsText = bindingsText.concat('}')
-  // TODO: Add dynamic description language tag!
-  // LOG and EXECTUE UPDATE 
-  console.log(bindingsText)
-  return client
-    .query(bindingsText)
-    .bind({
-      phenomenonURI: { value: senphurl + phenomenon.uri, type: 'uri' },
-      rov: {value: senphurl + Math.random().toString().split(".")[1], type: "uri"},
-      // +++ FIXME +++ language hardcoded, make it dynamic
-      desc: { value: phenomenon.description, lang: "en" },
-      validation: { value: phenomenon.validation, type: 'boolean' },
-      markdown: { value: phenomenon.markdown, type: 'string'}
-    })
-    .execute();
+  const domainIds = phenomenon.domain.map(domain => {return {"id": domain.domain}});
+
+  const labelTranslation = await prisma.translation.create({data: {}})
+  if(phenomenon.label.length > 0) {
+    const mappedLabel = phenomenon.label.map(label => {return {languageCode: label.lang, text: label.value, translationId: labelTranslation.id}});
+    const labels = await prisma.translationItem.createMany({data: mappedLabel})
+  }
+
+  const phenoItem = await prisma.phenomenon.create({data: {
+    label: {
+      connect: {id: labelTranslation.id },
+    },
+    // descriptionId: descTranslation.id,
+    validation: phenomenon.validation,
+    domains: {
+      connect: domainIds
+    },
+    // rov: {
+    //   create: {
+    //     phenomenon.rov
+    //   }
+    // }
+  }})
+
+  console.log("PHENO ITEM", phenoItem)
+  return phenoItem;
+
 }
 
 

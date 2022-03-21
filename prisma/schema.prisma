@@ -93,6 +93,7 @@ model Domain {
 
 model Language {
   code            String            @id @db.VarChar(2)
+  label           String?           @db.VarChar(255)
   TranslationItem TranslationItem[]
 }
 

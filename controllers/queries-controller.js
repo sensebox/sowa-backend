@@ -8,6 +8,7 @@ const updatepoint = `${fuseki_endpoint}/senph/update`;
 const unitpoint = 'http://sparql.hegroup.org/sparql/'; 
 const localUnitpoint = `${fuseki_endpoint}/ui/sparql`;
 
+const prisma = require('../lib/prisma');
 
 
 
@@ -749,26 +750,27 @@ module.exports.getUnitsForPhenomenon = function (iri) {
     });
 }
 
-module.exports.getUnits = function (iri) {
-  return localUnitClient
-    .query(SPARQL`
-    SELECT DISTINCT ?y ?label
-    WHERE
-    {
-    ?y <oboInOwl:hasExactSynonym>  ?z.
-    ?y rdfs:label ?label.
-    FILTER NOT EXISTS {
-  		?q rdfs:subClassOf ?y .
-    }
+module.exports.getUnits = async function (lang) {
+  let languageFilter = true;
+  if (lang) {
+    languageFilter = {
+      where: {
+        languageCode: lang,
+      },
+    };
+  }
 
-    }`)
-    .execute()
-    .then(res => {console.log(res); return res.results.bindings})
-    .catch(function (error) {
-      console.dir(arguments, { depth: null })
-      console.log("Oh no, error!")
-      console.log(error)
-    });
+  const result = await prisma.unit.findMany({
+    select: {
+      id: true,
+      name: true,
+      rov: true,
+      Element: true
+    }
+  });
+
+  return result;
+
 }
 
 // module.exports.getUnitLabel = function (iri) {
