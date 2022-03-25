@@ -67,8 +67,8 @@ router.post('/phenomenon/create/', function (req, res) {
 
 router.post('/phenomenon/edit/', function (req, res) {
   PhenomenaController.editPhenomenon(req.body, res.locals.user.role)
-  PhenomenaController.createHistoryPhenomenon(req.body, res.locals.user)
-    .then(res.json(req.body))
+     .then(res.json(req.body))
+  // PhenomenaController.createHistoryPhenomenon(req.body, res.locals.user)
 });
 
 router.post('/phenomenon/delete/', function (req, res) {

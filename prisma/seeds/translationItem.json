@@ -16,6 +16,14 @@
     "translationId" : 2
 },{
     "languageCode": "de",
+    "text": "",
+    "translationId" : 3
+},{
+    "languageCode": "en",
+    "text": "",
+    "translationId" : 3
+},{
+    "languageCode": "de",
     "text": "senseBox:edu",
     "translationId" : 4
 },{
@@ -30,6 +38,14 @@
     "languageCode": "en",
     "text": "The senseBox:edu is a kit for environmental sensing.",
     "translationId" : 5
+},{
+    "languageCode": "de",
+    "text": "",
+    "translationId" : 6
+},{
+    "languageCode": "en",
+    "text": "",
+    "translationId" : 6
 },{
     "languageCode": "de",
     "text": "LuftdatenInfo Gerät",
@@ -176,6 +192,14 @@
     "translationId" : 24
 },{
     "languageCode": "de",
+    "text": "",
+    "translationId" : 25
+},{
+    "languageCode": "en",
+    "text": "",
+    "translationId" : 25
+},{
+    "languageCode": "de",
     "text": "Relative Luftfeuchte",
     "translationId" : 26
 },{
@@ -190,6 +214,14 @@
     "languageCode": "en",
     "text": "Relative humidity (RH) is the ratio of the partial pressure of water vapor to the equilibrium vapor pressure of water at a given temperature. (Source: Wikipedia)",
     "translationId" : 27
+},{
+    "languageCode": "de",
+    "text": "",
+    "translationId" : 28
+},{
+    "languageCode": "en",
+    "text": "",
+    "translationId" : 28
 },{
     "languageCode": "de",
     "text": "Temperatur",
@@ -208,6 +240,14 @@
     "translationId" : 30
 },{
     "languageCode": "de",
+    "text": "",
+    "translationId" : 31
+},{
+    "languageCode": "en",
+    "text": "",
+    "translationId" : 31
+},{
+    "languageCode": "de",
     "text": "CO2",
     "translationId" : 32
 },{
@@ -222,6 +262,14 @@
     "languageCode": "en",
     "text": "Carbon dioxide (CO2) is measured in parts-per-million (ppm).",
     "translationId" : 33
+},{
+    "languageCode": "de",
+    "text": "test",
+    "translationId" : 34
+},{
+    "languageCode": "en",
+    "text": "test",
+    "translationId" : 34
 },{
     "languageCode": "de",
     "text": "Bodenfeuchte",
@@ -240,6 +288,14 @@
     "translationId" : 36
 },{
     "languageCode": "de",
+    "text": "",
+    "translationId" : 37
+},{
+    "languageCode": "en",
+    "text": "",
+    "translationId" : 37
+},{
+    "languageCode": "de",
     "text": "Umgebungslicht",
     "translationId" : 38
 },{
@@ -256,6 +312,14 @@
     "translationId" : 39
 },{
     "languageCode": "de",
+    "text": "",
+    "translationId" : 40
+},{
+    "languageCode": "en",
+    "text": "",
+    "translationId" : 40
+},{
+    "languageCode": "de",
     "text": "Ultraviolett A Licht",
     "translationId" : 41
 },{
@@ -270,6 +334,14 @@
     "languageCode": "en",
     "text": "Ultraviolet light with wavelength between 315 and 380 nm.",
     "translationId" : 42
+},{
+    "languageCode": "de",
+    "text": "",
+    "translationId" : 43
+},{
+    "languageCode": "en",
+    "text": "",
+    "translationId" : 43
 },{
     "languageCode": "de",
     "text": "Luftqualität",

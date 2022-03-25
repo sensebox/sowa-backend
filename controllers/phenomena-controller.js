@@ -322,62 +322,62 @@ module.exports.getHistoricPhenomenon = function (iri) {
 
 
 //get a single device identified by its iri @returns the device's labels, descriptions, website, image, contact and compatible sensors
-module.exports.editPhenomenon = function (phenomenon, role) {
-  var senphurl = 'http://sensors.wiki/SENPH#';
-  console.log(phenomenon);
-  if (role != 'expert' && role != 'admin') {
-    console.log("User has no verification rights!");
-    phenomenon.validation = false;
-  }
-  // create SPARQL Query: 
-  var bindingsText = 'DELETE {?a ?b ?c}' +
-    'INSERT {' +
-    '?phenomenonURI rdf:type     s:phenomenon.' +
-    '?phenomenonURI rdfs:comment ?desc.' +
-    '?phenomenonURI s:isValid ?validation.' +
-    '?phenomenonURI s:markdown ?markdown.';
-  // create insert ;line for each unit 
-  phenomenon.label.forEach(element => {
-    bindingsText = bindingsText.concat(
-      '?phenomenonURI rdfs:label ' + JSON.stringify(element.value) + '@' + element.lang + '. '
-    );
-  });
-  // create insert ;line for each unit 
-  phenomenon.unit.forEach(element => {
-    var rov = senphurl + Math.random().toString().split(".")[1];
-    bindingsText = bindingsText.concat(
-      '?phenomenonURI s:describedBy ' + '<' + rov + '>.' +
-      '<' + rov + '> s:describedBy ' + '<' + element.unitUri + '>' + '.' +
-      '<' + element.unitUri + '> rdfs:label "' + element.unitLabel + '".' +
-      '<' + rov + '> s:min "' + element.min + '".' +
-      '<' + rov + '> s:max "' + element.max + '".'
-    );
-  });
-  // create insert ;line for each domain 
-  phenomenon.domain.forEach(element => {
-    bindingsText = bindingsText.concat(
-      '?phenomenonURI s:hasDomain s:' + element.domainUri.slice(senphurl.length) + '. '
-    );
-  });
-  // add WHERE statement 
-  bindingsText = bindingsText.concat(
-    '} WHERE {?a ?b ?c. FILTER (?a = ?phenomenonURI || ?c = ?phenomenonURI)}');
-  console.log(bindingsText);
+// module.exports.editPhenomenon = function (phenomenon, role) {
+//   var senphurl = 'http://sensors.wiki/SENPH#';
+//   console.log(phenomenon);
+//   if (role != 'expert' && role != 'admin') {
+//     console.log("User has no verification rights!");
+//     phenomenon.validation = false;
+//   }
+//   // create SPARQL Query: 
+//   var bindingsText = 'DELETE {?a ?b ?c}' +
+//     'INSERT {' +
+//     '?phenomenonURI rdf:type     s:phenomenon.' +
+//     '?phenomenonURI rdfs:comment ?desc.' +
+//     '?phenomenonURI s:isValid ?validation.' +
+//     '?phenomenonURI s:markdown ?markdown.';
+//   // create insert ;line for each unit 
+//   phenomenon.label.forEach(element => {
+//     bindingsText = bindingsText.concat(
+//       '?phenomenonURI rdfs:label ' + JSON.stringify(element.value) + '@' + element.lang + '. '
+//     );
+//   });
+//   // create insert ;line for each unit 
+//   phenomenon.unit.forEach(element => {
+//     var rov = senphurl + Math.random().toString().split(".")[1];
+//     bindingsText = bindingsText.concat(
+//       '?phenomenonURI s:describedBy ' + '<' + rov + '>.' +
+//       '<' + rov + '> s:describedBy ' + '<' + element.unitUri + '>' + '.' +
+//       '<' + element.unitUri + '> rdfs:label "' + element.unitLabel + '".' +
+//       '<' + rov + '> s:min "' + element.min + '".' +
+//       '<' + rov + '> s:max "' + element.max + '".'
+//     );
+//   });
+//   // create insert ;line for each domain 
+//   phenomenon.domain.forEach(element => {
+//     bindingsText = bindingsText.concat(
+//       '?phenomenonURI s:hasDomain s:' + element.domainUri.slice(senphurl.length) + '. '
+//     );
+//   });
+//   // add WHERE statement 
+//   bindingsText = bindingsText.concat(
+//     '} WHERE {?a ?b ?c. FILTER (?a = ?phenomenonURI || ?c = ?phenomenonURI)}');
+//   console.log(bindingsText);
 
-  return client
-    .query(bindingsText)
-    // bind values to variable names
-    .bind({
-      phenomenonURI: { value: senphurl + phenomenon.uri, type: 'uri' },
-      // +++ FIXME +++ language hardcoded, make it dynamic
-      // phenomenonLabel:      {value: phenomenon.name, lang: "en"},
-      // +++ FIXME +++ language hardcoded, make it dynamic
-      desc: { value: phenomenon.description, lang: "en" },
-      validation: { value: phenomenon.validation, type: 'boolean' },
-      markdown: { value: phenomenon.markdown, type: 'string'}
-    })
-    .execute();
-}
+//   return client
+//     .query(bindingsText)
+//     // bind values to variable names
+//     .bind({
+//       phenomenonURI: { value: senphurl + phenomenon.uri, type: 'uri' },
+//       // +++ FIXME +++ language hardcoded, make it dynamic
+//       // phenomenonLabel:      {value: phenomenon.name, lang: "en"},
+//       // +++ FIXME +++ language hardcoded, make it dynamic
+//       desc: { value: phenomenon.description, lang: "en" },
+//       validation: { value: phenomenon.validation, type: 'boolean' },
+//       markdown: { value: phenomenon.markdown, type: 'string'}
+//     })
+//     .execute();
+// }
 
 //delete a single device identified by its iri 
 module.exports.deletePhenomenon = function (phenomenon, role) {
@@ -464,7 +464,7 @@ module.exports.createNewPhenomenon = async function (phenomenon, role) {
     console.log("User has no verification rights!");
     phenomenon.validation = false;
   }
-
+  console.log(phenomenon)
   const domainIds = phenomenon.domain.map(domain => {return {"id": domain.domain}});
 
   const labelTranslation = await prisma.translation.create({data: {}})
@@ -493,13 +493,171 @@ module.exports.createNewPhenomenon = async function (phenomenon, role) {
     },
     rov: {
       create: units
-      
     }
   }})
 
   console.log("PHENO ITEM", phenoItem)
   return phenoItem;
 
+}
+
+// 
+module.exports.editPhenomenon = async function (phenomenonForm, role) {
+  if (role != 'expert' && role != 'admin') {
+    console.log("User has no verification rights!");
+    phenomenonForm.validation = false;
+  }
+
+  console.log(phenomenonForm)
+
+  /////////// Current phenomenon ////////////
+  // retrive current phenomeonon with current attributes from database 
+  const phenomenon = await prisma.phenomenon.findUnique({
+    where: {
+      id: phenomenonForm.id,
+    }
+  })
+
+  
+  //////////// Labels ////////////
+  // delete, update or create domains for editing
+  phenomenonForm.deletedLabels.forEach( async (label) => {
+    console.log(label.translationId)
+    console.log(label.lang)
+    const deleteLabel = await prisma.translationItem.deleteMany({
+      where: {
+        translationId: label.translationId,
+        languageCode: label.lang,
+      }
+    })
+  })
+
+  phenomenonForm.label.forEach( async (label) => {
+    if (label.translationId !== null) {
+      const updateOrCreateLabel = await prisma.translationItem.updateMany({
+        where: {
+          translationId: label.translationId,
+          languageCode: label.lang
+        },
+        data:  {
+          text: label.value
+        }
+      })
+    } else if (label.translationId === null) {
+      const createLabel = await prisma.translationItem.create({
+        data: {
+          translationId: phenomenon.labelId,
+          text: label.value,
+          languageCode: label.lang
+        }
+      })
+    }
+    
+  })
+
+  /////////// Description //////////////
+  // update description text; if the whole text is deleted, description is set to an empty string
+  const updateDescription = await prisma.translationItem.updateMany({
+    where: {
+      translationId: phenomenonForm.description.translationId,
+      languageCode: "en",
+      // langageCode hardcoded, needs to be changed in schema that description is no longer a multi-language option
+    },
+    data: {
+      text:  phenomenonForm.description.text,
+    }
+  })
+
+  /////////// Markdown //////////////
+  // update markdown text; if the whole text is deleted, markdown is set to an empty string
+  const updateMarkdown = await prisma.translationItem.updateMany({
+    where: {
+      translationId: phenomenonForm.markdown.translationId,
+      languageCode: "en",
+      // langageCode hardcoded, needs to be changed in schema that description is no longer a multi-language option
+    },
+    data: {
+      text:  phenomenonForm.markdown.text,
+    }
+  })
+
+
+  /////////// Domains //////////////
+  // delete, update or create domains for editing
+  phenomenonForm.deletedDomains.forEach( async (domain) => {
+    console.log(domain.domain)
+    console.log(domain.exists)
+    if (domain.exists === true) {
+      const disconnectDomain = await prisma.domain.update({
+        where: {
+          id: domain.domain
+        },
+        data: {
+          phenomenon: {
+            disconnect: {
+              id: phenomenonForm.id
+            }
+          }
+          
+        }
+      })
+    } 
+  })
+
+  phenomenonForm.domain.forEach( async (domain) => {
+    if (domain.exists === false) {
+      const connectDomain = await prisma.domain.update({
+        where: {
+          id: domain.domain
+        },
+        data: {
+          phenomenon: {
+            connect: {
+              id: phenomenonForm.id
+            }
+          }
+        }
+      })
+    }
+  })
+
+
+  ////////// Units //////////////
+  // delete, update or create range of values (units) for editing
+  phenomenonForm.deletedUnits.forEach( async (unit) => {
+    console.log(unit)
+    const deleteUnit = await prisma.rangeOfValues.delete({
+      where: {
+        id: unit.rovId
+      }
+    })
+  })
+
+  phenomenonForm.unit.forEach( async (unit) => {
+    console.log(unit)
+    if (unit.rovId !== null) {
+      const updateUnit = await prisma.rangeOfValues.update({
+        where: {
+          id: unit.rovId
+        },
+        data: {
+          min: unit.min,
+          max: unit.max,
+          unitId: unit.unitUri,
+        }
+      })
+    }
+    else if (unit.rovId === null) {
+      const createUnit = await prisma.rangeOfValues.create({
+        data: {
+          min: unit.min,
+          max: unit.max,
+          unitId: unit.unitUri,
+          phenomenonId: phenomenonForm.id,
+        }
+      })
+    }
+  })
 }
 
 
