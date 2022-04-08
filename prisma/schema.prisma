@@ -68,7 +68,7 @@ model RangeOfValues {
   id           Int        @id @default(autoincrement())
   min          Int?
   max          Int?
-  unit         Unit       @relation(fields: [unitId], references: [id])
+  unit         Unit?       @relation(fields: [unitId], references: [id])
   unitId       Int
   phenomenon   Phenomenon @relation(fields: [phenomenonId], references: [id])
   phenomenonId Int

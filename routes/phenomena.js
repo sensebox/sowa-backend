@@ -73,7 +73,7 @@ router.post('/phenomenon/edit/', function (req, res) {
 
 router.post('/phenomenon/delete/', function (req, res) {
   PhenomenaController.deletePhenomenon(req.body, res.locals.user.role)
-    .then(res.json(req.body))
+     .then(res.json(req.body))
 });
 
 

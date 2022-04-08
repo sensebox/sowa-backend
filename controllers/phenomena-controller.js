@@ -380,25 +380,25 @@ module.exports.getHistoricPhenomenon = function (iri) {
 // }
 
 //delete a single device identified by its iri 
-module.exports.deletePhenomenon = function (phenomenon, role) {
-  var senphurl = 'http://sensors.wiki/SENPH#';
-  console.log(phenomenon);
-  // create SPARQL Query: 
-  var bindingsText =
-    ` DELETE {?a ?b ?c}
-    WHERE {?a ?b ?c .
-    FILTER (?a = ?phenomenonURI || ?c = ?phenomenonURI)
-  }`;
-  console.log(bindingsText);
+// module.exports.deletePhenomenon = function (phenomenon, role) {
+//   var senphurl = 'http://sensors.wiki/SENPH#';
+//   console.log(phenomenon);
+//   // create SPARQL Query: 
+//   var bindingsText =
+//     ` DELETE {?a ?b ?c}
+//     WHERE {?a ?b ?c .
+//     FILTER (?a = ?phenomenonURI || ?c = ?phenomenonURI)
+//   }`;
+//   console.log(bindingsText);
 
-  return client
-    .query(bindingsText)
-    // bind values to variable names
-    .bind({
-      phenomenonURI: { value: senphurl + phenomenon.uri, type: 'uri' }
-    })
-    .execute();
-}
+//   return client
+//     .query(bindingsText)
+//     // bind values to variable names
+//     .bind({
+//       phenomenonURI: { value: senphurl + phenomenon.uri, type: 'uri' }
+//     })
+//     .execute();
+// }
 
 
 
@@ -501,7 +501,7 @@ module.exports.createNewPhenomenon = async function (phenomenon, role) {
 
 }
 
-// 
+// editing 
 module.exports.editPhenomenon = async function (phenomenonForm, role) {
   if (role != 'expert' && role != 'admin') {
     console.log("User has no verification rights!");
@@ -656,6 +656,52 @@ module.exports.editPhenomenon = async function (phenomenonForm, role) {
           phenomenonId: phenomenonForm.id,
         }
       })
+    }
+  })
+}
+
+
+let translationsToDelete;
+
+module.exports.deletePhenomenon = async function (phenomenonForm, role) {
+  if (role != 'expert' && role != 'admin') {
+    console.log("User has no verification rights!");
+    phenomenonForm.validation = false;
+  }
+
+  console.log(phenomenonForm);
+
+  const deleteElements = await prisma.element.deleteMany({
+    where: {
+      phenomenonId: phenomenonForm.id,
+    },
+  });
+
+  const deleteRov = await prisma.rangeOfValues.deleteMany({
+    where: {
+      phenomenonId: phenomenonForm.id,
+    }
+  })
+
+  const deletetranslationItems = await prisma.translationItem.deleteMany({
+    where: {
+      translationId: {
+        in: phenomenonForm.translationIds,
+      }
+    }
+  })
+
+  const deletetranslations = await prisma.translation.deleteMany({
+    where: {
+      id: {
+        in: phenomenonForm.translationIds,
+      }
+    }
+  })
+
+  const deletePhenomenon = await prisma.phenomenon.delete({
+    where: {
+      id: phenomenonForm.id,
     }
   })
 }
