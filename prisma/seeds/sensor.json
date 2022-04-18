@@ -3,7 +3,7 @@
   "manufacturer": "Bosch",
   "lifePeriod": 365,
   "price": 0.00,
-  "image": null,
+  "image": "BME680.jpg",
   "datasheet": null,
   "label": {
     "connect": {

@@ -118,14 +118,14 @@ router.post('/device/create/', function (req, res) {
 });
 
 router.post('/device/edit/', function (req, res) {
-  console.dir(req.body);
+  // console.dir(req.body);
   DevicesController.editDevice(req.body, res.locals.user.role)
-  DevicesController.createHistoryDevice(req.body, res.locals.user)
-  .then(res.json(req.body))
+    .then(res.json(req.body))
+    // DevicesController.createHistoryDevice(req.body, res.locals.user)
 });
 
 router.post('/device/delete/', function (req, res) {
-  console.log(req.body);
+  // console.log(req.body);
   DevicesController.deleteDevice(req.body, res.locals.user.role)
     .then(res.json(req.body))
 });

@@ -520,7 +520,7 @@ module.exports.editPhenomenon = async function (phenomenonForm, role) {
 
   
   //////////// Labels ////////////
-  // delete, update or create domains for editing
+  // delete, update or create labels
   phenomenonForm.deletedLabels.forEach( async (label) => {
     console.log(label.translationId)
     console.log(label.lang)
@@ -534,13 +534,13 @@ module.exports.editPhenomenon = async function (phenomenonForm, role) {
 
   phenomenonForm.label.forEach( async (label) => {
     if (label.translationId !== null) {
-      const updateOrCreateLabel = await prisma.translationItem.updateMany({
+      const updateLabel = await prisma.translationItem.updateMany({
         where: {
           translationId: label.translationId,
           languageCode: label.lang
         },
         data:  {
-          text: label.value
+          text: label.value,
         }
       })
     } else if (label.translationId === null) {
@@ -552,7 +552,6 @@ module.exports.editPhenomenon = async function (phenomenonForm, role) {
         }
       })
     }
-    
   })
 
   /////////// Description //////////////
@@ -583,7 +582,7 @@ module.exports.editPhenomenon = async function (phenomenonForm, role) {
 
 
   /////////// Domains //////////////
-  // delete, update or create domains for editing
+  // delete, update or create domains
   phenomenonForm.deletedDomains.forEach( async (domain) => {
     console.log(domain.domain)
     console.log(domain.exists)
@@ -660,8 +659,6 @@ module.exports.editPhenomenon = async function (phenomenonForm, role) {
   })
 }
 
-
-let translationsToDelete;
 
 module.exports.deletePhenomenon = async function (phenomenonForm, role) {
   if (role != 'expert' && role != 'admin') {

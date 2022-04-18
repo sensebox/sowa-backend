@@ -133,7 +133,11 @@ module.exports.getDevice = async function (iri,lang) {
           item: languageFilter,
         },
       },
-      markdown: true,
+      markdown: {
+        select: {
+          item: languageFilter,
+        },
+      },
       image: true,
       sensors: {
         select: {
@@ -367,51 +371,185 @@ module.exports.getSensorElement = function (iri) {
 
 
 //edit a device
-module.exports.editDevice = function (device, role) {
-  var senphurl = 'http://sensors.wiki/SENPH#';
-  console.log(device);
+module.exports.editDevice = async function (deviceForm, role) {
+
   if (role != 'expert' && role != 'admin') {
     console.log("User has no verification rights!");
-    device.validation = false;
+    deviceForm.validation = false;
   }
-  // create SPARQL Query: 
-  var bindingsText = 'DELETE {?a ?b ?c}' +
-    'INSERT {' +
-    '?deviceURI rdf:type     s:device.' +
-    '?deviceURI rdfs:comment ?desc.' +
-    '?deviceURI s:website ?website.' +
-    '?deviceURI s:image ?image.' +
-    '?deviceURI s:hasContact ?contact.' +
-    '?deviceURI s:isValid ?validation.' +
-    '?deviceURI s:markdown ?markdown.';
 
-  // create insert ;line for each sensor 
-  device.sensor.forEach(element => {
-    var string = '?deviceURI s:hasSensor s:' + element.sensorUri.slice(senphurl.length) + '. ';
-    bindingsText = bindingsText.concat(string)
-  });
-  device.label.forEach(element => {
-    bindingsText = bindingsText.concat(
-      '?deviceURI rdfs:label ' + JSON.stringify(element.value) + '@' + element.lang + '. '
-    );
-  });
-  // add WHERE statement 
-  bindingsText = bindingsText.concat('} WHERE {?a ?b ?c. FILTER (?a = ?deviceURI || ?c = ?deviceURI)}');
-  console.log(bindingsText);
-  return client
-    .query(bindingsText)
-    // bind values to variable names
-    .bind({
-      deviceURI: { value: senphurl + device.uri, type: 'uri' },
-      // +++ FIXME +++ language hardcoded, make it dynamic
-      desc: { value: device.description, lang: "en" },
-      website: device.website,
-      image: { value: device.image, type: 'string' },
-      contact: device.contact,
-      validation: { value: device.validation, type: 'boolean' },
-      markdown: {value: device.markdown, type: 'string'}
+  console.log(deviceForm)
+
+  /////////// Current device ////////////
+  // retrive current phenomeonon with current attributes from database 
+  const device = await prisma.device.findUnique({
+    where: {
+      id: deviceForm.id,
+    }
+  })
+
+
+  //////////// Labels ////////////
+  // delete, update or create labels
+  deviceForm.deletedLabels.forEach( async (label) => {
+    console.log(label.translationId)
+    console.log(label.lang)
+    const deleteLabel = await prisma.translationItem.deleteMany({
+      where: {
+        translationId: label.translationId,
+        languageCode: label.lang,
+      }
     })
-    .execute()
+  })
+
+
+  deviceForm.label.forEach( async (label) => {
+    if (label.translationId !== null) {
+      const updateLabel = await prisma.translationItem.updateMany({
+        where: {
+          translationId: label.translationId,
+          languageCode: label.lang
+        },
+        data:  {
+          text: label.value
+        }
+      })
+    } else if (label.translationId === null) {
+      const createLabel = await prisma.translationItem.create({
+        data: {
+          translationId: device.labelId,
+          text: label.value,
+          languageCode: label.lang
+        }
+      })
+    }
+  })
+
+
+  /////////// Description //////////////
+  // update description text; if the whole text is deleted, description is set to an empty string
+  const updateDescription = await prisma.translationItem.updateMany({
+    where: {
+      translationId: deviceForm.description.translationId,
+      languageCode: "en",
+      // langageCode hardcoded, needs to be changed in schema that description is no longer a multi-language option
+    },
+    data: {
+      text:  deviceForm.description.text,
+    }
+  })
+
+
+  /////////// Markdown //////////////
+  // update markdown text; if the whole text is deleted, markdown is set to an empty string
+  const updateMarkdown = await prisma.translationItem.updateMany({
+    where: {
+      translationId: deviceForm.markdown.translationId,
+      languageCode: "en",
+      // langageCode hardcoded, needs to be changed in schema that description is no longer a multi-language option
+    },
+    data: {
+      text:  deviceForm.markdown.text,
+    }
+  })
+
+
+  /////////// Device //////////////
+  // update device values: image, validation
+  const updateDevice = await prisma.device.update({
+    where: {
+      id: deviceForm.id,
+    },
+    data: {
+      image: deviceForm.image,
+      validation: deviceForm.validation,
+    }
+  })
+
+
+  /////////// Sensors //////////////
+  // delete, update or create sensors of devices
+  deviceForm.deletedSensors.forEach( async (sensor) => {
+    console.log(sensor.sensor)
+    console.log(sensor.exists)
+    if (sensor.exists === true) {
+      const disconnectSensor = await prisma.sensor.update({
+        where: {
+          id: sensor.sensor
+        },
+        data: {
+          devices: {
+            disconnect: {
+              id: deviceForm.id
+            }
+          }
+        }
+      })
+    } 
+  })
+
+  deviceForm.sensor.forEach( async (sensor) => {
+    if (sensor.exists === false) {
+      const connectDevice = await prisma.sensor.update({
+        where: {
+          id: sensor.sensor
+        },
+        data: {
+          devices: {
+            connect: {
+              id: deviceForm.id
+            }
+          }
+        }
+      })
+    }
+  })
+
+
+  // var senphurl = 'http://sensors.wiki/SENPH#';
+  // console.log(device);
+  // if (role != 'expert' && role != 'admin') {
+  //   console.log("User has no verification rights!");
+  //   device.validation = false;
+  // }
+  // // create SPARQL Query: 
+  // var bindingsText = 'DELETE {?a ?b ?c}' +
+  //   'INSERT {' +
+  //   '?deviceURI rdf:type     s:device.' +
+  //   '?deviceURI rdfs:comment ?desc.' +
+  //   '?deviceURI s:website ?website.' +
+  //   '?deviceURI s:image ?image.' +
+  //   '?deviceURI s:hasContact ?contact.' +
+  //   '?deviceURI s:isValid ?validation.' +
+  //   '?deviceURI s:markdown ?markdown.';
+
+  // // create insert ;line for each sensor 
+  // device.sensor.forEach(element => {
+  //   var string = '?deviceURI s:hasSensor s:' + element.sensorUri.slice(senphurl.length) + '. ';
+  //   bindingsText = bindingsText.concat(string)
+  // });
+  // device.label.forEach(element => {
+  //   bindingsText = bindingsText.concat(
+  //     '?deviceURI rdfs:label ' + JSON.stringify(element.value) + '@' + element.lang + '. '
+  //   );
+  // });
+  // // add WHERE statement 
+  // bindingsText = bindingsText.concat('} WHERE {?a ?b ?c. FILTER (?a = ?deviceURI || ?c = ?deviceURI)}');
+  // console.log(bindingsText);
+  // return client
+  //   .query(bindingsText)
+  //   // bind values to variable names
+  //   .bind({
+  //     deviceURI: { value: senphurl + device.uri, type: 'uri' },
+  //     // +++ FIXME +++ language hardcoded, make it dynamic
+  //     desc: { value: device.description, lang: "en" },
+  //     website: device.website,
+  //     image: { value: device.image, type: 'string' },
+  //     contact: device.contact,
+  //     validation: { value: device.validation, type: 'boolean' },
+  //     markdown: {value: device.markdown, type: 'string'}
+  //   })
+  //   .execute()
 }
 
 module.exports.deleteDevice = function (device, role) {

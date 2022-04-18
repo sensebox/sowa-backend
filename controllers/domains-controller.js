@@ -193,48 +193,154 @@ module.exports.getHistoricDomain = function (iri) {
 
 
 //edit a domain
-module.exports.editDomain = function (domain, role) {
-  var senphurl = 'http://sensors.wiki/SENPH#';
-  console.log(domain);
-  if (role != ('expert' || 'admin')) {
+module.exports.editDomain = async function (domainForm, role) {
+
+  if (role != 'expert' && role != 'admin') {
     console.log("User has no verification rights!");
-    domain.validation = false;
+    domainForm.validation = false;
   }
-  // create SPARQL Query: 
-  var bindingsText = 'DELETE {?a ?b ?c}' +
-    'INSERT {' +
-    '?domainURI rdf:type     s:domain.' +
-    '?domainURI rdfs:comment ?desc.' +
-    '?domainURI s:isValid ?validation.';
 
-  // create insert ;line for each label 
-  domain.label.forEach(element => {
-    bindingsText = bindingsText.concat(
-      '?domainURI rdfs:label ' + JSON.stringify(element.value) + '@' + element.lang + '. '
-    );
-  });
+  console.log(domainForm)
 
-  // create insert ;line for each phenomenon 
-  domain.phenomenon.forEach(element => {
-    bindingsText = bindingsText.concat(
-      '?domainURI s:isDomainOf ' + '<' + element.phenomenonURI + '>' + '.'
-    );
-  });
+  /////////// Current domain ////////////
+  // retrive current phenomeonon with current attributes from database 
+  const domain = await prisma.domain.findUnique({
+    where: {
+      id: domainForm.id,
+    }
+  })
 
-  // add WHERE statement 
-  bindingsText = bindingsText.concat('} WHERE {?a ?b ?c. FILTER (?a = ?domainURI || ?c = ?domainURI)}');
-  console.log(bindingsText);
-
-  return client
-    .query(bindingsText)
-    // bind values to variable names
-    .bind({
-      domainURI: { value: senphurl + domain.uri, type: 'uri' },
-      // +++ FIXME +++ language hardcoded, make it dynamic
-      desc: { value: domain.description, lang: "en" },
-      validation: { value: domain.validation, type: 'boolean' }
+  //////////// Labels ////////////
+  // delete, update or create labels
+  domainForm.deletedLabels.forEach( async (label) => {
+    console.log(label.translationId)
+    console.log(label.lang)
+    const deleteLabel = await prisma.translationItem.deleteMany({
+      where: {
+        translationId: label.translationId,
+        languageCode: label.lang,
+      }
     })
-    .execute()
+  })
+
+  domainForm.label.forEach( async (label) => {
+    if (label.translationId !== null) {
+      const updateLabel = await prisma.translationItem.updateMany({
+        where: {
+          translationId: label.translationId,
+          languageCode: label.lang
+        },
+        data:  {
+          text: label.value,
+        }
+      })
+    } else if (label.translationId === null) {
+      const createLabel = await prisma.translationItem.create({
+        data: {
+          translationId: domain.labelId,
+          text: label.value,
+          languageCode: label.lang
+        }
+      })
+    }
+  })
+
+
+  /////////// Description //////////////
+  // update description text; if the whole text is deleted, description is set to an empty string
+  const updateDescription = await prisma.translationItem.updateMany({
+    where: {
+      translationId: domainForm.description.translationId,
+      languageCode: "en",
+      // langageCode hardcoded, needs to be changed in schema that description is no longer a multi-language option
+    },
+    data: {
+      text:  domainForm.description.text,
+    }
+  })
+
+
+  /////////// Phenomena //////////////
+  // delete, update or create phenomena
+  domainForm.deletedPhenomena.forEach( async (phenomenon) => {
+    console.log(phenomenon.phenomenon)
+    console.log(phenomenon.exists)
+    if (phenomenon.exists === true) {
+      const disconnectPhenomenon = await prisma.domain.update({
+        where: {
+          id: domainForm.id
+        },
+        data: {
+          phenomenon: {
+            disconnect: {
+              id: phenomenon.phenomenon
+            }
+          }
+          
+        }
+      })
+    } 
+  })
+
+  domainForm.phenomenon.forEach( async (phenomenon) => {
+    if (phenomenon.exists === false) {
+      const connectPhenomenon = await prisma.domain.update({
+        where: {
+          id: domainForm.id
+        },
+        data: {
+          phenomenon: {
+            connect: {
+              id: phenomenon.phenomenon
+            }
+          }
+        }
+      })
+    }
+  })
+
+
+  // var senphurl = 'http://sensors.wiki/SENPH#';
+  // console.log(domain);
+  // if (role != ('expert' || 'admin')) {
+  //   console.log("User has no verification rights!");
+  //   domain.validation = false;
+  // }
+  // // create SPARQL Query: 
+  // var bindingsText = 'DELETE {?a ?b ?c}' +
+  //   'INSERT {' +
+  //   '?domainURI rdf:type     s:domain.' +
+  //   '?domainURI rdfs:comment ?desc.' +
+  //   '?domainURI s:isValid ?validation.';
+
+  // // create insert ;line for each label 
+  // domain.label.forEach(element => {
+  //   bindingsText = bindingsText.concat(
+  //     '?domainURI rdfs:label ' + JSON.stringify(element.value) + '@' + element.lang + '. '
+  //   );
+  // });
+
+  // // create insert ;line for each phenomenon 
+  // domain.phenomenon.forEach(element => {
+  //   bindingsText = bindingsText.concat(
+  //     '?domainURI s:isDomainOf ' + '<' + element.phenomenonURI + '>' + '.'
+  //   );
+  // });
+
+  // // add WHERE statement 
+  // bindingsText = bindingsText.concat('} WHERE {?a ?b ?c. FILTER (?a = ?domainURI || ?c = ?domainURI)}');
+  // console.log(bindingsText);
+
+  // return client
+  //   .query(bindingsText)
+  //   // bind values to variable names
+  //   .bind({
+  //     domainURI: { value: senphurl + domain.uri, type: 'uri' },
+  //     // +++ FIXME +++ language hardcoded, make it dynamic
+  //     desc: { value: domain.description, lang: "en" },
+  //     validation: { value: domain.validation, type: 'boolean' }
+  //   })
+  //   .execute()
 }
 
 module.exports.deleteDomain = function (domain, role) {

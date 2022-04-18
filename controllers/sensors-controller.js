@@ -213,6 +213,17 @@ module.exports.getSensor = async function (iri, lang) {
           },
         }
       },
+      devices: {
+        select: {
+          id: true,
+          label: {
+            select: {
+              item: languageFilter
+            }
+          },
+          validation: true,
+        }
+      },
       price: true,
       image: true,
       manufacturer: true,
@@ -347,80 +358,243 @@ ORDER BY ?phenomenon ?device ?sensorElement`;
 // }
 
 
-module.exports.editSensor = function (sensor, role) {
-  var senphurl = 'http://sensors.wiki/SENPH#';
-  // if (role != 'expert' && role != 'admin') {
-  //   console.log("User has no verification rights!");
-  //   sensor.validation = false;
-  // }
-  sensor.sensorElement.forEach(element => {
-    element['uri'] = "sensorElement_" + sensor.uri + "_" + element.phenomenonUri.slice(senphurl.length);
+module.exports.editSensor = async function (sensorForm, role) {
+
+  if (role != 'expert' && role != 'admin') {
+    console.log("User has no verification rights!");
+    sensorForm.validation = false;
+  }
+
+  console.log(sensorForm)
+
+  /////////// Current sensor ////////////
+  // retrive current phenomeonon with current attributes from database 
+  const sensor = await prisma.sensor.findUnique({
+    where: {
+      id: sensorForm.id,
+    }
   })
 
-  // DELETE {...} INSERT{...}
-  var bindingsText = 'DELETE {?a ?b ?c}' +
-    'INSERT {' +
-    '?sensorURI rdf:type        s:sensor. ' +
-    '?sensorURI rdfs:comment    ?desc. ' +
-    '?sensorURI s:manufacturer  ?manu.' +
-    '?sensorURI s:dataSheet     ?datasheet.' +
-    '?sensorURI s:priceInEuro   ?price.' +
-    '?sensorURI s:lifePeriod    ?life.' +
-    '?sensorURI s:image         ?image.' +
-    '?sensorURI s:isValid       ?validation.' +
-    '?sensorURI s:markdown      ?markdown.';
-
-
-  sensor.label.forEach(element => {
-    bindingsText = bindingsText.concat(
-      '?sensorURI rdfs:label ' + JSON.stringify(element.value) + '@' + element.lang + '. '
-    );
-  });
-
-  sensor.device.forEach(element => {
-    bindingsText = bindingsText.concat(
-      '?sensorURI s:isSensorOf s:' + element.deviceUri.slice(senphurl.length) + '. '
-    );
-  });
-
-  sensor.sensorElement.forEach(element => {
-    var string = '?sensorURI s:hasElement s:' + element.uri + '. ' +
-      's:' + element.uri + ' s:canMeasure s:' + element.phenomenonUri.slice(senphurl.length) + '. ' +
-      's:' + element.uri + ' s:hasAccuracyUnit <' + element.unitOfAccuracy + '>. ' +
-      's:' + element.uri + ' s:accuracyValue ' + JSON.stringify(element.accuracyValue) + '.';
-    bindingsText = bindingsText.concat(string)
-  });
-
-  // WHERE { ... FILTER{...}}
-  bindingsText = bindingsText.concat(
-    '} WHERE {?a ?b ?c. FILTER ('
-  );
-
-  sensor.sensorElement.forEach(element => {
-    bindingsText = bindingsText.concat(
-      '?a = s:' + element.uri + ' || ?c = s:' + element.uri + ' || '
-    );
-  });
-
-  bindingsText = bindingsText.concat(' ?a = ?sensorURI || ?c = ?sensorURI )}');
-
-  // TODO: Add dynamic description language tag!
-  // LOG and EXECTUE UPDATE 
-  console.log(bindingsText)
-  return client
-    .query(bindingsText)
-    .bind({
-      sensorURI: { value: senphurl + sensor.uri, type: 'uri' },
-      desc: { value: sensor.description, lang: "en" },
-      manu: sensor.manufacturer,
-      datasheet: { value: sensor.datasheet, type: 'uri' },
-      price: { value: sensor.price, type: 'decimal' },
-      life: { value: sensor.lifeperiod, type: 'integer' },
-      image: { value: sensor.image, type: 'string' },
-      validation: { value: sensor.validation, type: 'boolean' },
-      markdown: { value: sensor.markdown, type: 'string'}
+  
+  //////////// Labels ////////////
+  // delete, update or create labels
+  sensorForm.deletedLabels.forEach( async (label) => {
+    console.log(label.translationId)
+    console.log(label.lang)
+    const deleteLabel = await prisma.translationItem.deleteMany({
+      where: {
+        translationId: label.translationId,
+        languageCode: label.lang,
+      }
     })
-    .execute();
+  })
+
+
+  sensorForm.label.forEach( async (label) => {
+    if (label.translationId !== null) {
+      const updateLabel = await prisma.translationItem.updateMany({
+        where: {
+          translationId: label.translationId,
+          languageCode: label.lang
+        },
+        data:  {
+          text: label.value
+        }
+      })
+    } else if (label.translationId === null) {
+      const createLabel = await prisma.translationItem.create({
+        data: {
+          translationId: sensor.labelId,
+          text: label.value,
+          languageCode: label.lang
+        }
+      })
+    }
+  })
+
+
+  /////////// Description //////////////
+  // update description text; if the whole text is deleted, description is set to an empty string
+  const updateDescription = await prisma.translationItem.updateMany({
+    where: {
+      translationId: sensorForm.description.translationId,
+      languageCode: "en",
+      // langageCode hardcoded, needs to be changed in schema that description is no longer a multi-language option
+    },
+    data: {
+      text:  sensorForm.description.text,
+    }
+  })
+
+
+  /////////// Sensor //////////////
+  // update sensor values: image, manufacturer, price, lifeperiod, datasheet, validation
+  const updateSensor = await prisma.sensor.update({
+    where: {
+      id: sensorForm.id,
+    },
+    data: {
+      image: sensorForm.image,
+      manufacturer: sensorForm.manufacturer,
+      price: sensorForm.price,
+      lifePeriod: sensorForm.lifeperiod,
+      datasheet: sensorForm.datasheet,
+      validation: sensorForm.validation,
+    }
+  })
+
+
+  /////////// Devices //////////////
+  // delete, update or create devices for editing
+  sensorForm.deletedDevices.forEach( async (device) => {
+    console.log(device.device)
+    console.log(device.exists)
+    if (device.exists === true) {
+      const disconnectDevice = await prisma.sensor.update({
+        where: {
+          id: sensorForm.id
+        },
+        data: {
+          devices: {
+            disconnect: {
+              id: device.device
+            }
+          }
+        }
+      })
+    } 
+  })
+
+  sensorForm.device.forEach( async (device) => {
+    if (device.exists === false) {
+      const connectDevice = await prisma.sensor.update({
+        where: {
+          id: sensorForm.id
+        },
+        data: {
+          devices: {
+            connect: {
+              id: device.device
+            }
+          }
+        }
+      })
+    }
+  })
+
+
+
+  ////////// Phenomena/ SensorElements //////////////
+  // delete, update or create sensorElements/phenomena for editing
+  sensorForm.deletedSensorElements.forEach( async (sensorElement) => {
+    console.log(sensorElement)
+    const deleteSensorElement = await prisma.element.delete({
+      where: {
+        id: sensorElement.sensorElementId
+      }
+    })
+  })
+
+  sensorForm.sensorElement.forEach( async (sensorElement) => {
+    console.log(sensorElement)
+    if (sensorElement.sensorElementId !== null) {
+      const updateSensorElement = await prisma.element.update({
+        where: {
+          id: sensorElement.sensorElementId
+        },
+        data: {
+          accuracy: sensorElement.accuracyValue,
+          unitId: sensorElement.unitId,
+          phenomenonId: sensorElement.phenomenonId,
+        }
+      })
+    }
+    else if (sensorElement.sensorElementId === null) {
+      const createSensorElement = await prisma.element.create({
+        data: {
+          accuracy: sensorElement.accuracyValue,
+          unitId: sensorElement.unitId,
+          sensorId: sensorForm.id,
+          phenomenonId: sensorElement.phenomenonId
+        }
+      })
+    }
+  })
+
+
+  // var senphurl = 'http://sensors.wiki/SENPH#';
+  // // if (role != 'expert' && role != 'admin') {
+  // //   console.log("User has no verification rights!");
+  // //   sensor.validation = false;
+  // // }
+  // sensor.sensorElement.forEach(element => {
+  //   element['uri'] = "sensorElement_" + sensor.uri + "_" + element.phenomenonUri.slice(senphurl.length);
+  // })
+
+  // // DELETE {...} INSERT{...}
+  // var bindingsText = 'DELETE {?a ?b ?c}' +
+  //   'INSERT {' +
+  //   '?sensorURI rdf:type        s:sensor. ' +
+  //   '?sensorURI rdfs:comment    ?desc. ' +
+  //   '?sensorURI s:manufacturer  ?manu.' +
+  //   '?sensorURI s:dataSheet     ?datasheet.' +
+  //   '?sensorURI s:priceInEuro   ?price.' +
+  //   '?sensorURI s:lifePeriod    ?life.' +
+  //   '?sensorURI s:image         ?image.' +
+  //   '?sensorURI s:isValid       ?validation.' +
+  //   '?sensorURI s:markdown      ?markdown.';
+
+
+  // sensor.label.forEach(element => {
+  //   bindingsText = bindingsText.concat(
+  //     '?sensorURI rdfs:label ' + JSON.stringify(element.value) + '@' + element.lang + '. '
+  //   );
+  // });
+
+  // sensor.device.forEach(element => {
+  //   bindingsText = bindingsText.concat(
+  //     '?sensorURI s:isSensorOf s:' + element.deviceUri.slice(senphurl.length) + '. '
+  //   );
+  // });
+
+  // sensor.sensorElement.forEach(element => {
+  //   var string = '?sensorURI s:hasElement s:' + element.uri + '. ' +
+  //     's:' + element.uri + ' s:canMeasure s:' + element.phenomenonUri.slice(senphurl.length) + '. ' +
+  //     's:' + element.uri + ' s:hasAccuracyUnit <' + element.unitOfAccuracy + '>. ' +
+  //     's:' + element.uri + ' s:accuracyValue ' + JSON.stringify(element.accuracyValue) + '.';
+  //   bindingsText = bindingsText.concat(string)
+  // });
+
+  // // WHERE { ... FILTER{...}}
+  // bindingsText = bindingsText.concat(
+  //   '} WHERE {?a ?b ?c. FILTER ('
+  // );
+
+  // sensor.sensorElement.forEach(element => {
+  //   bindingsText = bindingsText.concat(
+  //     '?a = s:' + element.uri + ' || ?c = s:' + element.uri + ' || '
+  //   );
+  // });
+
+  // bindingsText = bindingsText.concat(' ?a = ?sensorURI || ?c = ?sensorURI )}');
+
+  // // TODO: Add dynamic description language tag!
+  // // LOG and EXECTUE UPDATE 
+  // console.log(bindingsText)
+  // return client
+  //   .query(bindingsText)
+  //   .bind({
+  //     sensorURI: { value: senphurl + sensor.uri, type: 'uri' },
+  //     desc: { value: sensor.description, lang: "en" },
+  //     manu: sensor.manufacturer,
+  //     datasheet: { value: sensor.datasheet, type: 'uri' },
+  //     price: { value: sensor.price, type: 'decimal' },
+  //     life: { value: sensor.lifeperiod, type: 'integer' },
+  //     image: { value: sensor.image, type: 'string' },
+  //     validation: { value: sensor.validation, type: 'boolean' },
+  //     markdown: { value: sensor.markdown, type: 'string'}
+  //   })
+  //   .execute();
 }
 
 module.exports.deleteSensor = function (sensor, role) {
@@ -446,74 +620,74 @@ module.exports.deleteSensor = function (sensor, role) {
 
 
 
-module.exports.createHistorySensor = function (sensor, user) {
-  var date = Date.now();
-  var isoDate = new Date(date).toISOString();
-  sensor['dateTime'] = date;
-  //console.log(sensor);
-  // if (user.role != 'expert' && user.role != 'admin') {
-  //   console.log("User has no verification rights!");
-  //   sensor.validation = false;
-  // }
-  var senphurl = 'http://sensors.wiki/SENPH#';
-  sensor.sensorElement.forEach(element => {
-    element['uri'] = "sensorElement_" + sensor.uri + "_" + element.phenomenonUri.slice(senphurl.length) + '_' + sensor.dateTime;
-  })
+// module.exports.createHistorySensor = function (sensor, user) {
+//   var date = Date.now();
+//   var isoDate = new Date(date).toISOString();
+//   sensor['dateTime'] = date;
+//   //console.log(sensor);
+//   // if (user.role != 'expert' && user.role != 'admin') {
+//   //   console.log("User has no verification rights!");
+//   //   sensor.validation = false;
+//   // }
+//   var senphurl = 'http://sensors.wiki/SENPH#';
+//   sensor.sensorElement.forEach(element => {
+//     element['uri'] = "sensorElement_" + sensor.uri + "_" + element.phenomenonUri.slice(senphurl.length) + '_' + sensor.dateTime;
+//   })
 
-  // DELETE {...} INSERT{...}
-  var bindingsText = 'INSERT DATA {' +
-    '?sensorURI rdf:type        s:sensor. ' +
-    '?sensorURI rdfs:comment    ?desc. ' +
-    '?sensorURI s:manufacturer  ?manu.' +
-    '?sensorURI s:dataSheet     ?datasheet.' +
-    '?sensorURI s:priceInEuro   ?price.' +
-    '?sensorURI s:lifePeriod    ?life.' +
-    '?sensorURI s:image         ?image.' +
-    '?sensorURI s:isValid       ?validation.' +
-    '?sensorURI s:editDate      ?dateTime.' +
-    '?sensorURI s:editBy        ?userName.';
+//   // DELETE {...} INSERT{...}
+//   var bindingsText = 'INSERT DATA {' +
+//     '?sensorURI rdf:type        s:sensor. ' +
+//     '?sensorURI rdfs:comment    ?desc. ' +
+//     '?sensorURI s:manufacturer  ?manu.' +
+//     '?sensorURI s:dataSheet     ?datasheet.' +
+//     '?sensorURI s:priceInEuro   ?price.' +
+//     '?sensorURI s:lifePeriod    ?life.' +
+//     '?sensorURI s:image         ?image.' +
+//     '?sensorURI s:isValid       ?validation.' +
+//     '?sensorURI s:editDate      ?dateTime.' +
+//     '?sensorURI s:editBy        ?userName.';
 
 
-  sensor.label.forEach(element => {
-    bindingsText = bindingsText.concat(
-      '?sensorURI rdfs:label ' + JSON.stringify(element.value) + '@' + element.lang + '. '
-    );
-  });
+//   sensor.label.forEach(element => {
+//     bindingsText = bindingsText.concat(
+//       '?sensorURI rdfs:label ' + JSON.stringify(element.value) + '@' + element.lang + '. '
+//     );
+//   });
 
-  sensor.device.forEach(element => {
-    bindingsText = bindingsText.concat(
-      '?sensorURI s:isSensorOf s:' + element.deviceUri.slice(senphurl.length) + '. '
-    );
-  });
+//   sensor.device.forEach(element => {
+//     bindingsText = bindingsText.concat(
+//       '?sensorURI s:isSensorOf s:' + element.deviceUri.slice(senphurl.length) + '. '
+//     );
+//   });
 
-  sensor.sensorElement.forEach(element => {
-    var string = '?sensorURI s:hasElement s:' + element.uri + '. ' +
-      's:' + element.uri + ' s:canMeasure s:' + element.phenomenonUri.slice(senphurl.length) + '. ' +
-      's:' + element.uri + ' s:hasAccuracyUnit <' + element.unitOfAccuracy + '>. ' +
-      's:' + element.uri + ' s:accuracyValue ' + JSON.stringify(element.accuracyValue) + '.';
-    bindingsText = bindingsText.concat(string)
-  });
+//   sensor.sensorElement.forEach(element => {
+//     var string = '?sensorURI s:hasElement s:' + element.uri + '. ' +
+//       's:' + element.uri + ' s:canMeasure s:' + element.phenomenonUri.slice(senphurl.length) + '. ' +
+//       's:' + element.uri + ' s:hasAccuracyUnit <' + element.unitOfAccuracy + '>. ' +
+//       's:' + element.uri + ' s:accuracyValue ' + JSON.stringify(element.accuracyValue) + '.';
+//     bindingsText = bindingsText.concat(string)
+//   });
 
-  bindingsText = bindingsText.concat('}')
-  // TODO: Add dynamic description language tag!
-  // LOG and EXECTUE UPDATE 
-  //console.log(bindingsText)
-  return historyClient
-    .query(bindingsText)
-    .bind({
-      sensorURI: { value: senphurl + sensor.uri + '_' + sensor.dateTime, type: 'uri' },
-      desc: { value: sensor.description, lang: "en" },
-      manu: sensor.manufacturer,
-      datasheet: { value: sensor.datasheet, type: 'uri' },
-      price: { value: sensor.price, type: 'decimal' },
-      life: { value: sensor.lifeperiod, type: 'integer' },
-      image: { value: sensor.image, type: 'string' },
-      validation: { value: sensor.validation, type: 'boolean' },
-      dateTime: { value: isoDate, type: 'http://www.w3.org/2001/XMLSchema#dateTime' },
-      //userName: user.name
-    })
-    .execute();
-}
+//   bindingsText = bindingsText.concat('}')
+//   // TODO: Add dynamic description language tag!
+//   // LOG and EXECTUE UPDATE 
+//   //console.log(bindingsText)
+//   return historyClient
+//     .query(bindingsText)
+//     .bind({
+//       sensorURI: { value: senphurl + sensor.uri + '_' + sensor.dateTime, type: 'uri' },
+//       desc: { value: sensor.description, lang: "en" },
+//       manu: sensor.manufacturer,
+//       datasheet: { value: sensor.datasheet, type: 'uri' },
+//       price: { value: sensor.price, type: 'decimal' },
+//       life: { value: sensor.lifeperiod, type: 'integer' },
+//       image: { value: sensor.image, type: 'string' },
+//       validation: { value: sensor.validation, type: 'boolean' },
+//       dateTime: { value: isoDate, type: 'http://www.w3.org/2001/XMLSchema#dateTime' },
+//       //userName: user.name
+//     })
+//     .execute();
+// }
 
 module.exports.createNewSensor = async function (sensor, role) {
   console.log(sensor);
