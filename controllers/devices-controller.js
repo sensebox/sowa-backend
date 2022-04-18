@@ -3,6 +3,7 @@ const Device = require('../models/Device');
 const Devices = require('../models/Devices');
 
 const prisma = require('../lib/prisma');
+const { getSensorsForPhenomenon } = require('./sensors-controller');
 
 
 /* ---------- All device funtions: -----------------*/
@@ -552,25 +553,51 @@ module.exports.editDevice = async function (deviceForm, role) {
   //   .execute()
 }
 
-module.exports.deleteDevice = function (device, role) {
-  var senphurl = 'http://sensors.wiki/SENPH#';
+module.exports.deleteDevice = async function (deviceForm, role) {
+
   if (role != 'expert' && role != 'admin') {
     console.log("User has no verification rights!");
+    deviceForm.validation = false;
   }
-  else {
-    var bindingsText =
-      ` DELETE {?a ?b ?c}
-    WHERE { ?a ?b ?c .
-            FILTER (?a = ?deviceURI || ?c = ?deviceURI )
-          }`;
-    console.log(bindingsText)
-    return client
-      .query(bindingsText)
-      .bind({
-        deviceURI: { value: senphurl + device.uri, type: 'uri' },
-      })
-      .execute();
-  }
+
+  console.log(deviceForm)
+
+  deviceForm.sensor.forEach( async (sensor) => {
+    const disconnectDevice = prisma.sensor.update({
+      where: {
+        id: sensor.sensor
+      },
+      data: {
+        devices: {
+          disconnect: {
+            id: deviceForm.id
+          }
+        }
+      }
+    })
+  })
+
+  const deletetranslationItems = await prisma.translationItem.deleteMany({
+    where: {
+      translationId: {
+        in: deviceForm.translationIds,
+      }
+    }
+  })
+
+  const deletetranslations = await prisma.translation.deleteMany({
+    where: {
+      id: {
+        in: deviceForm.translationIds,
+      }
+    }
+  })
+
+  const deleteDevice = await prisma.device.delete({
+    where: {
+      id: deviceForm.id,
+    }
+  })
 }
 
 //create new version of a device in history db 

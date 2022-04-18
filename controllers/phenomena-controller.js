@@ -661,6 +661,7 @@ module.exports.editPhenomenon = async function (phenomenonForm, role) {
 
 
 module.exports.deletePhenomenon = async function (phenomenonForm, role) {
+  
   if (role != 'expert' && role != 'admin') {
     console.log("User has no verification rights!");
     phenomenonForm.validation = false;

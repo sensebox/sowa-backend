@@ -343,21 +343,53 @@ module.exports.editDomain = async function (domainForm, role) {
   //   .execute()
 }
 
-module.exports.deleteDomain = function (domain, role) {
-  var senphurl = 'http://sensors.wiki/SENPH#';
-    var bindingsText =
-      ` DELETE {?a ?b ?c}
-    WHERE { ?a ?b ?c .
-            FILTER (?a = ?domainURI || ?c = ?domainURI )
-          }`;
-    console.log(bindingsText)
-    return client
-      .query(bindingsText)
-      .bind({
-        domainURI: { value: senphurl + domain.uri, type: 'uri' },
-      })
-      .execute();
+module.exports.deleteDomain = async function (domainForm, role) {
+  
+  if (role != 'expert' && role != 'admin') {
+    console.log("User has no verification rights!");
+    domainForm.validation = false;
   }
+
+  console.log(domainForm)
+
+  domainForm.phenomenon.forEach( async (phenomenon) => {
+    const disconnectPhenomenon = prisma.domain.update({
+      where: {
+        id: domainForm.id
+      },
+      data: {
+        phenomenon: {
+          disconnect: {
+            id: phenomenon.phenomenon
+          }
+        }
+      }
+    })
+  })
+
+  const deletetranslationItems = await prisma.translationItem.deleteMany({
+    where: {
+      translationId: {
+        in: domainForm.translationIds,
+      }
+    }
+  })
+
+  const deletetranslations = await prisma.translation.deleteMany({
+    where: {
+      id: {
+        in: domainForm.translationIds,
+      }
+    }
+  })
+
+  const deleteDomain = await prisma.domain.delete({
+    where: {
+      id: domainForm.id,
+    }
+  })
+
+}
 
 //create new version of a domain in history db 
 module.exports.createHistoryDomain = function (domain, user) {

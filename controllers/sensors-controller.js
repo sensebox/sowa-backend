@@ -597,25 +597,57 @@ module.exports.editSensor = async function (sensorForm, role) {
   //   .execute();
 }
 
-module.exports.deleteSensor = function (sensor, role) {
-  var senphurl = 'http://sensors.wiki/SENPH#';
-  // if (role != 'expert' && role != 'user') {
-  //   console.log("User has no verification rights!");
-  // }
-  // else {
-    var bindingsText =
-      ` DELETE {?a ?b ?c}
-    WHERE { ?a ?b ?c .
-            FILTER (?a = ?sensorURI || ?c = ?sensorURI )
-          }`;
-    console.log(bindingsText)
-    return client
-      .query(bindingsText)
-      .bind({
-        sensorURI: { value: senphurl + sensor.uri, type: 'uri' },
-      })
-      .execute();
-  //}
+module.exports.deleteSensor = async function (sensorForm, role) {
+
+  if (role != 'expert' && role != 'admin') {
+    console.log("User has no verification rights!");
+    sensorForm.validation = false;
+  }
+  
+  console.log(sensorForm)
+
+  const deleteElements = await prisma.element.deleteMany({
+    where: {
+      sensorId: sensorForm.id,
+    },
+  });
+
+  sensorForm.device.forEach( async (device) => {
+    const disconnectDevices = await prisma.sensor.update({
+      where: {
+        id: sensorForm.id
+      },
+      data: {
+        devices: {
+          disconnect: {
+            id: device.device
+          }
+        }
+      }
+    })
+  })
+  
+  const deletetranslationItems = await prisma.translationItem.deleteMany({
+    where: {
+      translationId: {
+        in: sensorForm.translationIds,
+      }
+    }
+  })
+
+  const deletetranslations = await prisma.translation.deleteMany({
+    where: {
+      id: {
+        in: sensorForm.translationIds,
+      }
+    }
+  })
+
+  const deleteSensor = await prisma.sensor.delete({
+    where: {
+      id: sensorForm.id,
+    }
+  })
 }
 
 
