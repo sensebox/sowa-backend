@@ -459,21 +459,23 @@ module.exports.createHistoryPhenomenon = function (phenomenon, user) {
 }
 
 
-module.exports.createNewPhenomenon = async function (phenomenon, role) {
+module.exports.createNewPhenomenon = async function (phenomenonForm, role) {
   if (role != 'expert' && role != 'admin') {
     console.log("User has no verification rights!");
-    phenomenon.validation = false;
+    phenomenonForm.validation = false;
   }
-  console.log(phenomenon)
-  const domainIds = phenomenon.domain.map(domain => {return {"id": domain.domain}});
+  console.log(phenomenonForm)
+
+  const domainIds = phenomenonForm.domain.map(domain => {return {"id": domain.domain}});
+  console.log(domainIds)
 
   const labelTranslation = await prisma.translation.create({data: {}})
-  if(phenomenon.label.length > 0) {
-    const mappedLabel = phenomenon.label.map(label => {return {languageCode: label.lang, text: label.value, translationId: labelTranslation.id}});
+  if(phenomenonForm.label.length > 0) {
+    const mappedLabel = phenomenonForm.label.map(label => {return {languageCode: label.lang, text: label.value, translationId: labelTranslation.id}});
     const labels = await prisma.translationItem.createMany({data: mappedLabel})
   }
 
-  const units = phenomenon.unit.map(unit => {return {
+  const units = phenomenonForm.unit.map(unit => {return {
     unit: {
       connect: {id: unit.unitUri}
     },
@@ -482,12 +484,12 @@ module.exports.createNewPhenomenon = async function (phenomenon, role) {
   }})
 
 
-  const phenoItem = await prisma.phenomenon.create({data: {
+  const phenomenon = await prisma.phenomenonForm.create({data: {
     label: {
       connect: {id: labelTranslation.id },
     },
     // descriptionId: descTranslation.id,
-    validation: phenomenon.validation,
+    validation: phenomenonForm.validation,
     domains: {
       connect: domainIds
     },
@@ -496,8 +498,8 @@ module.exports.createNewPhenomenon = async function (phenomenon, role) {
     }
   }})
 
-  console.log("PHENO ITEM", phenoItem)
-  return phenoItem;
+  console.log("PHENO ITEM", phenomenon)
+  return phenomenon;
 
 }
 
