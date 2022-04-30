@@ -16,6 +16,8 @@ model Device {
   description   Translation? @relation("descriptionDevice", fields: [descriptionId], references: [id])
   markdown      Translation? @relation("markdownDevice", fields: [markdownId], references: [id])
   sensors       Sensor[]
+  contact       String?      
+  website       String?    
   validation    Boolean      @default(false)
   image         String?      
   labelId       Int?         @unique

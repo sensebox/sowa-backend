@@ -444,21 +444,21 @@ module.exports.createHistoryDomain = function (domain, user) {
 }
 
 //create new domain 
-module.exports.createNewDomain = async function (domain, role) {
-  console.log(domain);
+module.exports.createNewDomain = async function (domainForm, role) {
+  console.log(domainForm);
   if (role != 'expert' && role != 'admin') {
     console.log("User has no verification rights!");
-    domain.validation = false;
+    domainForm.validation = false;
   } else {
-    domain.validation = true;
+    domainForm.validation = true;
   }
 
-  const phenomenaIds = domain.phenomenon.map(pheno => {return {"id": pheno.phenomenon.id}});
+  const phenomenaIds = domainForm.phenomenon.map(pheno => {return {"id": pheno.phenomenon.phenomenon}});
   const labelTranslation = await prisma.translation.create({data: {}})
   const descTranslation = await prisma.translation.create({data: {}})
 
-  if(domain.label.length > 0) {
-    const mappedLabel = domain.label.map(label => {return {languageCode: label.lang, text: label.value, translationId: labelTranslation.id}});
+  if(domainForm.label.length > 0) {
+    const mappedLabel = domainForm.label.map(label => {return {languageCode: label.lang, text: label.value, translationId: labelTranslation.id}});
     const labels = await prisma.translationItem.createMany({data: mappedLabel})
   }
 
@@ -468,18 +468,18 @@ module.exports.createNewDomain = async function (domain, role) {
   //   })
   // }
 
-  const domainItem = await prisma.domain.create({data: {
+  const domain = await prisma.domain.create({data: {
     label: {
       connect: {id: labelTranslation.id },
     },
-    // descriptionId: descTranslation.id,
-    validation: domain.validation,
+    descriptionId: descTranslation.id,
+    validation: domainForm.validation,
     phenomenon: {
       connect: phenomenaIds
     }
   }})
 
-  return domainItem;
+  return domain;
 }
 
 module.exports.convertDomainToJson = function(domain){
