@@ -1,5 +1,7 @@
 [{
     "id": 1,
+    "contact": null,
+    "website": null,
     "image": "sensebox_home.jpg",
     "labelId": 1,
     "descriptionId": 2,
@@ -7,6 +9,8 @@
     "validation" : false
 },{
     "id": 2,
+    "contact": null,
+    "website": null,
     "image": "sensebox_edu.jpg",
     "labelId": 4,
     "descriptionId": 5,
@@ -14,6 +18,8 @@
     "validation" : false
 },{
     "id": 3,
+    "contact": null,
+    "website": null,
     "image": "Luftdaten_Info.jpeg",
     "labelId": 7,
     "descriptionId": 8,

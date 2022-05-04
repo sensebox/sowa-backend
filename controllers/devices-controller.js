@@ -133,6 +133,8 @@ module.exports.getDevice = async function (iri, lang) {
           item: languageFilter,
         },
       },
+      contact: true,
+      website: true,
       image: true,
       sensors: {
         select: {
@@ -453,6 +455,8 @@ module.exports.editDevice = async function (deviceForm, role) {
       id: deviceForm.id,
     },
     data: {
+      contact: deviceForm.contact,
+      website: deviceForm.website,
       image: deviceForm.image,
       validation: deviceForm.validation,
     },

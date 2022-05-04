@@ -484,9 +484,9 @@ module.exports.createNewPhenomenon = async function (phenomenonForm, role) {
   }})
 
 
-  const phenomenon = await prisma.phenomenonForm.create({data: {
+  const phenomenon = await prisma.phenomenon.create({data: {
     label: {
-      connect: {id: labelTranslation.id },
+      connect: {id: labelTranslation.id},
     },
     // descriptionId: descTranslation.id,
     validation: phenomenonForm.validation,
