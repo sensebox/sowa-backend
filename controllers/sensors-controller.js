@@ -656,22 +656,18 @@ module.exports.createNewSensor = async function (sensorForm, role) {
   console.log(sensorForm)
 
   const labelTranslation = await prisma.translation.create({data: {}})
-  const descTranslation = await prisma.translation.create({data: {}})
   let devicesIds = null;
   if(sensorForm.device) {
     devicesIds = sensorForm.device.map(device => {return {"id": device.device}});
   }
 
-  // const elements = sensor.sensorElement.map(pheno => {return {
-  //   phenomena: {
-  //     connect: {id: pheno.phenomenon.id}
-  //   },
-  //   accuracy: pheno.accuracy,
-  //   unit: {
-  //     connect: {id: pheno.phenomenon.unit}
-  //   }
+  
+  const descTranslation = await prisma.translation.create({data: {}})
+  if(sensorForm.description) {
+    const mappedDescription = [{languageCode: 'en', text: sensorForm.description.text, translationId: descTranslation.id}];
+    const descriptions = await prisma.translationItem.createMany({data: mappedDescription})
+  }
 
-  // }})
 
   if(sensorForm.label.length > 0) {
     const mappedLabel = sensorForm.label.map(label => {return {languageCode: label.lang, text: label.value, translationId: labelTranslation.id}});
@@ -680,9 +676,12 @@ module.exports.createNewSensor = async function (sensorForm, role) {
 
 
 
-  const sensor = await prisma.sensorForm.create({ data: {
+  const sensor = await prisma.sensor.create({ data: {
     label: {
       connect: {id: labelTranslation.id}
+    },
+    description: {
+      connect: {id: descTranslation.id}
     },
     price: sensorForm.price,
     image: sensorForm.image,
@@ -690,20 +689,17 @@ module.exports.createNewSensor = async function (sensorForm, role) {
     lifePeriod: sensorForm.lifePeriod,
     datasheet: sensorForm.datasheet,
     validation: sensorForm.validation,
-
     devices: {
       connect: devicesIds
     }
-
   }})
-  console.log(sensorItem);
 
   if(sensorForm.sensorElement.length > 0) {
     const mappedElements = sensorForm.sensorElement.map(element => {return {
       phenomenonId: element.phenomenonId,
       accuracy: element.accuracyValue,
       unitId: element.unitId,
-      sensorId: sensorItem.id
+      sensorId: sensor.id
     }});
     const elements = await prisma.element.createMany({data: mappedElements})
   }

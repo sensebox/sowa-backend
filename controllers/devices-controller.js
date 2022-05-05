@@ -672,7 +672,6 @@ module.exports.createNewDevice = async function (deviceForm, role) {
   console.log(deviceForm);
 
   const labelTranslation = await prisma.translation.create({data: {}})
-  const descTranslation = await prisma.translation.create({data: {}})
   let sensorIds = null;
   if(deviceForm.sensor) {
     sensorIds = deviceForm.sensor.map(sensor => {return {"id": sensor.sensor}});
@@ -684,9 +683,27 @@ module.exports.createNewDevice = async function (deviceForm, role) {
     const labels = await prisma.translationItem.createMany({data: mappedLabel})
   }
 
+  const descTranslation = await prisma.translation.create({data: {}})
+  if(deviceForm.description) {
+    const mappedDescription = [{languageCode: 'en', text: deviceForm.description.text, translationId: descTranslation.id}];
+    const descriptions = await prisma.translationItem.createMany({data: mappedDescription})
+  }
+
+  const markdownTranslation = await prisma.translation.create({data: {}})
+  if(deviceForm.markdown) {
+    const mappedMarkdown = [{languageCode: 'en', text: deviceForm.markdown.text, translationId: markdownTranslation.id}];
+    const markdowns = await prisma.translationItem.createMany({data: mappedMarkdown})
+  }
+
   const device = await prisma.device.create({ data: {
     label: {
       connect: {id: labelTranslation.id}
+    },
+    description: {
+      connect: {id: descTranslation.id}
+    },
+    markdown: {
+      connect: {id: markdownTranslation.id}
     },
     website: deviceForm.website,
     contact: deviceForm.contact,

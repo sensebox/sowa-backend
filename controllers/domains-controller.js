@@ -453,26 +453,28 @@ module.exports.createNewDomain = async function (domainForm, role) {
     domainForm.validation = true;
   }
 
-  const phenomenaIds = domainForm.phenomenon.map(pheno => {return {"id": pheno.phenomenon.phenomenon}});
+  const phenomenaIds = domainForm.phenomenon.map(pheno => {return {"id": pheno.phenomenon}});
   const labelTranslation = await prisma.translation.create({data: {}})
-  const descTranslation = await prisma.translation.create({data: {}})
 
   if(domainForm.label.length > 0) {
     const mappedLabel = domainForm.label.map(label => {return {languageCode: label.lang, text: label.value, translationId: labelTranslation.id}});
     const labels = await prisma.translationItem.createMany({data: mappedLabel})
   }
 
-  // if(domain.description.length > 0) {
-  //   const mappedDesc = domain.description.map(label => {return {languageCode: label.lang, text: label.value, translationId: labelTranslation.id}});
-  //   const descs = await prisma.translationItem.createMany({data: mappedDesc      
-  //   })
-  // }
+
+  const descTranslation = await prisma.translation.create({data: {}})
+  if(domainForm.description) {
+    const mappedDescription = [{languageCode: 'en', text: domainForm.description.text, translationId: descTranslation.id}];
+    const descriptions = await prisma.translationItem.createMany({data: mappedDescription})
+  }
 
   const domain = await prisma.domain.create({data: {
     label: {
       connect: {id: labelTranslation.id },
     },
-    descriptionId: descTranslation.id,
+    description: {
+      connect:  {id: descTranslation.id}
+    },
     validation: domainForm.validation,
     phenomenon: {
       connect: phenomenaIds

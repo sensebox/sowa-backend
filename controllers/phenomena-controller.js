@@ -475,6 +475,18 @@ module.exports.createNewPhenomenon = async function (phenomenonForm, role) {
     const labels = await prisma.translationItem.createMany({data: mappedLabel})
   }
 
+  const descTranslation = await prisma.translation.create({data: {}})
+  if(phenomenonForm.description) {
+    const mappedDescription = [{languageCode: 'en', text: phenomenonForm.description.text, translationId: descTranslation.id}];
+    const descriptions = await prisma.translationItem.createMany({data: mappedDescription})
+  }
+
+  const markdownTranslation = await prisma.translation.create({data: {}})
+  if(phenomenonForm.markdown) {
+    const mappedMarkdown = [{languageCode: 'en', text: phenomenonForm.markdown.text, translationId: markdownTranslation.id}];
+    const markdowns = await prisma.translationItem.createMany({data: mappedMarkdown})
+  }
+
   const units = phenomenonForm.unit.map(unit => {return {
     unit: {
       connect: {id: unit.unitUri}
@@ -488,8 +500,13 @@ module.exports.createNewPhenomenon = async function (phenomenonForm, role) {
     label: {
       connect: {id: labelTranslation.id},
     },
-    // descriptionId: descTranslation.id,
+    description: {
+      connect: {id: descTranslation.id},
+    },
     validation: phenomenonForm.validation,
+    markdown: {
+      connect: {id: markdownTranslation.id},
+    },
     domains: {
       connect: domainIds
     },
