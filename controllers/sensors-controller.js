@@ -211,6 +211,16 @@ module.exports.getSensor = async function (iri, lang) {
               }
             }
           },
+          sensor: {
+            select: {
+              id: true,
+              label: {
+                select: {
+                  item: languageFilter,
+                }
+              }
+            }
+          }
         }
       },
       devices: {

@@ -77,10 +77,12 @@ model RangeOfValues {
 }
 
 model Unit {
-  id      Int             @id @default(autoincrement())
-  name    String          @db.VarChar(255)
-  rov     RangeOfValues[]
-  Element Element[]
+  id            Int               @id @default(autoincrement())
+  name          String            @db.VarChar(255)
+  description   Translation?      @relation("descriptionUnit", fields: [descriptionId], references: [id])
+  rov           RangeOfValues[]
+  Element       Element[]
+  descriptionId Int?              @unique
 }
 
 model Domain {
@@ -113,6 +115,7 @@ model Translation {
   markdownPhenomenon    Phenomenon?       @relation("markdownPhenomenon")
   labelDomain           Domain?           @relation("labelDomain")
   descriptionDomain     Domain?           @relation("descriptionDomain")
+  descriptionUnit       Unit?             @relation("descriptionUnit")
 }
 
 model TranslationItem {
