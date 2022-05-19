@@ -1,4 +1,5 @@
 const PrismaClient = require('@prisma/client').PrismaClient;
+const slugify = require('slugify')
 
 const prisma = new PrismaClient();
 
@@ -12,6 +13,7 @@ const unitData = require('./seeds/unit.json');
 const elementData = require('./seeds/element.json');
 const rovData = require('./seeds/rov.json');
 const domainData = require('./seeds/domain.json');
+
 
 async function main() {
   console.log("Start seeding ...");
@@ -56,14 +58,19 @@ async function main() {
   }
 
   for (const u of deviceData) {
+    
+    var labelEn = await prisma.translationItem.findMany({where: {translationId: u.labelId, languageCode: 'en'}})
+    var slug = slugify(labelEn[0].text, "_");
+    const withSlug = {...u, slug: slug};
+
     const device = await prisma.device.upsert({
       where: {
-        id: u.id,
+        id: withSlug.id,
       },
       update: {
-        ...u
+        ...withSlug
       },
-      create: u,
+      create: withSlug,
     });
     console.log(`Created device with id: ${device.id}`)
   }

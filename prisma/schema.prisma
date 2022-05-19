@@ -12,6 +12,7 @@ datasource db {
 
 model Device {
   id            Int          @id @default(autoincrement())
+  slug          String       @unique
   label         Translation? @relation("labelDevice", fields: [labelId], references: [id])
   description   Translation? @relation("descriptionDevice", fields: [descriptionId], references: [id])
   markdown      Translation? @relation("markdownDevice", fields: [markdownId], references: [id])

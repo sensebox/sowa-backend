@@ -112,10 +112,10 @@ module.exports.getDevice = async function (iri, lang) {
     };
   }
 
+  let where = (isNaN(parseInt(iri))) ? {slug: iri} : {id: parseInt(iri)};
+
   const result = await prisma.device.findUnique({
-    where: {
-      id: parseInt(iri),
-    },
+    where: where,
     select: {
       id: true,
       label: {
