@@ -13,6 +13,7 @@ const unitData = require('./seeds/unit.json');
 const elementData = require('./seeds/element.json');
 const rovData = require('./seeds/rov.json');
 const domainData = require('./seeds/domain.json');
+const helperFunctions = require('../helper/helperFunctions');
 
 
 async function main() {
@@ -58,63 +59,82 @@ async function main() {
   }
 
   for (const u of deviceData) {
-    
     var labelEn = await prisma.translationItem.findMany({where: {translationId: u.labelId, languageCode: 'en'}})
-    var slug = slugify(labelEn[0].text, "_");
+    var slug = helperFunctions.slugifyModified(labelEn[0].text);
     const withSlug = {...u, slug: slug};
+    const {id, ...rest} = withSlug;
+    console.log(rest)
 
     const device = await prisma.device.upsert({
       where: {
-        id: withSlug.id,
+        id: id,
       },
       update: {
-        ...withSlug
+        ...rest
       },
-      create: withSlug,
+      create: rest,
     });
     console.log(`Created device with id: ${device.id}`)
   }
 
   for (const u of sensorData) {
-    const {id, ...rest} = u;
-    const device = await prisma.sensor.upsert({
+    console.log(u.label.connect.id)
+    var labelEn = await prisma.translationItem.findMany({where: {translationId: u.label.connect.id, languageCode: 'en'}})
+    var slug = helperFunctions.slugifyModified(labelEn[0].text);
+    const withSlug = {...u, slug: slug};
+    const {id, ...rest} = withSlug;
+
+    const sensor = await prisma.sensor.upsert({
       where: {
         id: id,
       },
-      create: rest,
+      create: {
+        ...rest
+      },
       update: rest,
     });
-    console.log(`Created sensor with id: ${device.id}`);
+    console.log(`Created sensor with id: ${sensor.id}`);
   }
 
   for (const u of phenomenonData) {
-    const device = await prisma.phenomenon.upsert({
+    var labelEn = await prisma.translationItem.findMany({where: {translationId: u.labelId, languageCode: 'en'}})
+    var slug = helperFunctions.slugifyModified(labelEn[0].text);
+    const withSlug = {...u, slug: slug};
+    const {id, ...rest} = withSlug;
+
+    const phenomenon = await prisma.phenomenon.upsert({
       where: {
-        id: u.id,
+        id: id,
       },
       update: {
-        ...u
+        ...rest
       },
-      create: u,
+      create: rest,
     });
-    console.log(`Created phenomenon with id: ${device.id}`);
+    console.log(`Created phenomenon with id: ${phenomenon.id}`);
   }
 
   for (const u of unitData) {
-    const device = await prisma.unit.upsert({
+
+    var labelEn = u.name;
+    var slug = helperFunctions.slugifyModified(labelEn);
+    const withSlug = {...u, slug: slug};
+    const {id, ...rest} = withSlug;
+
+    const unit = await prisma.unit.upsert({
       where: {
-        id: u.id
+        id: id
       },
       update: {
-        ...u
+        ...rest
       },
-      create: u
+      create: rest
     });
-    console.log(`Created unit with id: ${device.id}`);
+    console.log(`Created unit with id: ${unit.id}`);
   }
 
   for (const u of elementData) {
-    const device = await prisma.element.upsert({
+    const element = await prisma.element.upsert({
       where: {
         id: u.id,
       },
@@ -123,11 +143,11 @@ async function main() {
       },
       create: u,
     });
-    console.log(`Created element with id: ${device.id}`);
+    console.log(`Created element with id: ${element.id}`);
   }
 
   for (const u of rovData) {
-    const device = await prisma.rangeOfValues.upsert({
+    const rov = await prisma.rangeOfValues.upsert({
       where: {
         id: u.id
       },
@@ -136,24 +156,30 @@ async function main() {
       },
       create: u
     });
-    console.log(`Created rov with id: ${device.id}`);
+    console.log(`Created rov with id: ${rov.id}`);
   }
 
   for (const u of domainData) {
-    const { id, ...rest } = u;
-    const device = await prisma.domain.upsert({
+    var labelEn = await prisma.translationItem.findMany({where: {translationId: u.label.connect.id, languageCode: 'en'}})
+    var slug = helperFunctions.slugifyModified(labelEn[0].text);
+    const withSlug = {...u, slug: slug};
+    const { id, ...rest } = withSlug;
+
+    const domain = await prisma.domain.upsert({
       where: {
         id: id
       },
-      update: rest,
+      update: {
+        ...rest,
+      },
       create: rest
     });
-    console.log(`Created domain with id: ${device.id}`);
+    console.log(`Created domain with id: ${domain.id}`);
   }
-
-
   console.log("Seeding finished.")
 }
+
+
 
 main()
   .catch((e) => {

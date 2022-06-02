@@ -22,6 +22,7 @@ module.exports.getPhenomena = async function (lang) {
   const result = await prisma.phenomenon.findMany({
     select: {
       id: true,
+      slug: true,
       markdown: {
         select: {
           item: languageFilter,
@@ -146,12 +147,13 @@ module.exports.getPhenomenon = async function (iri, lang) {
     };
   }
 
+  let where = (isNaN(parseInt(iri))) ? {slug: iri} : {id: parseInt(iri)};
+
   const result = await prisma.phenomenon.findUnique({
-    where: {
-      id: parseInt(iri)
-    },
+    where: where,
     select: {
       id: true,
+      slug: true,
       label: {
         select: {
           item: languageFilter,
@@ -171,6 +173,7 @@ module.exports.getPhenomenon = async function (iri, lang) {
       domains: {
         select: {
           id: true,
+          slug: true,
           label: {
             select: {
               item: languageFilter,

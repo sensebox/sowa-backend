@@ -20,8 +20,8 @@ module.exports.getSensors = async function (lang) {
 
   const result = await prisma.sensor.findMany({
     select: {
-      // markdown: true,
       id: true,
+      slug: true,
       label: {
         select: {
           item: languageFilter,
@@ -180,12 +180,13 @@ module.exports.getSensor = async function (iri, lang) {
     };
   }
 
+  let where = (isNaN(parseInt(iri))) ? {slug: iri} : {id: parseInt(iri)};
+
   const result = await prisma.sensor.findUnique({
-    where: {
-      id: parseInt(iri)
-    },
+    where: where,
     select: {
       id: true,
+      slug: true,
       label: {
         select: {
           item: languageFilter,
@@ -204,6 +205,7 @@ module.exports.getSensor = async function (iri, lang) {
           phenomena: {
             select: {
               id: true,
+              slug: true,
               label: {
                 select: {
                   item: languageFilter,
@@ -214,6 +216,7 @@ module.exports.getSensor = async function (iri, lang) {
           sensor: {
             select: {
               id: true,
+              slug: true,
               label: {
                 select: {
                   item: languageFilter,

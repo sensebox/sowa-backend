@@ -28,6 +28,7 @@ model Device {
 
 model Sensor {
   id            Int          @id @default(autoincrement())
+  slug          String       @unique
   label         Translation? @relation("labelSensor", fields: [labelId], references: [id])
   description   Translation? @relation("descriptionSensor", fields: [descriptionId], references: [id])
   devices       Device[]
@@ -55,6 +56,7 @@ model Element {
 
 model Phenomenon {
   id            Int             @id @default(autoincrement())
+  slug          String          @unique
   label         Translation?    @relation("labelPhenomenon", fields: [labelId], references: [id])
   description   Translation?    @relation("descriptionPhenomenon", fields: [descriptionId], references: [id])
   markdown      Translation?    @relation("markdownPhenomenon", fields: [markdownId], references: [id])
@@ -79,6 +81,7 @@ model RangeOfValues {
 
 model Unit {
   id            Int               @id @default(autoincrement())
+  slug          String            @unique
   name          String            @db.VarChar(255)
   description   Translation?      @relation("descriptionUnit", fields: [descriptionId], references: [id])
   rov           RangeOfValues[]
@@ -88,6 +91,7 @@ model Unit {
 
 model Domain {
   id            Int          @id @default(autoincrement())
+  slug          String       @unique
   label         Translation? @relation("labelDomain", fields: [labelId], references: [id])
   description   Translation? @relation("descriptionDomain", fields: [descriptionId], references: [id])
   validation    Boolean      @default(false)

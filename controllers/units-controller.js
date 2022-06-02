@@ -23,7 +23,8 @@ module.exports.getUnits = async function (lang) {
     const result = await prisma.unit.findMany({
       select: {
         id: true,
-        name: true
+        slug: true,
+        name: true,
       },
     });
   
@@ -34,20 +35,21 @@ module.exports.getUnits = async function (lang) {
 module.exports.getUnit = async function (iri, lang) {
 
   let languageFilter = true;
-    if (lang) {
-      languageFilter = {
-        where: {
-          languageCode: lang,
-        },
-      };
-    }
+  if (lang) {
+    languageFilter = {
+      where: {
+        languageCode: lang,
+      },
+    };
+  }
+
+  let where = (isNaN(parseInt(iri))) ? {slug: iri} : {id: parseInt(iri)};
 
   const result = await prisma.unit.findUnique({
-    where: {
-      id: parseInt(iri),
-    },
+    where: where,
     select: {
       id: true,
+      slug: true,
       name: true,
       description: {
         select: {
@@ -70,6 +72,7 @@ module.exports.getUnit = async function (iri, lang) {
           phenomena: {
             select: {
               id: true,
+              slug: true,
               label: {
                 select: {
                   item: languageFilter,
@@ -80,6 +83,7 @@ module.exports.getUnit = async function (iri, lang) {
           sensor: {
             select: {
               id: true,
+              slug: true,
               label: {
                 select: {
                   item: languageFilter,

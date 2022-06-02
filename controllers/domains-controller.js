@@ -23,6 +23,7 @@ module.exports.getDomains = async function (lang) {
   const result = await prisma.domain.findMany({
     select: {
       id: true,
+      slug: true,
       phenomenon: true,
       label: {
         select: {
@@ -86,12 +87,13 @@ module.exports.getDomain = async function (iri, lang) {
     };
   }
 
+  let where = (isNaN(parseInt(iri))) ? {slug: iri} : {id: parseInt(iri)};
+
   const result = await prisma.domain.findUnique({
-    where: {
-      id: parseInt(iri),
-    },
+    where: where,
     select: {
       id: true,
+      slug: true,
       label: {
         select: {
           item: languageFilter,
@@ -106,6 +108,7 @@ module.exports.getDomain = async function (iri, lang) {
       phenomenon: {
         select: {
           id: true,
+          slug: true,
           label: {
             select: {
               item: languageFilter,
