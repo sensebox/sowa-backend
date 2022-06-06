@@ -1,29 +1,49 @@
 [{
   "id": 1,
   "name": "Not specified.",
+  "notation": "N/S",
+  "validation": false,
   "descriptionId": 114
 },{
   "id": 2,
-  "name": "Celsius",
+  "name": "Degree Celsius",
+  "notation": "°C",
+  "validation": false,
   "descriptionId": 115
 },{
   "id": 3,
   "name": "Pascal",
+  "notation": "Pa",
+  "validation": false,
   "descriptionId": 116
 },{
   "id": 4,
-  "name": "%",
+  "name": "Percent",
+  "notation": "%",
+  "validation": false,
   "descriptionId": 117
 },{
   "id": 5,
-  "name": "parts per million (ppm)",
+  "name": "Parts per million",
+  "notation": "ppm",
+  "validation": false,
   "descriptionId": 118
 },{
   "id": 6,
-  "name": "lux",
+  "name": "Lux",
+  "notation": "lx",
+  "validation": false,
   "descriptionId": 119
 },{
   "id": 7,
-  "name": "watt per sqare meter",
+  "name": "Watt per square meter",
+  "notation": "W/m²",
+  "validation": false,
   "descriptionId": 120
+},{
+  "id": 8,
+  "name": "Degree Fahrenheit",
+  "notation": "°F",
+  "validation": false,
+  "descriptionId": 121
 }]

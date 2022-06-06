@@ -83,6 +83,8 @@ model Unit {
   id            Int               @id @default(autoincrement())
   slug          String            @unique
   name          String            @db.VarChar(255)
+  notation      String            @db.VarChar(255)
+  validation    Boolean           @default(false)
   description   Translation?      @relation("descriptionUnit", fields: [descriptionId], references: [id])
   rov           RangeOfValues[]
   Element       Element[]

@@ -1,8 +1,6 @@
 const config = require('config');
 const { phenomenon } = require('../lib/prisma');
-
-// const Sensor = require('../models/Unit');
-// const Sensors = require('../models/Units');
+const helperFunctions = require('../helper/helperFunctions');
 
 const prisma = require('../lib/prisma');
 
@@ -25,6 +23,7 @@ module.exports.getUnits = async function (lang) {
         id: true,
         slug: true,
         name: true,
+        notation: true,
       },
     });
   
@@ -51,6 +50,7 @@ module.exports.getUnit = async function (iri, lang) {
       id: true,
       slug: true,
       name: true,
+      notation: true,
       description: {
         select: {
           item: languageFilter,
@@ -104,16 +104,123 @@ module.exports.getUnit = async function (iri, lang) {
 module.exports.createNewUnit = async function (unitForm, role) {
   console.log(unitForm);
   console.log(role);
+
+  if (role != 'expert' && role != 'admin') {
+    console.log("User has no verification rights!");
+    unitForm.validation = false;
+  } else {
+    unitForm.validation = true;
+  }
+
+  const descriptionTranslation = await prisma.translation.create({data: {}});
+  if(unitForm.description) {
+    const mappedDescription = [{
+                                languageCode: 'en', 
+                                text: unitForm.description.text, 
+                                translationId: descriptionTranslation.id
+                              }];
+    const descriptions = await prisma.translationItem.createMany({data: mappedDescription})
+  }
+
+  const unitSlug = await helperFunctions.slugifyModified(unitForm.name);
+
+  const unit = await prisma.unit.create({data: {
+    slug: unitSlug,
+    name: unitForm.name,
+    notation: unitForm.notation,
+    description: {
+      connect:  {id: descriptionTranslation.id}
+    },
+    validation: unitForm.validation,
+  }})
+
+  return unit;
 }
 
 // edit existing unit
 module.exports.editUnit = async function (unitForm, role) {
   console.log(unitForm);
   console.log(role);
+
+  if (role != 'expert' && role != 'admin') {
+    console.log("User has no verification rights!");
+    unitForm.validation = false;
+  } else {
+    unitForm.validation = true;
+  }
+
+
+  /////////// Description //////////////
+  // update description text; if the whole text is deleted, description is set to an empty string
+  const updateDescription = await prisma.translationItem.updateMany({
+    where: {
+      translationId: unitForm.description.translationId,
+      languageCode: "en",
+      // langageCode hardcoded, needs to be changed in schema that description is no longer a multi-language option
+    },
+    data: {
+      text:  unitForm.description.text,
+    }
+  })
+
+
 }
 
 // delete existing unit
 module.exports.deleteUnit = async function (unitForm, role) {
   console.log(unitForm);
   console.log(role);
+
+  if (role != 'expert' && role != 'admin') {
+    console.log("User has no verification rights!");
+    unitForm.validation = false;
+  } else {
+    unitForm.validation = true;
+  }
+
+  unitForm.sensorElement.forEach( async (element) => {
+    const updateElement = await prisma.element.update({
+      where: {
+        id: element.sensorElementId
+      },
+      data: {
+        unitId: 1
+      }
+    });
+  })
+
+  unitForm.rov.forEach( async (rov) => {
+    const updateElement = await prisma.rangeOfValues.update({
+      where: {
+        id: rov.rovId
+      },
+      data: {
+        unitId: 1
+      }
+    });
+  })
+  
+
+  const deletetranslationItems = await prisma.translationItem.deleteMany({
+    where: {
+      translationId: {
+        in: unitForm.translationIds,
+      }
+    }
+  })
+
+  const deletetranslations = await prisma.translation.deleteMany({
+    where: {
+      id: {
+        in: unitForm.translationIds,
+      }
+    }
+  })
+
+  const deleteUnit = await prisma.unit.delete({
+    where: {
+      id: unitForm.id
+    }
+  });
+
 }
