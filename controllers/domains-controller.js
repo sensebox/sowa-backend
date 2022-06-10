@@ -284,7 +284,7 @@ module.exports.createNewDomain = async function (domainForm, role) {
 
   // generate slug from english label
   let domainSlug;
-  domainForm.label.forEach(async (label) => {
+  await domainForm.label.forEach(async (label) => {
     if (label.lang == 'en') {
       domainSlug = await helperFunctions.slugifyModified(label.value);
     }  

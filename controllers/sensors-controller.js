@@ -376,7 +376,7 @@ module.exports.createNewSensor = async function (sensorForm, role) {
 
   // generate slug from english label
   let sensorSlug;
-  sensorForm.label.forEach(async (label) => {
+  await sensorForm.label.forEach(async (label) => {
     if (label.lang == 'en') {
       sensorSlug = await helperFunctions.slugifyModified(label.value);
     }  

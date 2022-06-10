@@ -149,8 +149,9 @@ module.exports.createNewPhenomenon = async function (phenomenonForm, role) {
 
   // generate slug from english label
   let phenomenonSlug;
-  phenomenonForm.label.forEach(async (label) => {
+  await phenomenonForm.label.forEach(async (label) => {
     if (label.lang == 'en') {
+      console.log(label.value)
       phenomenonSlug = await helperFunctions.slugifyModified(label.value);
     }  
   });

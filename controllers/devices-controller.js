@@ -316,7 +316,7 @@ module.exports.createNewDevice = async function (deviceForm, role) {
 
   // generate slug from english label
   let deviceSlug;
-  deviceForm.label.forEach(async (label) => {
+  await deviceForm.label.forEach(async (label) => {
     if (label.lang == 'en') {
       deviceSlug = await helperFunctions.slugifyModified(label.value);
     }  
