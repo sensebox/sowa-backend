@@ -39,20 +39,19 @@ router.get('/domain-history/:iri', function (req, res) {
 router.post('/domain/create/', function (req, res) {
   // LOCALS contains the user now including the role
   DomainsController.createNewDomain(req.body, res.locals.user.role)
-  DomainsController.createHistoryDomain(req.body, res.locals.user)
     .then(res.json(req.body))
 });
 
 router.post('/domain/edit/', function (req, res) {
   // LOCALS contains the user now including the role
-  console.dir(req.body);
+  // console.dir(req.body);
   DomainsController.editDomain(req.body, res.locals.user.role)
-  DomainsController.createHistoryDomain(req.body, res.locals.user)
-  .then(res.json(req.body))
+    .then(res.json(req.body))
+  // DomainsController.createHistoryDomain(req.body, res.locals.user)
 });
 
 router.post('/domain/delete/', function (req, res) {
-  console.log(req.body);
+  // console.log(req.body);
   DomainsController.deleteDomain(req.body, res.locals.user.role)
     .then(res.json(req.body))
 });

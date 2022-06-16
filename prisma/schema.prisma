@@ -12,10 +12,13 @@ datasource db {
 
 model Device {
   id            Int          @id @default(autoincrement())
+  slug          String       @unique
   label         Translation? @relation("labelDevice", fields: [labelId], references: [id])
   description   Translation? @relation("descriptionDevice", fields: [descriptionId], references: [id])
   markdown      Translation? @relation("markdownDevice", fields: [markdownId], references: [id])
   sensors       Sensor[]
+  contact       String?      
+  website       String?    
   validation    Boolean      @default(false)
   image         String?      
   labelId       Int?         @unique
@@ -25,6 +28,7 @@ model Device {
 
 model Sensor {
   id            Int          @id @default(autoincrement())
+  slug          String       @unique
   label         Translation? @relation("labelSensor", fields: [labelId], references: [id])
   description   Translation? @relation("descriptionSensor", fields: [descriptionId], references: [id])
   devices       Device[]
@@ -52,6 +56,7 @@ model Element {
 
 model Phenomenon {
   id            Int             @id @default(autoincrement())
+  slug          String          @unique
   label         Translation?    @relation("labelPhenomenon", fields: [labelId], references: [id])
   description   Translation?    @relation("descriptionPhenomenon", fields: [descriptionId], references: [id])
   markdown      Translation?    @relation("markdownPhenomenon", fields: [markdownId], references: [id])
@@ -68,21 +73,27 @@ model RangeOfValues {
   id           Int        @id @default(autoincrement())
   min          Int?
   max          Int?
-  unit         Unit       @relation(fields: [unitId], references: [id])
+  unit         Unit?       @relation(fields: [unitId], references: [id])
   unitId       Int
   phenomenon   Phenomenon @relation(fields: [phenomenonId], references: [id])
   phenomenonId Int
 }
 
 model Unit {
-  id      Int             @id @default(autoincrement())
-  name    String          @db.VarChar(255)
-  rov     RangeOfValues[]
-  Element Element[]
+  id            Int               @id @default(autoincrement())
+  slug          String            @unique
+  name          String            @db.VarChar(255)
+  notation      String            @db.VarChar(255)
+  validation    Boolean           @default(false)
+  description   Translation?      @relation("descriptionUnit", fields: [descriptionId], references: [id])
+  rov           RangeOfValues[]
+  Element       Element[]
+  descriptionId Int?              @unique
 }
 
 model Domain {
   id            Int          @id @default(autoincrement())
+  slug          String       @unique
   label         Translation? @relation("labelDomain", fields: [labelId], references: [id])
   description   Translation? @relation("descriptionDomain", fields: [descriptionId], references: [id])
   validation    Boolean      @default(false)
@@ -93,6 +104,7 @@ model Domain {
 
 model Language {
   code            String            @id @db.VarChar(2)
+  label           String?           @db.VarChar(255)
   TranslationItem TranslationItem[]
 }
 
@@ -110,6 +122,7 @@ model Translation {
   markdownPhenomenon    Phenomenon?       @relation("markdownPhenomenon")
   labelDomain           Domain?           @relation("labelDomain")
   descriptionDomain     Domain?           @relation("descriptionDomain")
+  descriptionUnit       Unit?             @relation("descriptionUnit")
 }
 
 model TranslationItem {

@@ -12,7 +12,7 @@ module.exports = router;
 
 /* ---------- All domain funtions: -----------------*/
 router.get('/units', function (req, res) {
-  QueriesController.getUnits()
+  QueriesController.getUnits(req.params.lang)
     .then(data => res.json(data))
 });
 

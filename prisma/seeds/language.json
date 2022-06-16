@@ -1,5 +1,13 @@
 [{
-    "code": "en"
+    "code": "en",
+    "label": "English"
 },{
-    "code": "de"
+    "code": "de",
+    "label": "German"
+},{
+    "code": "es",
+    "label": "Spanish"
+},{
+    "code": "fr",
+    "label": "French"
 }]

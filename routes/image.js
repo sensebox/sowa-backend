@@ -3,6 +3,8 @@ const multer = require('multer');
 const fs = require('fs');
 var router = express.Router();
 
+const prisma = require('../lib/prisma');
+
 const PATH = './public/images/upload/';
 
 let storage = multer.diskStorage({
@@ -44,7 +46,7 @@ router.post('/upload', upload.single('image'), (req, res) => {
     } else {
         console.log("Endung: " + req.file.originalname.slice(req.file.originalname.lastIndexOf('.')));
         fs.renameSync(req.file.path, req.file.path.replace(req.file.originalname,
-            req.body.uri + req.file.originalname.slice(req.file.originalname.lastIndexOf('.'))));
+            req.body.name));
         console.log('File is available!');
         console.log(req.file);
         return res.send({
@@ -64,8 +66,10 @@ router.get('/:name', (req, res) => {
     // });
 })
 
-router.delete('/delete/:name', (req, res) => {
-    console.log(req.params.name);
+router.delete('/delete/:name', async(req, res) => {
+    console.log(req.body);
+    console.log(req.params)
+
     fs.unlink('./public/images/upload/' + req.params.name, (err) => {
         if (err) {
             console.log(err);

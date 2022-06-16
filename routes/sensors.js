@@ -14,6 +14,7 @@ router.get('/', function (req, res, next) {
 router.get('/all', function (req, res) {
   SensorsController.getSensors(req.query.lang)
     .then(data => {
+      // console.log(data);
       return res.json(data);
     })
 });
@@ -86,16 +87,15 @@ router.get('/sensor-history/:iri', function (req, res) {
 
 router.post('/sensor/create/', function (req, res) {
   console.log(req.body);
-  SensorsController.createNewSensor(req.body)
-  SensorsController.createHistorySensor(req.body)
-    .then(res.json(req.body))
+  SensorsController.createNewSensor(req.body).then(res.json(req.body))
+  // SensorsController.createHistorySensor(req.body)
+    
 });
 
 router.post('/sensor/edit/', function (req, res) {
-  console.log(req.body);
-  SensorsController.editSensor(req.body)
-  SensorsController.createHistorySensor(req.body)
-    .then(res.json(req.body))
+  SensorsController.editSensor(req.body, res.locals.user.role)
+     .then(res.json(req.body))
+  // SensorsController.createHistorySensor(req.body)
 });
 
 router.post('/sensor/delete/', function (req, res) {
