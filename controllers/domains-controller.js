@@ -119,7 +119,7 @@ module.exports.editDomain = async function (domainForm, role) {
 
   //////////// Labels ////////////
   // delete, update or create labels
-  domainForm.deletedLabels.forEach( async (label) => {
+  for (const label of domainForm.deletedLabels) {
     console.log(label.translationId)
     console.log(label.lang)
     const deleteLabel = await prisma.translationItem.deleteMany({
@@ -128,9 +128,9 @@ module.exports.editDomain = async function (domainForm, role) {
         languageCode: label.lang,
       }
     })
-  })
+  };
 
-  domainForm.label.forEach( async (label) => {
+  for (const label of domainForm.label) {
     if (label.translationId !== null) {
       const updateLabel = await prisma.translationItem.updateMany({
         where: {
@@ -150,7 +150,7 @@ module.exports.editDomain = async function (domainForm, role) {
         }
       })
     }
-  })
+  };
 
 
   /////////// Description //////////////
@@ -169,7 +169,7 @@ module.exports.editDomain = async function (domainForm, role) {
 
   /////////// Phenomena //////////////
   // delete, update or create phenomena
-  domainForm.deletedPhenomena.forEach( async (phenomenon) => {
+  for (const phenomenon of domainForm.deletedPhenomena) {
     console.log(phenomenon.phenomenon)
     console.log(phenomenon.exists)
     if (phenomenon.exists === true) {
@@ -187,9 +187,9 @@ module.exports.editDomain = async function (domainForm, role) {
         }
       })
     } 
-  })
+  };
 
-  domainForm.phenomenon.forEach( async (phenomenon) => {
+  for (const phenomenon of domainForm.phenomenon) {
     if (phenomenon.exists === false) {
       const connectPhenomenon = await prisma.domain.update({
         where: {
@@ -204,7 +204,7 @@ module.exports.editDomain = async function (domainForm, role) {
         }
       })
     }
-  })
+  };
 }
 
 module.exports.deleteDomain = async function (domainForm, role) {
@@ -216,7 +216,7 @@ module.exports.deleteDomain = async function (domainForm, role) {
 
   console.log(domainForm)
 
-  domainForm.phenomenon.forEach( async (phenomenon) => {
+  for (const phenomenon of domainForm.phenomenon) {
     const disconnectPhenomenon = await prisma.domain.update({
       where: {
         id: domainForm.id
@@ -229,7 +229,7 @@ module.exports.deleteDomain = async function (domainForm, role) {
         }
       }
     })
-  })
+  };
 
   const deletetranslationItems = await prisma.translationItem.deleteMany({
     where: {
@@ -237,7 +237,7 @@ module.exports.deleteDomain = async function (domainForm, role) {
         in: domainForm.translationIds,
       }
     }
-  })
+  });
 
   const deletetranslations = await prisma.translation.deleteMany({
     where: {
@@ -245,13 +245,13 @@ module.exports.deleteDomain = async function (domainForm, role) {
         in: domainForm.translationIds,
       }
     }
-  })
+  });
 
   const deleteDomain = await prisma.domain.delete({
     where: {
       id: domainForm.id,
     }
-  })
+  });
 
 }
 
@@ -284,11 +284,11 @@ module.exports.createNewDomain = async function (domainForm, role) {
 
   // generate slug from english label
   let domainSlug;
-  await domainForm.label.forEach(async (label) => {
+  for (const label of domainForm.label) {
     if (label.lang == 'en') {
       domainSlug = await helperFunctions.slugifyModified(label.value);
     }  
-  });
+  };
 
   const domain = await prisma.domain.create({data: {
     slug: domainSlug,

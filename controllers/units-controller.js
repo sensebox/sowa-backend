@@ -178,7 +178,7 @@ module.exports.deleteUnit = async function (unitForm, role) {
     unitForm.validation = true;
   }
 
-  unitForm.sensorElement.forEach( async (element) => {
+  for (const element of unitForm.sensorElement) {
     const updateElement = await prisma.element.update({
       where: {
         id: element.sensorElementId
@@ -187,9 +187,9 @@ module.exports.deleteUnit = async function (unitForm, role) {
         unitId: 1
       }
     });
-  })
+  }
 
-  unitForm.rov.forEach( async (rov) => {
+  for (const rov of unitForm.rov) {
     const updateElement = await prisma.rangeOfValues.update({
       where: {
         id: rov.rovId
@@ -198,7 +198,7 @@ module.exports.deleteUnit = async function (unitForm, role) {
         unitId: 1
       }
     });
-  })
+  }
   
 
   const deletetranslationItems = await prisma.translationItem.deleteMany({

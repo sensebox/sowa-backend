@@ -14,6 +14,7 @@ router.get('/', function (req, res, next) {
 router.get('/all', function (req, res) {
   SensorsController.getSensors(req.query.lang)
     .then(data => {
+      // console.log(data);
       return res.json(data);
     })
 });

@@ -118,7 +118,7 @@ module.exports.editDevice = async function (deviceForm, role) {
 
   //////////// Labels ////////////
   // delete, update or create labels
-  deviceForm.deletedLabels.forEach(async (label) => {
+  for (const label of deviceForm.deletedLabels) {
     console.log(label.translationId);
     console.log(label.lang);
     const deleteLabel = await prisma.translationItem.deleteMany({
@@ -127,9 +127,9 @@ module.exports.editDevice = async function (deviceForm, role) {
         languageCode: label.lang,
       },
     });
-  });
+  };
 
-  deviceForm.label.forEach(async (label) => {
+  for (const label of deviceForm.label) {
     if (label.translationId !== null) {
       const updateLabel = await prisma.translationItem.updateMany({
         where: {
@@ -149,7 +149,7 @@ module.exports.editDevice = async function (deviceForm, role) {
         },
       });
     }
-  });
+  };
 
   /////////// Description //////////////
   // update description text; if the whole text is deleted, description is set to an empty string
@@ -193,7 +193,7 @@ module.exports.editDevice = async function (deviceForm, role) {
 
   /////////// Sensors //////////////
   // delete, update or create sensors of devices
-  deviceForm.deletedSensors.forEach(async (sensor) => {
+  for (const sensor of deviceForm.deletedSensors) {
     console.log(sensor.sensor);
     console.log(sensor.exists);
     if (sensor.exists === true) {
@@ -210,9 +210,9 @@ module.exports.editDevice = async function (deviceForm, role) {
         },
       });
     }
-  });
+  };
 
-  deviceForm.sensor.forEach(async (sensor) => {
+  for (const sensor of deviceForm.sensor) {
     if (sensor.exists === false) {
       const connectDevice = await prisma.sensor.update({
         where: {
@@ -227,7 +227,7 @@ module.exports.editDevice = async function (deviceForm, role) {
         },
       });
     }
-  });
+  };
 };
 
 module.exports.deleteDevice = async function (deviceForm, role) {
@@ -238,7 +238,7 @@ module.exports.deleteDevice = async function (deviceForm, role) {
 
   console.log(deviceForm);
 
-  deviceForm.sensor.forEach(async (sensor) => {
+  for (const sensor of deviceForm.sensor) {
     const disconnectDevice = await prisma.sensor.update({
       where: {
         id: sensor.sensor,
@@ -251,7 +251,7 @@ module.exports.deleteDevice = async function (deviceForm, role) {
         },
       },
     });
-  });
+  };
 
   const deletetranslationItems = await prisma.translationItem.deleteMany({
     where: {
@@ -316,11 +316,11 @@ module.exports.createNewDevice = async function (deviceForm, role) {
 
   // generate slug from english label
   let deviceSlug;
-  await deviceForm.label.forEach(async (label) => {
+  for (const label of deviceForm.label) {
     if (label.lang == 'en') {
       deviceSlug = await helperFunctions.slugifyModified(label.value);
     }  
-  });
+  };
 
   // create device
   const device = await prisma.device.create({ data: {
