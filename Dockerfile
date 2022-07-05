@@ -2,7 +2,7 @@ FROM node:16-alpine as build
 
 ENV NODE_ENV=production
 
-RUN apk --no-cache --virtual .build add build-base python2 git
+RUN apk --no-cache --virtual .build add build-base python3 git
 
 WORKDIR /usr/src/app
 
