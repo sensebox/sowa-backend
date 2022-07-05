@@ -11,7 +11,6 @@ COPY package.json /usr/src/app/
 RUN npm install --production
 
 COPY . /usr/src/app
-RUN npx prisma generate
 
 # Final stage
 FROM node:12-alpine
@@ -20,5 +19,6 @@ ENV NODE_ENV=production
 
 WORKDIR /usr/src/app
 COPY --from=build /usr/src/app /usr/src/app
+RUN npx prisma generate
 
 CMD [ "npm", "start" ]
