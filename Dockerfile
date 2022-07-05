@@ -1,4 +1,4 @@
-FROM node:12-alpine as build
+FROM node:16-alpine as build
 
 ENV NODE_ENV=production
 
@@ -13,7 +13,7 @@ RUN npm install --production
 COPY . /usr/src/app
 
 # Final stage
-FROM node:12-alpine
+FROM node:16-alpine
 
 ENV NODE_ENV=production
 
