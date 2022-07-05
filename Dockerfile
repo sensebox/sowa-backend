@@ -22,4 +22,4 @@ WORKDIR /usr/src/app
 COPY --from=build /usr/src/app /usr/src/app
 RUN npx prisma generate
 
-CMD npx prisma migrate deploy && npm start
+CMD npm start
