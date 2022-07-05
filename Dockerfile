@@ -20,5 +20,6 @@ ENV NODE_ENV=production
 WORKDIR /usr/src/app
 COPY --from=build /usr/src/app /usr/src/app
 RUN npx prisma generate
+RUN npx prisma migrate deploy
 
 CMD [ "npm", "start" ]
