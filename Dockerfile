@@ -21,5 +21,6 @@ ENV DATABASE_URL=production
 WORKDIR /usr/src/app
 COPY --from=build /usr/src/app /usr/src/app
 RUN npx prisma generate
+RUN chmod +x startup.sh
 
 CMD [ "startup.sh" ]
