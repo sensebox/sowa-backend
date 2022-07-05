@@ -16,10 +16,11 @@ COPY . /usr/src/app
 FROM node:16-alpine
 
 ENV NODE_ENV=production
+ENV DATABASE_URL=production
 
 WORKDIR /usr/src/app
 COPY --from=build /usr/src/app /usr/src/app
 RUN npx prisma generate
 RUN npx prisma migrate deploy
 
-CMD [ "npm", "start" ]
+CMD [ "startup.sh" ]
