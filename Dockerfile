@@ -9,9 +9,9 @@ WORKDIR /usr/src/app
 # copy in main package.json and yarn.lock
 COPY package.json /usr/src/app/
 RUN npm install --production
-RUN npx prisma generate
 
 COPY . /usr/src/app
+RUN npx prisma generate
 
 # Final stage
 FROM node:12-alpine
