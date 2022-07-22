@@ -703,18 +703,16 @@ module.exports.getSensorsForPhenomenon = function (iri) {
 
 /**--------------Get all sensors that are part of a given device --------------- */
 module.exports.getSensorsForDevice = function (iri) {
-  return client
-    .query(SPARQL`
-                     SELECT ?label ?sensors
-                     WHERE {
-                       ${{ s: iri }} s:hasSensor ?sensors;
-                       ?sensors rdfs:label ?label 
-                     }`)
-    .execute({ format: { resource: 'sensors' } })
-    .then(res => res.results.bindings)
-    .catch(function (error) {
-      console.log("Oh no, error!")
-    });
+  var sensors = prisma.sensor.findMany({
+    where: {
+      devices: {
+        id: {
+          in: [ID],
+        },
+      },
+    }
+  });
+  res.send("sensors");
 }
 
 

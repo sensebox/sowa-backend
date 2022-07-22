@@ -48,7 +48,7 @@ router.get('/all', async function (req, res) {
   // return res.json(result);
 });
 
-router.get('/device/:iri', async function (req, res) {
+router.get('/:iri', async function (req, res) {
   DevicesController.getDevice(req.params.iri, req.query.lang).then(data => {
     return res.json(data);
   })
@@ -65,8 +65,8 @@ router.get('/device/:iri', async function (req, res) {
   //   })
 });
 
-router.get('/device/:iri/sensors', function (req, res) {
-  DevicesController.getSensorsOfDevice(req.params.iri)
+router.get('/:iri/sensors', function (req, res) {
+  DevicesController.getSensorsOfDevice(parseInt(req.params.iri))
     .then(data => {
       return res.json(data);
       //Do We need this conversion stuff?
@@ -110,21 +110,21 @@ router.get('/device-history/:iri', function (req, res) {
     .then(data => res.json(data))
 });
 
-router.post('/device/create/', function (req, res) {
+router.post('/create/', function (req, res) {
   console.log(req.body);
   DevicesController.createNewDevice(req.body, res.locals.user.role)
     .then(res.json(req.body))
   // DevicesController.createHistoryDevice(req.body, res.locals.user)
 });
 
-router.post('/device/edit/', function (req, res) {
+router.post('/edit/', function (req, res) {
   // console.dir(req.body);
   DevicesController.editDevice(req.body, res.locals.user.role)
     .then(res.json(req.body))
     // DevicesController.createHistoryDevice(req.body, res.locals.user)
 });
 
-router.post('/device/delete/', function (req, res) {
+router.post('/delete/', function (req, res) {
   // console.log(req.body);
   DevicesController.deleteDevice(req.body, res.locals.user.role)
     .then(res.json(req.body))

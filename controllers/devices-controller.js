@@ -22,6 +22,7 @@ module.exports.getDevices = async function (lang) {
       id: true,
       slug: true,
       markdown: true,
+      image: true,
       label: {
         select: {
           item: languageFilter,
@@ -53,7 +54,7 @@ module.exports.getDevice = async function (iri, lang) {
     };
   }
 
-  let where = (isNaN(parseInt(iri))) ? {slug: iri} : {id: parseInt(iri)};
+  let where = (isNaN(parseInt(iri))) ? { slug: iri } : { id: parseInt(iri) };
 
   const result = await prisma.device.findUnique({
     where: where,
@@ -96,7 +97,26 @@ module.exports.getDevice = async function (iri, lang) {
   return result;
 };
 
-
+// get sensors of device
+module.exports.getSensorsOfDevice = async function (deviceId) {
+  const result = await prisma.sensor.findMany({
+    where: {
+      devices: {
+        some: {
+          id: deviceId,
+        },
+      },
+    }, 
+    select: {
+      id: true,
+      slug: true,
+      label: true,
+      description: true,
+      elements: true,
+    }
+  });
+  return result;
+}
 
 
 //edit a device
@@ -286,32 +306,32 @@ module.exports.createNewDevice = async function (deviceForm, role) {
   }
   console.log(deviceForm);
 
-  const labelTranslation = await prisma.translation.create({data: {}})
+  const labelTranslation = await prisma.translation.create({ data: {} })
   let sensorIds = null;
-  if(deviceForm.sensor) {
-    sensorIds = deviceForm.sensor.map(sensor => {return {"id": sensor.sensor}});
+  if (deviceForm.sensor) {
+    sensorIds = deviceForm.sensor.map(sensor => { return { "id": sensor.sensor } });
   }
   console.log("SENSORIDS", sensorIds)
 
 
   // map and create labels
-  if(deviceForm.label.length > 0) {
-    const mappedLabel = deviceForm.label.map(label => {return {languageCode: label.lang, text: label.value, translationId: labelTranslation.id}});
-    const labels = await prisma.translationItem.createMany({data: mappedLabel})
+  if (deviceForm.label.length > 0) {
+    const mappedLabel = deviceForm.label.map(label => { return { languageCode: label.lang, text: label.value, translationId: labelTranslation.id } });
+    const labels = await prisma.translationItem.createMany({ data: mappedLabel })
   }
 
   // map and create description
-  const descTranslation = await prisma.translation.create({data: {}})
-  if(deviceForm.description) {
-    const mappedDescription = [{languageCode: 'en', text: deviceForm.description.text, translationId: descTranslation.id}];
-    const descriptions = await prisma.translationItem.createMany({data: mappedDescription})
+  const descTranslation = await prisma.translation.create({ data: {} })
+  if (deviceForm.description) {
+    const mappedDescription = [{ languageCode: 'en', text: deviceForm.description.text, translationId: descTranslation.id }];
+    const descriptions = await prisma.translationItem.createMany({ data: mappedDescription })
   }
 
   // map and create markdown
-  const markdownTranslation = await prisma.translation.create({data: {}})
-  if(deviceForm.markdown) {
-    const mappedMarkdown = [{languageCode: 'en', text: deviceForm.markdown.text, translationId: markdownTranslation.id}];
-    const markdowns = await prisma.translationItem.createMany({data: mappedMarkdown})
+  const markdownTranslation = await prisma.translation.create({ data: {} })
+  if (deviceForm.markdown) {
+    const mappedMarkdown = [{ languageCode: 'en', text: deviceForm.markdown.text, translationId: markdownTranslation.id }];
+    const markdowns = await prisma.translationItem.createMany({ data: mappedMarkdown })
   }
 
   // generate slug from english label
@@ -319,29 +339,31 @@ module.exports.createNewDevice = async function (deviceForm, role) {
   for (const label of deviceForm.label) {
     if (label.lang == 'en') {
       deviceSlug = await helperFunctions.slugifyModified(label.value);
-    }  
+    }
   };
 
   // create device
-  const device = await prisma.device.create({ data: {
-    slug: deviceSlug,
-    label: {
-      connect: {id: labelTranslation.id}
-    },
-    description: {
-      connect: {id: descTranslation.id}
-    },
-    markdown: {
-      connect: {id: markdownTranslation.id}
-    },
-    website: deviceForm.website,
-    contact: deviceForm.contact,
-    validation: deviceForm.validation,
-    image: deviceForm.image,
-    sensors: {
-      connect: sensorIds
+  const device = await prisma.device.create({
+    data: {
+      slug: deviceSlug,
+      label: {
+        connect: { id: labelTranslation.id }
+      },
+      description: {
+        connect: { id: descTranslation.id }
+      },
+      markdown: {
+        connect: { id: markdownTranslation.id }
+      },
+      website: deviceForm.website,
+      contact: deviceForm.contact,
+      validation: deviceForm.validation,
+      image: deviceForm.image,
+      sensors: {
+        connect: sensorIds
+      }
     }
-  }})
+  })
 
   return device;
 };
