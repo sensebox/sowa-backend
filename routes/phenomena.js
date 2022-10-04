@@ -61,7 +61,7 @@ router.get('/phenomenon-history/:iri', function (req, res) {
 
 router.post('/phenomenon/create/', function (req, res) {
   PhenomenaController.createNewPhenomenon(req.body, res.locals.user.role)
-    .then(res.json(req.body))
+    .then(data => res.json(data))
   // PhenomenaController.createHistoryPhenomenon(req.body, res.locals.user)
 });
 

@@ -21,8 +21,6 @@ module.exports.getDevices = async function (lang) {
     select: {
       id: true,
       slug: true,
-      markdown: true,
-      image: true,
       label: {
         select: {
           item: languageFilter,
@@ -33,7 +31,13 @@ module.exports.getDevices = async function (lang) {
           item: languageFilter,
         },
       },
+      markdown: {
+        select: {
+          item: languageFilter,
+        },
+      },
       sensors: true,
+      image: true,
       validation: true,
     },
   });
@@ -98,13 +102,14 @@ module.exports.getDevice = async function (iri, lang) {
 };
 
 // get sensors of device
-module.exports.getSensorsOfDevice = async function (deviceId) {
+module.exports.getSensorsOfDevice = async function (iri) {
+
+  let where = (isNaN(parseInt(iri))) ? { slug: iri } : { id: parseInt(iri) };
+
   const result = await prisma.sensor.findMany({
     where: {
       devices: {
-        some: {
-          id: deviceId,
-        },
+        some: where,
       },
     }, 
     select: {

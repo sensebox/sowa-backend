@@ -48,7 +48,7 @@ router.get('/all', async function (req, res) {
   // return res.json(result);
 });
 
-router.get('/:iri', async function (req, res) {
+router.get('/device/:iri', async function (req, res) {
   DevicesController.getDevice(req.params.iri, req.query.lang).then(data => {
     return res.json(data);
   })
@@ -66,7 +66,7 @@ router.get('/:iri', async function (req, res) {
 });
 
 router.get('/:iri/sensors', function (req, res) {
-  DevicesController.getSensorsOfDevice(parseInt(req.params.iri))
+  DevicesController.getSensorsOfDevice(req.params.iri)
     .then(data => {
       return res.json(data);
       //Do We need this conversion stuff?
@@ -78,19 +78,19 @@ router.get('/:iri/sensors', function (req, res) {
     })
 });
 
-router.get('/all/sensors', function (req, res) {
-  DevicesController.getAllSensorsOfAllDevices()
-    .then(data => {
-      console.log(data);
-      return res.json(data);
-      //Do We need this conversion stuff?
-      // if(req.query.format === 'json'){
-      //   return res.json(SensorsController.convertSensorsToJson(data))
-      // } else {
-      //   return res.json(data);
-      // }
-    })
-});
+// router.get('/all/sensors', function (req, res) {
+//   DevicesController.getAllSensorsOfAllDevices()
+//     .then(data => {
+//       console.log(data);
+//       return res.json(data);
+//       //Do We need this conversion stuff?
+//       // if(req.query.format === 'json'){
+//       //   return res.json(SensorsController.convertSensorsToJson(data))
+//       // } else {
+//       //   return res.json(data);
+//       // }
+//     })
+// });
 
 // router.post('/device/update/', function (req, res) {
 //   console.dir(req.body);

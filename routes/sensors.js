@@ -106,10 +106,10 @@ router.post('/sensor/delete/', function (req, res) {
 
 /* --------------------Sensor element functions ------------------------*/
 
-router.get('/sensorElement/:iri', function (req, res) {
-  console.log(req);
-  SensorsController.getSensorElement(req.params.iri)
-    .then(data => res.json(data))
-});
+// router.get('/sensorElement/:iri', function (req, res) {
+//   console.log(req);
+//   SensorsController.getSensorElement(req.params.iri)
+//     .then(data => res.json(data))
+// });
 
 module.exports = router;
