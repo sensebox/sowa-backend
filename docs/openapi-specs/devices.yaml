@@ -1,0 +1,360 @@
+openapi: 3.1.0
+info:
+  title: devices
+  version: 1.0.0
+
+servers:
+  - url: https://api.sensors.wiki
+    description: Main (production) server
+
+paths:
+  #####################
+  # device operations #
+  #####################
+
+  # get all devices
+  /devices/all:
+    get:
+      summary: Get all devices
+      description: retrieves all devices that are registered
+      tags:
+        - devices
+      operationId: get-all-devices
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id: 
+                      type: integer
+                      description: the id of the device
+                    slug:
+                      type: string
+                      description: the slug of the device
+                    label:
+                      type: object
+                      properties:
+                        item:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              languageCode:
+                                type: string
+                                description: |
+                                  languageCode for the language of the label. e.g. `en`, `de`,...
+                              text:
+                                type: string
+                                description: |
+                                  the label text
+                              translationId:
+                                type: integer
+                                description: |
+                                  unique identifier of the translation item
+                    description: 
+                      type: object
+                      properties:
+                        item:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              languageCode:
+                                type: string
+                                description: |
+                                  languageCode for the language of the description. e.g. `en`, `de`,...
+                              text:
+                                type: string
+                                description: |
+                                  the description text
+                              translationId:
+                                type: integer
+                                description: |
+                                  unique identifier of the translation item
+                    markdown:
+                      type: object
+                      properties:
+                        item:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              languageCode:
+                                type: string
+                                description: |
+                                  languageCode for the language of the markdown text. e.g. `en`, `de`,...
+                              text:
+                                type: string
+                                description: |
+                                  the markdown text
+                              translationId:
+                                type: integer
+                                description: |
+                                  unique identifier of the translation item
+                    sensors:
+                      type: array
+                      description: |
+                        all sensors that are compatible with the retrieved device
+                      items:
+                        type: object
+                        properties:
+                          id: 
+                            type: integer
+                            description: the id of the sensor
+                          slug:
+                            type: string
+                            description: the slug of the device
+                          manufacturer:
+                            type: string
+                            description: |
+                              the name of the manufacturer of the sensor e.g. `Bosch`, `Truebener GmbH` etc.
+                          lifePeriod:
+                            type: integer
+                            description: |
+                                the estimated life period of the sensor in days
+                          price:
+                            type: integer
+                            description: |
+                              the price of the sensor
+                          validation:
+                            type: boolean
+                            description: |
+                              boolean that is true if the information is validated by an admin
+                          image:
+                            type: string
+                            description: |
+                              the filename of the sensors image that can be accessed via /images/uploads/{filename}
+                          datasheet:
+                            type: string
+                            description: |
+                              a link to the datasheet of the retrieved sensor
+                          labelId:
+                            type: integer
+                            description: |
+                              unique identifier of the label
+                          descriptionId:
+                            type: integer
+                            description: |
+                              unique identifier of the description
+                    image:
+                      type: string
+                      description: |
+                        the filename of the device's image that can be accessed via /images/uploads/{filename}
+                    validation:
+                      type: boolean
+                      description: |
+                        boolean that is true if the information is validated by an admin
+
+  # get device by iri
+  /devices/device/{iri}:
+    get:
+      parameters:
+      - name: iri
+        in: path
+        required: true
+        schema:
+          type: string
+      summary: Get a single device by its id or slug
+      tags:
+        - device
+      operationId: get-single-device
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id: 
+                    type: integer
+                    description: the id of the device
+                  slug:
+                    type: string
+                    description: the slug of the device
+                  label:
+                    type: object
+                    properties:
+                      item:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            languageCode:
+                              type: string
+                              description: |
+                                languageCode for the language of the label. e.g. `en`, `de`,...
+                            text:
+                              type: string
+                              description: |
+                                the label text
+                            translationId:
+                              type: integer
+                              description: |
+                                unique identifier of the translation item
+                  description: 
+                    type: object
+                    properties:
+                      item:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            languageCode:
+                              type: string
+                              description: |
+                                languageCode for the language of the description. e.g. `en`, `de`,...
+                            text:
+                              type: string
+                              description: |
+                                the description text
+                            translationId:
+                              type: integer
+                              description: |
+                                unique identifier of the translation item
+                  markdown:
+                    type: object
+                    properties:
+                      item:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            languageCode:
+                              type: string
+                              description: |
+                                languageCode for the language of the markdown text. e.g. `en`, `de`,...
+                            text:
+                              type: string
+                              description: |
+                                the markdown text
+                            translationId:
+                              type: integer
+                              description: |
+                                unique identifier of the translation item
+                  contact:
+                    type: string
+                    description: |
+                      contact information for device support
+                  website:
+                    type: string
+                    description: |
+                      link to a website with more information about the device
+                  sensors:
+                    type: array
+                    description: |
+                      all sensors that are compatible with the retrieved device
+                    items:
+                      type: object
+                      properties:
+                        id: 
+                          type: integer
+                          description: the id of the sensor
+                        slug:
+                          type: string
+                          description: the slug of the device
+                        label:
+                          type: object
+                          properties:
+                            item:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  languageCode:
+                                    type: string
+                                    description: |
+                                      languageCode for the language of the label. e.g. `en`, `de`,...
+                                  text:
+                                    type: string
+                                    description: |
+                                      the label text
+                                  translationId:
+                                    type: integer
+                                    description: |
+                                      unique identifier of the translation item
+                        validation:
+                          type: boolean
+                          description: |
+                            boolean that is true if the information is validated by an admin
+                  validation:
+                    type: boolean
+                    description: |
+                      boolean that is true if the information is validated by an admin     
+
+
+  # get all sensors of a device
+  /devices/{iri}/sensors:
+    get:
+      parameters:
+      - name: iri
+        in: path
+        required: true
+        schema:
+          type: string
+      summary: Get all sensors of a device by its id or slug
+      tags:
+        - deviceSensors
+      operationId: get-device-sensors
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id: 
+                      type: integer
+                      description: the id of the sensor
+                    slug:
+                      type: string
+                      description: the slug of the sensor
+                    label:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: |
+                            the id of the translationItems that contain the label
+                    description:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: |
+                            the id of the translationItems that contain the description
+                    elements:
+                      type: array
+                      items:
+                        type: object
+                        description: |
+                          the sensorElements of the sensor (phenomena that can be measured with the accuracy and Unit)
+                        properties:
+                          id:
+                            type: integer
+                            description: |
+                              id of the sensorElement
+                          accuracy:
+                            type: float
+                            description: |
+                              the accuracy with which the phenomenon is measured
+                          sensorId:
+                            type: integer
+                            description: |
+                              id of the sensor the sensor Element belongs to
+                          phenomenonId:
+                            type: integer
+                            description: |
+                              the id of the measured phenomenon
+                          unitId:
+                            type: integer
+                            description: |
+                              the id of the unit of the measured phenomenon

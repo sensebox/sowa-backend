@@ -1199,7 +1199,7 @@ paths:
 
 
   #####################
-  # domain operations #
+  # unit operations #
   #####################
 
   # get all units
@@ -1234,7 +1234,7 @@ paths:
                       description: the notation of the unit
 
 
-  # get device by iri
+  # get unit by iri
   /units/unit/{iri}:
     get:
       parameters:
