@@ -16,7 +16,7 @@ paths:
   /sensors/all:
     get:
       summary: Get all sensors
-      description: retrieves all sensors that are registered for the available devices
+      description: Retrieves all sensors that are registered for the available devices
       tags:
         - sensors
       operationId: get-all-sensors

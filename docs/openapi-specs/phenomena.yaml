@@ -16,7 +16,7 @@ paths:
   /phenomena/all:
     get:
       summary: Get all phenomena
-      description: retrieves all phenomena that can be measured with the registered sensors
+      description: Retrieves all phenomena that can be measured with the registered sensors
       tags:
         - phenomena
       operationId: get-all-phenomena

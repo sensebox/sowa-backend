@@ -16,7 +16,7 @@ paths:
   /units/all:
     get:
       summary: Get all units
-      description: retrieves all units that are registered
+      description: Retrieves all units that are registered
       tags:
         - units
       operationId: get-all-units

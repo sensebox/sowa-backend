@@ -16,7 +16,7 @@ paths:
   /domains/all:
     get:
       summary: Get all domains
-      description: retrieves all domains that are registered
+      description: Retrieves all domains that are registered
       tags:
         - domains
       operationId: get-all-domains

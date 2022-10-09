@@ -16,7 +16,7 @@ paths:
   /devices/all:
     get:
       summary: Get all devices
-      description: retrieves all devices that are registered
+      description: Retrieves all devices that are registered
       tags:
         - devices
       operationId: get-all-devices

@@ -106,7 +106,7 @@ const config = {
       navbar: {
         title: 'sensorWiki API Docs',
         logo: {
-          alt: 'My Site Logo',
+          alt: 'Senph Logo',
           src: 'img/senph-icon.png',
         },
         items: [
@@ -139,16 +139,12 @@ const config = {
             title: 'Community',
             items: [
               {
-                label: 'Stack Overflow',
-                href: 'https://stackoverflow.com/questions/tagged/docusaurus',
-              },
-              {
-                label: 'Discord',
-                href: 'https://discordapp.com/invite/docusaurus',
+                label: 'LinkedIn',
+                href: 'https://www.linkedin.com/company/reedu-de/',
               },
               {
                 label: 'Twitter',
-                href: 'https://twitter.com/docusaurus',
+                href: 'https://twitter.com/SenseBox_De',
               },
             ],
           },
@@ -157,7 +153,7 @@ const config = {
             items: [
               {
                 label: 'GitHub',
-                href: 'https://github.com/facebook/docusaurus',
+                href: 'https://github.com/sensebox/sowa-backend',
               },
             ],
           },
