@@ -163,7 +163,15 @@ module.exports.editUnit = async function (unitForm, role) {
     }
   })
 
+  /////////// Edited unit ////////////
+  // retrive edited unit with edited attributes from database 
+  const editedUnit = await prisma.unit.findUnique({
+    where: {
+      id: unitForm.id,
+    }
+  })
 
+  return editedUnit;
 }
 
 // delete existing unit
@@ -223,4 +231,5 @@ module.exports.deleteUnit = async function (unitForm, role) {
     }
   });
 
+  return {info: "Unit successfully deleted"};
 }

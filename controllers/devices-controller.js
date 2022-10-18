@@ -253,6 +253,16 @@ module.exports.editDevice = async function (deviceForm, role) {
       });
     }
   };
+
+  /////////// Edited device ////////////
+  // retrive edited device with edited attributes from database 
+  const editedDevice = await prisma.device.findUnique({
+    where: {
+      id: deviceForm.id,
+    }
+  })
+
+  return editedDevice;
 };
 
 module.exports.deleteDevice = async function (deviceForm, role) {
@@ -299,6 +309,8 @@ module.exports.deleteDevice = async function (deviceForm, role) {
       id: deviceForm.id,
     },
   });
+
+  return {info: "Device successfully deleted"};
 };
 
 
@@ -316,7 +328,7 @@ module.exports.createNewDevice = async function (deviceForm, role) {
   if (deviceForm.sensor) {
     sensorIds = deviceForm.sensor.map(sensor => { return { "id": sensor.sensor } });
   }
-  console.log("SENSORIDS", sensorIds)
+  // console.log("SENSORIDS", sensorIds)
 
 
   // map and create labels

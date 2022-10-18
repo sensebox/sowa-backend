@@ -110,24 +110,24 @@ router.get('/device-history/:iri', function (req, res) {
     .then(data => res.json(data))
 });
 
-router.post('/create/', function (req, res) {
+router.post('/device/create/', function (req, res) {
   console.log(req.body);
   DevicesController.createNewDevice(req.body, res.locals.user.role)
-    .then(res.json(req.body))
-  // DevicesController.createHistoryDevice(req.body, res.locals.user)
-});
-
-router.post('/edit/', function (req, res) {
-  // console.dir(req.body);
-  DevicesController.editDevice(req.body, res.locals.user.role)
-    .then(res.json(req.body))
+    .then(data => res.json(data))
     // DevicesController.createHistoryDevice(req.body, res.locals.user)
 });
 
-router.post('/delete/', function (req, res) {
+router.post('/device/edit/', function (req, res) {
+  // console.dir(req.body);
+  DevicesController.editDevice(req.body, res.locals.user.role)
+    .then(data => res.json(data))
+    // DevicesController.createHistoryDevice(req.body, res.locals.user)
+});
+
+router.post('/device/delete/', function (req, res) {
   // console.log(req.body);
   DevicesController.deleteDevice(req.body, res.locals.user.role)
-    .then(res.json(req.body))
+    .then(data => res.json(data))
 });
 
 // router.post('/device/add/', function (req, res) {

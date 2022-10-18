@@ -7,6 +7,7 @@ hide_title: true
 hide_table_of_contents: true
 api: {"description":"Retrieves all units that are registered","tags":["units"],"operationId":"get-all-units","responses":{"200":{"description":"OK","content":{"application/json":{"schema":{"type":"array","items":{"type":"object","properties":{"id":{"type":"integer","description":"the id of the unit"},"slug":{"type":"string","description":"the slug of the uunit"},"name":{"type":"string","description":"the name of the unit"},"notation":{"type":"string","description":"the notation of the unit"}}}}}}}},"method":"get","path":"/units/all","servers":[{"url":"https://api.sensors.wiki","description":"Main (production) server"}],"info":{"title":"units","version":"1.0.0"},"postman":{"name":"Get all units","description":{"content":"Retrieves all units that are registered","type":"text/plain"},"url":{"path":["units","all"],"host":["{{baseUrl}}"],"query":[],"variable":[]},"header":[{"key":"Accept","value":"application/json"}],"method":"GET"}}
 sidebar_class_name: "get api-method"
+sidebar_position: 1
 info_path: docs/Units/units
 ---
 

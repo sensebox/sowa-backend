@@ -106,6 +106,9 @@ module.exports.editDomain = async function (domainForm, role) {
     console.log("User has no verification rights!");
     domainForm.validation = false;
   }
+  else {
+    domainForm.validation = true;
+  }
 
   console.log(domainForm)
 
@@ -205,6 +208,16 @@ module.exports.editDomain = async function (domainForm, role) {
       })
     }
   };
+
+  /////////// Edited domain ////////////
+  // retrive edited domain with edited attributes from database 
+  const editedDomain = await prisma.domain.findUnique({
+    where: {
+      id: domainForm.id,
+    }
+  })
+
+  return editedDomain;
 }
 
 module.exports.deleteDomain = async function (domainForm, role) {
@@ -212,6 +225,9 @@ module.exports.deleteDomain = async function (domainForm, role) {
   if (role != 'expert' && role != 'admin') {
     console.log("User has no verification rights!");
     domainForm.validation = false;
+  }
+  else {
+    domainForm.validation = true;
   }
 
   console.log(domainForm)
@@ -253,6 +269,7 @@ module.exports.deleteDomain = async function (domainForm, role) {
     }
   });
 
+  return {info: "Domain successfully deleted"};
 }
 
 

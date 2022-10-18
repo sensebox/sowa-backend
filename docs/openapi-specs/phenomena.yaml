@@ -22,7 +22,7 @@ paths:
       operationId: get-all-phenomena
       responses:
         "200":
-          description: "OK"
+          description: OK
           content:
             application/json:
               schema:
@@ -109,14 +109,15 @@ paths:
         in: path
         required: true
         schema:
-          type: string
-      summary: Get a single phenomenon by its id or slug
+          type: integer or string
+      summary: Get a single phenomenon
+      description: Retrieves a specific phenomena by its unique id or slug
       tags:
         - phenomenon
       operationId: get-single-phenomenon
       responses:
         "200":
-          description: "OK"
+          description: OK
           content:
             application/json:
               schema:
@@ -275,3 +276,362 @@ paths:
                               type: integer
                               description: |
                                 the id of the description that belongs to the unit
+
+  # create a phenomenon
+  /phenomena/phenomenon/create:
+    post:
+      summary: Create a new phenomenon
+      description: Creates a new phenomenon from the information given in the requestBody
+      tags:
+        - phenomenon
+      operationId: create-new-phenomenon
+      parameters:
+        - in: header
+          name: Authorization
+          schema:
+            type: string
+          required: true
+          description: |
+            Token retrieved from the opensensemap api LogIn
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: |
+                phenomena object that should be created
+              properties:
+                label:
+                  type: array
+                  description: |
+                    array with label objects in different languages specified for the phenomenon
+                  items:
+                    type: object
+                    properties:
+                      value:
+                        type: string
+                        description: |
+                          the label text itself
+                      lang:
+                        type: string
+                        description: |
+                          languageCode for the language of the label. e.g. `en`, `de`,...
+                description:
+                  type: object
+                  properties:
+                    text:
+                      type: string
+                      description: |
+                        the description text
+                markdown:
+                  type: object
+                  properties:
+                    text:
+                      type: string
+                      description: |
+                        the markdown text
+                domain:
+                  type: array
+                  description: |
+                    array with the domains connected to the phenomenon
+                  items:
+                    type: object
+                    properties:
+                      domain:
+                        type: integer
+                        description: |
+                          the id of the domain to connect
+                unit:
+                  type: array
+                  description: |
+                    array with the units and ranges the phenomenon is measured in
+                  items:
+                    type: object
+                    properties:
+                      unitUri:
+                        type: integer
+                        description: |
+                          the id of the unit to connect
+                      min:
+                        type: integer
+                        description: |
+                          minimum of the unit range
+                      max:
+                        type: integer
+                        description: |
+                          maximum of the unit range
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                description: |
+                  plain phenomena object
+                properties:
+                  id:
+                    type: integer
+                    description: the id of the created phenomenon
+                  slug:
+                    type: string
+                    description: the slug of the created phenomenon
+                  validation:
+                    type: boolean
+                    description: |
+                      boolean that is true if the information is validated by an admin
+                  labelId:
+                    type: integer
+                    description: the id of the created translation item
+                  descriptionId:
+                    type: integer
+                    description: the id of the created translation item
+                  markdownId:
+                    type: integer
+                    description: the id of the created translation item
+
+
+  # edit a phenomenon
+  /phenomena/phenomenon/edit:
+    post:
+      summary: Edit a phenomenon
+      description: Edits a specific phenomenon by the information given in the requestBody
+      tags:
+        - phenomenon
+      operationId: edit-phenomenon
+      parameters:
+        - in: header
+          name: Authorization
+          schema:
+            type: string
+          required: true
+          description: |
+            Token retrieved from the opensensemap api LogIn
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: |
+                phenomena object that should be edited
+              properties:
+                id:
+                  type: integer
+                  description: |
+                    the id of the phenomenon to edit
+                description:
+                  type: object
+                  properties:
+                    translationId:
+                      type: integer
+                      description: |
+                        the translationId of the description to edit
+                    text:
+                      type: string
+                      description: |
+                        the description text to edit
+                markdown:
+                  type: object
+                  properties:
+                    translationId:
+                      type: integer
+                      description: |
+                        the translationId of the markdown to edit
+                    text:
+                      type: string
+                      description: |
+                        the markdown text to edit
+                label:
+                  type: array
+                  description: |
+                    array with label objects in different languages specified for the phenomenon to be edited
+                  items:
+                    type: object
+                    properties:
+                      translationId:
+                        type: integer
+                        nullable: true
+                        description: |
+                          the translationId of the label to be edited, 'null' if it is a newly created label
+                      value:
+                        type: string
+                        description: |
+                          the label text itself
+                      lang:
+                        type: string
+                        description: |
+                          languageCode for the language of the markdown text. e.g. `en`, `de`,...
+                deletedLabels:
+                  type: array
+                  description: |
+                    array containing all the label to be deleted from the phenomena
+                  items:
+                    type: object
+                    properties:
+                      translationId:
+                        type: integer
+                        description: |
+                          the translationId of the label to be deleted
+                      value:
+                        type: string
+                        description: |
+                          the label text itself
+                      lang:
+                        type: string
+                        description: |
+                          languageCode for the language of the markdown text. e.g. `en`, `de`,...
+                domain:
+                  type: array
+                  description: |
+                    array with the domains connected to the phenomenon
+                  items:
+                    type: object
+                    properties:
+                      domain:
+                        type: integer
+                        description: |
+                          the id of the domain to connect
+                      exists:
+                        type: boolean
+                        description: |
+                          'true' if it is an existing domain connection, 'false' if it is a new domain connection
+                deletedDomains:
+                  type: array
+                  description: |
+                    array with the domains to be disconnected from the phenomenon
+                  items:
+                    type: object
+                    properties:
+                      domain:
+                        type: integer
+                        description: |
+                          the id of the domain to disconnect
+                      exists:
+                        type: boolean
+                        description: |
+                          'true' if it is an existing domain connection, 'false' if it is a new domain connection
+                unit:
+                  type: array
+                  description: |
+                    array with the units and ranges the phenomenon is measured in
+                  items:
+                    type: object
+                    properties:
+                      unitUri:
+                        type: integer
+                        description: |
+                          the id of the unit to connect
+                      min:
+                        type: integer
+                        description: |
+                          minimum of the unit range
+                      max:
+                        type: integer
+                        description: |
+                          maximum of the unit range
+                      rovId:
+                        type: integer
+                        nullable: true
+                        description: |
+                          the id of the value range the phenomenon is connected to; 'null' if it is a newly created connection and the range object does not exist yet
+                deletedUnits:
+                  type: array
+                  description: |
+                    array with the units and ranges to be disconnected and deleted from the phenomenon
+                  items:
+                    type: object
+                    properties:
+                      unitUri:
+                        type: integer
+                        description: |
+                          the id of the unit to disconnect
+                      min:
+                        type: integer
+                        description: |
+                          minimum of the unit range
+                      max:
+                        type: integer
+                        description: |
+                          maximum of the unit range
+                      rovId:
+                        type: integer
+                        nullable: true
+                        description: |
+                          the id of the value range the phenomenon is connected to
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                description: |
+                  plain phenomena object
+                properties:
+                  id:
+                    type: integer
+                    description: the id of the phenomenon
+                  slug:
+                    type: string
+                    description: the slug of the phenomenon
+                  validation:
+                    type: boolean
+                    description: |
+                      boolean that is true if the information is validated by an admin
+                  labelId:
+                    type: integer
+                    description: the id of the translation item
+                  descriptionId:
+                    type: integer
+                    description: the id of the translation item
+                  markdownId:
+                    type: integer
+                    description: the id of the translation item
+
+  # delete a phenomenon
+  /phenomena/phenomenon/delete:
+    post:
+      summary: Delete a phenomenon
+      description: Delete a specific phenomenon by its id
+      tags:
+        - phenomenon
+      operationId: delete-phenomenon
+      parameters:
+        - in: header
+          name: Authorization
+          schema:
+            type: string
+          required: true
+          description: |
+            Token retrieved from the opensensemap api LogIn
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: |
+                phenomena object that should be delted
+              properties:
+                id:
+                  type: integer
+                  description: |
+                    the id of the phenomenon to delete
+                translationIds:
+                  type: array
+                  description: |
+                    array with all the translationIds to be deleted, that belong to the phenomenon
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  info:
+                    type: string
+                    description: |
+                      info text that indicates if the deleting of the phenomena was successfull

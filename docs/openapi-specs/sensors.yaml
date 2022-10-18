@@ -22,7 +22,7 @@ paths:
       operationId: get-all-sensors
       responses:
         "200":
-          description: "OK"
+          description: OK
           content:
             application/json:
               schema:
@@ -101,14 +101,14 @@ paths:
         in: path
         required: true
         schema:
-          type: string
-      summary: Get a single sensor by its id or slug
+          type: integer or string
+      summary: Get a single sensor
       tags:
         - sensor
       operationId: get-single-sensor
       responses:
         "200":
-          description: "OK"
+          description: OK
           content:
             application/json:
               schema:
@@ -321,3 +321,430 @@ paths:
                     type: boolean
                     description: |
                       boolean that is true if the information is validated by an admin
+
+  
+  # create a sensor
+  /sensors/sensor/create:
+    post:
+      summary: Create a new sensor
+      description: Creates a new sensor from the information given in the requestBody
+      tags:
+        - sensors
+      operationId: create-new-sensor
+      parameters:
+        - in: header
+          name: Authorization
+          schema:
+            type: string
+          required: true
+          description: |
+            Token retrieved from the opensensemap api LogIn
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: |
+                sensor object that should be created
+              properties:
+                label:
+                  type: array
+                  description: |
+                    array with label objects in different languages specified for the sensor
+                  items:
+                    type: object
+                    properties:
+                      value:
+                        type: string
+                        description: |
+                          the label text itself
+                      lang:
+                        type: string
+                        description: |
+                          languageCode for the language of the label. e.g. `en`, `de`,...
+                description:
+                  type: object
+                  properties:
+                    text:
+                      type: string
+                      description: |
+                        the description text
+                device:
+                  type: array
+                  description: |
+                    array with the devices to connect to the sesnor
+                  items:
+                    type: object
+                    properties:
+                      device:
+                        type: integer
+                        description: |
+                          the id of the device to connect
+                sensorElement:
+                  type: array
+                  description: |
+                    array with the sensor elements of the sensor to create
+                  items:
+                    type: object
+                    properties:
+                      phenomenonId:
+                        type: integer
+                        nullable: false
+                        description: |
+                          the id of the phenomenon to connect to the sensor element
+                      unitId:
+                        type: integer
+                        nullable: true
+                        description: |
+                          the id of the unit to connect to the sensor element, 'null' if not specified
+                      accuracyValue:
+                        type: float
+                        description: |
+                          the accuracy value of the sensor element
+                manufacturer:
+                  type: string
+                  nullable: true
+                  description: |
+                    the name of the manufacturer of the sensor; 'null' if currently not specified
+                price:
+                  type: float
+                  nullable: true
+                  description: |
+                    the price of the sensor; 'null' if currently not specified
+                datasheet:
+                  type: string
+                  nullable: true
+                  description: |
+                    a link to the datasheet of the sensor, 'null' if currently not specified
+                lifePeriod:
+                  type: integer
+                  nullable: true
+                  description: |
+                    the estimated life period of the sensor, 'null' if currently not specified
+                image:
+                  type: string
+                  nullable: true
+                  description: |
+                    the name of the belonging image of the sensor so that it can be retrieved from the source; 'null' if currently not specified
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                description: |
+                  plain sensor object
+                properties:
+                  id:
+                    type: integer
+                    description: the id of the created sensor
+                  slug:
+                    type: string
+                    description: the slug of the created sensor
+                  manufacturer:
+                    type: string
+                    description: |
+                      the name of the manufacturer of the sensor; 'null' if currently not specified
+                  lifePeriod:
+                    type: integer
+                    description: |
+                      the estimated life period of the sensor, 'null' if currently not specified
+                  price:
+                    type: float
+                    description: |
+                      the price of the sensor; 'null' if currently not specified
+                  image:
+                    type: string
+                    description: |
+                      the name of the belonging image of the sensor so that it can be retrieved from the source; 'null' if currently not specified
+                  datasheet:
+                    type: string
+                    description: |
+                      a link to the datasheet of the sensor, 'null' if currently not specified
+                  validation:
+                    type: boolean
+                    description: |
+                      boolean that is true if the information is validated by an admin
+                  labelId:
+                    type: integer
+                    description: the id of the created translation item
+                  descriptionId:
+                    type: integer
+                    description: the id of the created translation item
+
+
+  # edit a sensor
+  /sensors/sensor/edit:
+    post:
+      summary: Edit a sensor
+      description: Edits a specific sensor by the information given in the requestBody
+      tags:
+        - sensors
+      operationId: edit-sensor
+      parameters:
+        - in: header
+          name: Authorization
+          schema:
+            type: string
+          required: true
+          description: |
+            Token retrieved from the opensensemap api LogIn
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: |
+                sensor object that should be edited
+              properties:
+                id:
+                  type: integer
+                  description: |
+                    the id of the sensor to edit
+                description:
+                  type: object
+                  properties:
+                    translationId:
+                      type: integer
+                      description: |
+                        the translationId of the description to edit
+                    text:
+                      type: string
+                      description: |
+                        the description text to edit
+                label:
+                  type: array
+                  description: |
+                    array with label objects in different languages specified for the sensor to be edited
+                  items:
+                    type: object
+                    properties:
+                      translationId:
+                        type: integer
+                        nullable: true
+                        description: |
+                          the translationId of the label to be edited, 'null' if it is a newly created label
+                      value:
+                        type: string
+                        description: |
+                          the label text itself
+                      lang:
+                        type: string
+                        description: |
+                          languageCode for the language of the markdown text. e.g. `en`, `de`,...
+                deletedLabels:
+                  type: array
+                  description: |
+                    array containing all the label to be deleted from the sensor
+                  items:
+                    type: object
+                    properties:
+                      translationId:
+                        type: integer
+                        description: |
+                          the translationId of the label to be deleted
+                      value:
+                        type: string
+                        description: |
+                          the label text itself
+                      lang:
+                        type: string
+                        description: |
+                          languageCode for the language of the markdown text. e.g. `en`, `de`,...
+                device:
+                  type: array
+                  description: |
+                    array with the devices connected to the sensor
+                  items:
+                    type: object
+                    properties:
+                      device:
+                        type: integer
+                        description: |
+                          the id of the device to connect
+                      exists:
+                        type: boolean
+                        description: |
+                          'true' if it is an existing device connection, 'false' if it is a new device connection
+                deletedDevices:
+                  type: array
+                  description: |
+                    array with the devices to be disconnected from the sensor
+                  items:
+                    type: object
+                    properties:
+                      device:
+                        type: integer
+                        description: |
+                          the id of the device to disconnect
+                      exists:
+                        type: boolean
+                        description: |
+                          'true' if it is an existing device connection, 'false' if it is a new device connection
+                sensorElement:
+                  type: array
+                  description: |
+                    array with the sensor elements of the sensor
+                  items:
+                    type: object
+                    properties:
+                      sensorElementId:
+                        type: integer
+                        nullable: true
+                        description: |
+                          the id of the sensor element; 'null' if it is newly created
+                      phenomenonId:
+                        type: integer
+                        description: |
+                          minimum of the unit range
+                      unitId:
+                        type: integer
+                        description: |
+                          the id of the unit that is connected to the sensor element
+                      accuracyValue:
+                        type: integer
+                        nullable: true
+                        description: |
+                          the accuracy value of the sensor element; 'null' if currently not specified
+                deletedSensorElements:
+                  type: array
+                  description: |
+                    array with the sensor elements of to delete
+                  items:
+                    type: object
+                    properties:
+                      sensorElementId:
+                        type: integer
+                        description: |
+                          the id of the sensor element
+                manufacturer:
+                  type: string
+                  nullable: true
+                  description: |
+                    the name of the manufacturer of the sensor; 'null' if currently not specified
+                price:
+                  type: float
+                  nullable: true
+                  description: |
+                    the price of the sensor; 'null' if currently not specified
+                datasheet:
+                  type: string
+                  nullable: true
+                  description: |
+                    a link to the datasheet of the sensor, 'null' if currently not specified
+                lifePeriod:
+                  type: integer
+                  nullable: true
+                  description: |
+                    the estimated life period of the sensor, 'null' if currently not specified
+                image:
+                  type: string
+                  nullable: true
+                  description: |
+                    the name of the belonging image of the sensor so that it can be retrieved from the source; 'null' if currently not specified
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                description: |
+                  plain sensor object
+                properties:
+                  id:
+                    type: integer
+                    description: the id of the created sensor
+                  slug:
+                    type: string
+                    description: the slug of the created sensor
+                  manufacturer:
+                    type: string
+                    description: |
+                      the name of the manufacturer of the sensor; 'null' if currently not specified
+                  lifePeriod:
+                    type: integer
+                    description: |
+                      the estimated life period of the sensor, 'null' if currently not specified
+                  price:
+                    type: float
+                    description: |
+                      the price of the sensor; 'null' if currently not specified
+                  image:
+                    type: string
+                    description: |
+                      the name of the belonging image of the sensor so that it can be retrieved from the source; 'null' if currently not specified
+                  datasheet:
+                    type: string
+                    description: |
+                      a link to the datasheet of the sensor, 'null' if currently not specified
+                  validation:
+                    type: boolean
+                    description: |
+                      boolean that is true if the information is validated by an admin
+                  labelId:
+                    type: integer
+                    description: the id of the created translation item
+                  descriptionId:
+                    type: integer
+                    description: the id of the created translation item
+
+  # delete a phenomenon
+  /sensors/sensor/delete:
+    post:
+      summary: Delete a sensor
+      description: Delete a specific sensor by its id
+      tags:
+        - sensors
+      operationId: delete-sensor
+      parameters:
+        - in: header
+          name: Authorization
+          schema:
+            type: string
+          required: true
+          description: |
+            Token retrieved from the opensensemap api LogIn
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: |
+                sensors object that should be delted
+              properties:
+                id:
+                  type: integer
+                  description: |
+                    the id of the sensor to delete
+                device:
+                  type: array
+                  description: |
+                    array with the devices connected to the sensor to delete
+                  items:
+                    type: object
+                    properties:
+                      device:
+                        type: integer
+                        description: |
+                          the id of the device to connect
+                translationIds:
+                  type: array
+                  description: |
+                    array with all the translationIds to be deleted, that belong to the sensor
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  info:
+                    type: string
+                    description: |
+                      info text that indicates if the deleting of the sensor was successfull

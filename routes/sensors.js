@@ -87,20 +87,21 @@ router.get('/sensor-history/:iri', function (req, res) {
 
 router.post('/sensor/create/', function (req, res) {
   console.log(req.body);
-  SensorsController.createNewSensor(req.body).then(res.json(req.body))
+  SensorsController.createNewSensor(req.body)
+    .then(data => res.json(data))
   // SensorsController.createHistorySensor(req.body)
     
 });
 
 router.post('/sensor/edit/', function (req, res) {
   SensorsController.editSensor(req.body, res.locals.user.role)
-     .then(res.json(req.body))
+     .then(data => res.json(data))
   // SensorsController.createHistorySensor(req.body)
 });
 
 router.post('/sensor/delete/', function (req, res) {
   SensorsController.deleteSensor(req.body)
-    .then(res.json(req.body))
+    .then(data => res.json(data))
 });
 
 

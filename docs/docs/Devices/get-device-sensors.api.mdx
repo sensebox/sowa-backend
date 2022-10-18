@@ -1,12 +1,13 @@
 ---
 id: get-device-sensors
-title: "Get all sensors of a device by its id or slug"
-description: "Get all sensors of a device by its id or slug"
-sidebar_label: Get all sensors of a device by its id or slug
+title: "Get all sensors of a device"
+description: "Get all sensors of a device"
+sidebar_label: Get all sensors of a device
 hide_title: true
 hide_table_of_contents: true
-api: {"parameters":[{"name":"iri","in":"path","required":true,"schema":{"type":"string"}}],"tags":["deviceSensors"],"operationId":"get-device-sensors","responses":{"200":{"description":"OK","content":{"application/json":{"schema":{"type":"array","items":{"type":"object","properties":{"id":{"type":"integer","description":"the id of the sensor"},"slug":{"type":"string","description":"the slug of the sensor"},"label":{"type":"object","properties":{"id":{"type":"integer","description":"the id of the translationItems that contain the label\n"}}},"description":{"type":"object","properties":{"id":{"type":"integer","description":"the id of the translationItems that contain the description\n"}}},"elements":{"type":"array","items":{"type":"object","description":"the sensorElements of the sensor (phenomena that can be measured with the accuracy and Unit)\n","properties":{"id":{"type":"integer","description":"id of the sensorElement\n"},"accuracy":{"type":"float","description":"the accuracy with which the phenomenon is measured\n"},"sensorId":{"type":"integer","description":"id of the sensor the sensor Element belongs to\n"},"phenomenonId":{"type":"integer","description":"the id of the measured phenomenon\n"},"unitId":{"type":"integer","description":"the id of the unit of the measured phenomenon\n"}}}}}}}}}}},"description":"Get all sensors of a device by its id or slug","method":"get","path":"/devices/{iri}/sensors","servers":[{"url":"https://api.sensors.wiki","description":"Main (production) server"}],"info":{"title":"devices","version":"1.0.0"},"postman":{"name":"Get all sensors of a device by its id or slug","description":{"type":"text/plain"},"url":{"path":["devices",":iri","sensors"],"host":["{{baseUrl}}"],"query":[],"variable":[{"disabled":false,"description":{"content":"(Required) ","type":"text/plain"},"type":"any","value":"","key":"iri"}]},"header":[{"key":"Accept","value":"application/json"}],"method":"GET"}}
+api: {"parameters":[{"name":"iri","in":"path","required":true,"schema":{"type":"integer or string"}}],"tags":["deviceSensors"],"operationId":"get-device-sensors","responses":{"200":{"description":"OK","content":{"application/json":{"schema":{"type":"array","items":{"type":"object","properties":{"id":{"type":"integer","description":"the id of the sensor"},"slug":{"type":"string","description":"the slug of the sensor"},"label":{"type":"object","properties":{"id":{"type":"integer","description":"the id of the translationItems that contain the label\n"}}},"description":{"type":"object","properties":{"id":{"type":"integer","description":"the id of the translationItems that contain the description\n"}}},"elements":{"type":"array","items":{"type":"object","description":"the sensorElements of the sensor (phenomena that can be measured with the accuracy and Unit)\n","properties":{"id":{"type":"integer","description":"id of the sensorElement\n"},"accuracy":{"type":"float","description":"the accuracy with which the phenomenon is measured\n"},"sensorId":{"type":"integer","description":"id of the sensor the sensor Element belongs to\n"},"phenomenonId":{"type":"integer","description":"the id of the measured phenomenon\n"},"unitId":{"type":"integer","description":"the id of the unit of the measured phenomenon\n"}}}}}}}}}}},"description":"Get all sensors of a device","method":"get","path":"/devices/{iri}/sensors","servers":[{"url":"https://api.sensors.wiki","description":"Main (production) server"}],"info":{"title":"devices","version":"1.0.0"},"postman":{"name":"Get all sensors of a device","description":{"type":"text/plain"},"url":{"path":["devices",":iri","sensors"],"host":["{{baseUrl}}"],"query":[],"variable":[{"disabled":false,"description":{"content":"(Required) ","type":"text/plain"},"type":"any","value":"","key":"iri"}]},"header":[{"key":"Accept","value":"application/json"}],"method":"GET"}}
 sidebar_class_name: "get api-method"
+sidebar_position: 3
 info_path: docs/Devices/devices
 ---
 
@@ -19,13 +20,13 @@ import SchemaTabs from "@theme/SchemaTabs";
 import DiscriminatorTabs from "@theme/DiscriminatorTabs";
 import TabItem from "@theme/TabItem";
 
-## Get all sensors of a device by its id or slug
+## Get all sensors of a device
 
 
 
-Get all sensors of a device by its id or slug
+Get all sensors of a device
 
-<details style={{"marginBottom":"1rem"}} data-collapsed={false} open={true}><summary style={{}}><strong>Path Parameters</strong></summary><div><ul><ParamsItem className={"paramsItem"} param={{"name":"iri","in":"path","required":true,"schema":{"type":"string"}}}></ParamsItem></ul></div></details><div><ApiTabs><TabItem label={"200"} value={"200"}><div>
+<details style={{"marginBottom":"1rem"}} data-collapsed={false} open={true}><summary style={{}}><strong>Path Parameters</strong></summary><div><ul><ParamsItem className={"paramsItem"} param={{"name":"iri","in":"path","required":true,"schema":{"type":"integer or string"}}}></ParamsItem></ul></div></details><div><ApiTabs><TabItem label={"200"} value={"200"}><div>
 
 OK
 

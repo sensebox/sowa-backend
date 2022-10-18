@@ -67,13 +67,13 @@ router.post('/phenomenon/create/', function (req, res) {
 
 router.post('/phenomenon/edit/', function (req, res) {
   PhenomenaController.editPhenomenon(req.body, res.locals.user.role)
-     .then(res.json(req.body))
+     .then(data => res.json(data))
   // PhenomenaController.createHistoryPhenomenon(req.body, res.locals.user)
 });
 
 router.post('/phenomenon/delete/', function (req, res) {
   PhenomenaController.deletePhenomenon(req.body, res.locals.user.role)
-     .then(res.json(req.body))
+     .then(data => res.json(data))
 });
 
 

@@ -266,21 +266,19 @@ module.exports.editPhenomenon = async function (phenomenonForm, role) {
   for (const domain of phenomenonForm.deletedDomains) {
     console.log(domain.domain)
     console.log(domain.exists)
-    if (domain.exists === true) {
-      const disconnectDomain = await prisma.domain.update({
-        where: {
-          id: domain.domain
-        },
-        data: {
-          phenomenon: {
-            disconnect: {
-              id: phenomenonForm.id
-            }
+    const disconnectDomain = await prisma.domain.update({
+      where: {
+        id: domain.domain
+      },
+      data: {
+        phenomenon: {
+          disconnect: {
+            id: phenomenonForm.id
           }
-          
         }
-      })
-    } 
+        
+      }
+    })
   }
 
   for (const domain of phenomenonForm.domain) {
@@ -337,6 +335,17 @@ module.exports.editPhenomenon = async function (phenomenonForm, role) {
       })
     }
   }
+
+
+  /////////// Edited phenomenon ////////////
+  // retrive edited phenomeonon with edited attributes from database 
+  const editedPhenomenon = await prisma.phenomenon.findUnique({
+    where: {
+      id: phenomenonForm.id,
+    }
+  })
+
+  return editedPhenomenon;
 }
 
 
@@ -382,6 +391,8 @@ module.exports.deletePhenomenon = async function (phenomenonForm, role) {
       id: phenomenonForm.id,
     }
   })
+
+  return {info: "Phenomenon successfully deleted"};
 }
 
 

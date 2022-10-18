@@ -26,20 +26,20 @@ router.get('/unit/:iri', function (req, res) {
 router.post('/unit/create/', function (req, res) {
   // LOCALS contains the user now including the role
   UnitsController.createNewUnit(req.body, res.locals.user.role)
-    .then(res.json(req.body))
+    .then(data => res.json(data))
 });
 
 router.post('/unit/edit/', function (req, res) {
   // LOCALS contains the user now including the role
   // console.dir(req.body);
   UnitsController.editUnit(req.body, res.locals.user.role)
-    .then(res.json(req.body))
+    .then(data => res.json(data))
 });
 
 router.post('/unit/delete/', function (req, res) {
   // console.log(req.body);
   UnitsController.deleteUnit(req.body, res.locals.user.role)
-    .then(res.json(req.body))
+    .then(data => res.json(data))
 });
 
 module.exports = router;

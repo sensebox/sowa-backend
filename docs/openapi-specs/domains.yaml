@@ -111,7 +111,7 @@ paths:
                         boolean that is true if the information is validated by an admin
 
 
-  # get device by iri
+  # get domain by its iri
   /domains/domain/{iri}:
     get:
       parameters:
@@ -119,10 +119,10 @@ paths:
         in: path
         required: true
         schema:
-          type: string
-      summary: Get a single domain by its id or slug
+          type: integer or string
+      summary: Get a single domain
       tags:
-        - domain
+        - domains
       operationId: get-single-domain
       responses:
         "200":
@@ -219,3 +219,282 @@ paths:
                     type: boolean
                     description: |
                       boolean that is true if the information is validated by an admin
+
+
+  # create a domain
+  /domain/domain/create:
+    post:
+      summary: Create a new domain
+      description: Creates a new domain from the information given in the requestBody
+      tags:
+        - domains
+      operationId: create-new-domain
+      parameters:
+        - in: header
+          name: Authorization
+          schema:
+            type: string
+          required: true
+          description: |
+            Token retrieved from the opensensemap api LogIn
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: |
+                domain object that should be created
+              properties:
+                label:
+                  type: array
+                  description: |
+                    array with label objects in different languages specified for the domain
+                  items:
+                    type: object
+                    properties:
+                      value:
+                        type: string
+                        description: |
+                          the label text itself
+                      lang:
+                        type: string
+                        description: |
+                          languageCode for the language of the lebel. e.g. `en`, `de`,...
+                description:
+                  type: object
+                  properties:
+                    text:
+                      type: string
+                      description: |
+                        the description text
+                phenomenon:
+                  type: array
+                  description: |
+                    array with the phenomena to connect to the domain
+                  items:
+                    type: object
+                    properties:
+                      phenomenon:
+                        type: integer
+                        description: |
+                          the id of the phenomenon to connect
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                description: |
+                  plain domain object
+                properties:
+                  id:
+                    type: integer
+                    description: the id of the created domain
+                  slug:
+                    type: string
+                    description: the slug of the created domain
+                  validation:
+                    type: boolean
+                    description: |
+                      boolean that is true if the information is validated by an admin
+                  labelId:
+                    type: integer
+                    description: the id of the created translation item
+                  descriptionId:
+                    type: integer
+                    description: the id of the created translation item
+
+
+  # edit a domain
+  /domains/domain/edit:
+    post:
+      summary: Edit a domain
+      description: Edits a specific domain by the information given in the requestBody
+      tags:
+        - domains
+      operationId: edit-domain
+      parameters:
+        - in: header
+          name: Authorization
+          schema:
+            type: string
+          required: true
+          description: |
+            Token retrieved from the opensensemap api LogIn
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: |
+                domain object that should be edited
+              properties:
+                id:
+                  type: integer
+                  description: |
+                    the id of the domain to edit
+                description:
+                  type: object
+                  properties:
+                    translationId:
+                      type: integer
+                      description: |
+                        the translationId of the description item to edit
+                    text:
+                      type: string
+                      description: |
+                        the description text to edit
+                label:
+                  type: array
+                  description: |
+                    array with label objects in different languages specified for the domain to be edited
+                  items:
+                    type: object
+                    properties:
+                      translationId:
+                        type: integer
+                        description: |
+                          the translationId of the domain to be edited, 'null' if it is a newly created label
+                      value:
+                        type: string
+                        description: |
+                          the label text itself
+                      lang:
+                        type: string
+                        description: |
+                          languageCode for the language of the label. e.g. `en`, `de`,...
+                deletedLabels:
+                  type: array
+                  description: |
+                    array containing all the label to be deleted from the sensor
+                  items:
+                    type: object
+                    properties:
+                      translationId:
+                        type: integer
+                        description: |
+                          the translationId of the label to be deleted
+                      value:
+                        type: string
+                        description: |
+                          the label text itself
+                      lang:
+                        type: string
+                        description: |
+                          languageCode for the language of the label. e.g. `en`, `de`,...
+                phenomenon:
+                  type: array
+                  description: |
+                    array with the phenomena connected to the domain
+                  items:
+                    type: object
+                    properties:
+                      phenomenon:
+                        type: integer
+                        description: |
+                          the id of the phenomenon to connect
+                      exists:
+                        type: boolean
+                        description: |
+                          'true' if it is an existing phenomenon connection, 'false' if it is a new phenomenon connection
+                deletedPhenomena:
+                  type: array
+                  description: |
+                    array with the phenomena to be disconnected from the domain
+                  items:
+                    type: object
+                    properties:
+                      phenomenon:
+                        type: integer
+                        description: |
+                          the id of the phenomenon to disconnect
+                      exists:
+                        type: boolean
+                        description: |
+                          'true' if it is an existing phenomenon connection, 'false' if it is a new phenomenon connection
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                description: |
+                  plain domain object
+                properties:
+                  id:
+                    type: integer
+                    description: the id of the created domain
+                  slug:
+                    type: string
+                    description: the slug of the created domain
+                  validation:
+                    type: boolean
+                    description: |
+                      boolean that is true if the information is validated by an admin
+                  labelId:
+                    type: integer
+                    description: the id of the created translation item
+                  descriptionId:
+                    type: integer
+                    description: the id of the created translation item
+
+  # delete a domain
+  /domains/domain/delete:
+    post:
+      summary: Delete a domain
+      description: Delete a specific domain by its id
+      tags:
+        - domains
+      operationId: delete-domain
+      parameters:
+        - in: header
+          name: Authorization
+          schema:
+            type: string
+          required: true
+          description: |
+            Token retrieved from the opensensemap api LogIn
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: |
+                domain object that should be delted
+              properties:
+                id:
+                  type: integer
+                  description: |
+                    the id of the domain to delete
+                phenomenon:
+                  type: array
+                  description: |
+                    array with the phenomena connected to the domain to delete
+                  items:
+                    type: object
+                    properties:
+                      sensor:
+                        type: integer
+                        description: |
+                          the id of the phenomenon to disconnect
+                translationIds:
+                  type: array
+                  description: |
+                    array with all the ids of the translationItems to be deleted, that belong to the domain
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  info:
+                    type: string
+                    description: |
+                      info text that indicates if the deleting of the domain was successfull
