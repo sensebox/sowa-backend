@@ -292,7 +292,7 @@ paths:
             type: string
           required: true
           description: |
-            Token retrieved from the opensensemap api LogIn
+            Token retrieved from the opensensemap API LogIn
       requestBody:
         required: true
         content:
@@ -407,7 +407,7 @@ paths:
             type: string
           required: true
           description: |
-            Token retrieved from the opensensemap api LogIn
+            Token retrieved from the opensensemap API LogIn
       requestBody:
         required: true
         content:
@@ -605,7 +605,7 @@ paths:
             type: string
           required: true
           description: |
-            Token retrieved from the opensensemap api LogIn
+            Token retrieved from the opensensemap API LogIn
       requestBody:
         required: true
         content:

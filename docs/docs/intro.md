@@ -1,12 +1,12 @@
 ---
 sidebar_position: 1
-pagination_next: null
-pagination_prev: null
+# pagination_next: null
+# pagination_prev: null
 ---
 
 # Introduction
 
-Documentation of the routes and methods to manage the sensorWiki API. You can find the API running at https://api.sensors.wiki/. The belonging user interface to the API can be accessed under https://sensors.wiki/.
+Documentation of the routes and methods to manage the sensorWiki API. You can find the API running at <https://api.sensors.wiki/>. The belonging user interface to the API can be accessed under <https://sensors.wiki/>.
 
 The API offers a wiki to access, create, edit and delete crowd sourced explicit information about instances of sensors, phenomena, devices, domains and units.
 
