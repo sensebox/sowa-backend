@@ -13,4 +13,4 @@ The API offers a wiki to access, create, edit and delete crowd sourced explicit 
 The API has two kinds of different routes:
     - GET
     - POST
-The GET-routes are used to retrieve information stored in the database and the POST routes are there to add, change and delete information from the database. Therefore you need to be authorized to use the POST-routes. You can achieve that by retrieving a web token from your opensensemap API LogIn (See in the following).
+The GET-routes are used to retrieve information stored in the database and the POST routes can be used to add, change and delete information from the database. Therefore you need to be authorized to use the POST-routes. You can achieve that by retrieving a web token from your opensensemap API LogIn (See in the following).
