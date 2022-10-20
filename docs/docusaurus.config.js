@@ -8,7 +8,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 const config = {
   title: 'sensorWiki Docs',
   tagline: 'Documentation for sensorWiki API',
-  url: 'https://docs.sensorWikiAPI.com',
+  url: 'https://sowa-backend.netlify.app',
   baseUrl: '/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
