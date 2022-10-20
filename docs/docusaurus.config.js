@@ -58,11 +58,15 @@ const config = {
         id: "apiDocs",
         docsPluginId: "classic",
         config: {
+          opensensemap: {
+            specPath: "openapi-specs/opensensemap.yaml",
+            outputDir: "docs",
+          }, 
           phenomena: { // Note: phenomena key is treated as the <id> and can be used to specify an API doc instance when using CLI commands
             specPath: "openapi-specs/phenomena.yaml", // Path to designated spec file
             outputDir: "docs/Phenomena", // Output directory for generated .mdx docs
             // sidebarOptions: {
-            //   groupPathsBy: "tag",
+            
             // },
           },
           sensors: {
@@ -160,10 +164,15 @@ const config = {
         ],
         copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
       },
-      prism: {
-        theme: lightCodeTheme,
-        darkTheme: darkCodeTheme,
+      colorMode: {
+        defaultMode: 'dark',
+        disableSwitch: true,
+        respectPrefersColorScheme: false,
       },
+      // prism: {
+      //   theme: darkCodeTheme,
+      //   // darkTheme: darkCodeTheme,
+      // },
     }),
 };
 
