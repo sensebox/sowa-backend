@@ -100,12 +100,18 @@ const sidebars = {
           type: 'doc',
           label: 'Get all devices',
           id: 'Devices/get-all-devices',
-          className: 'get api-method',
+          className: 'get api-method', 
         },
         {
           type: 'doc',
           label: 'Get a single device',
           id: 'Devices/get-single-device',
+          className: 'get api-method',
+        },
+        {
+          type: 'doc',
+          label: 'Get all sensors of a device',
+          id: 'Devices/get-device-sensors',
           className: 'get api-method',
         },
         {

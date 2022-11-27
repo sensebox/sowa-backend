@@ -160,7 +160,7 @@ paths:
         schema:
           type: integer or string
       summary: Get a single device
-      description: Retrieves a single
+      description: Retrieves a single device
       tags:
         - device
       operationId: get-single-device
@@ -290,7 +290,7 @@ paths:
 
 
   # get all sensors of a device
-  /devices/{iri}/sensors:
+  /devices/device/{iri}/sensors:
     get:
       parameters:
       - name: iri
@@ -299,6 +299,7 @@ paths:
         schema:
           type: integer or string
       summary: Get all sensors of a device
+      description: Retrieves all sensors of a single device
       tags:
         - deviceSensors
       operationId: get-device-sensors
@@ -344,7 +345,7 @@ paths:
                             description: |
                               id of the sensorElement
                           accuracy:
-                            type: float
+                            type: number
                             description: |
                               the accuracy with which the phenomenon is measured
                           sensorId:

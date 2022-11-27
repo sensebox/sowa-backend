@@ -55,33 +55,21 @@ const config = {
             specPath: "openapi-specs/opensensemap.yaml",
             outputDir: "docs",
           }, 
-          phenomena: { // Note: phenomena key is treated as the <id> and can be used to specify an API doc instance when using CLI commands
+          phenomena: { // Note: key is treated as the <id> and can be used to specify an API doc instance when using CLI commands
             specPath: "openapi-specs/phenomena.yaml", // Path to designated spec file
             outputDir: "docs/Phenomena", // Output directory for generated .mdx docs
-            // sidebarOptions: {
-            
-            // },
           },
           sensors: {
             specPath: "openapi-specs/sensors.yaml",
             outputDir: "docs/Sensors",
-            // sidebarOptions: {
-            //   groupPathsBy: "tag",
-            // },
           },
           devices: {
             specPath: "openapi-specs/devices.yaml",
             outputDir: "docs/Devices",
-            // sidebarOptions: {
-            //   groupPathsBy: "tag",
-            // },
           },
           domains: {
             specPath: "openapi-specs/domains.yaml",
             outputDir: "docs/Domains",
-            // sidebarOptions: {
-            //   groupPathsBy: "tag",
-            // },
           },
           units: {
             specPath: "openapi-specs/units.yaml",
