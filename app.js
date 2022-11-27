@@ -6,7 +6,7 @@ var logger = require('morgan');
 var bodyParser = require("body-parser");
 
 var indexRouter = require('./routes/index');
-var queriesRouter = require('./routes/queries');
+// var queriesRouter = require('./routes/queries');
 var sensorsRouter = require('./routes/sensors');
 var phenomenaRouter = require('./routes/phenomena');
 var devicesRouter = require('./routes/devices');
@@ -51,7 +51,7 @@ app.post('*', AuthController.isAuthenticated, function (req, res, next) {
 });
 
 app.use('/', indexRouter);
-app.use('/queries', queriesRouter);
+// app.use('/queries', queriesRouter);
 app.use('/sensors', sensorsRouter);
 app.use('/phenomena', phenomenaRouter);
 app.use('/devices', devicesRouter);

@@ -28,13 +28,15 @@ router.post("/sensor/create/", function (req, res) {
 });
 
 router.post("/sensor/edit/", function (req, res) {
-  SensorsController.editSensor(req.body, res.locals.user.role).then((data) =>
-    res.json(data)
-  );
+  SensorsController.editSensor(req.body, res.locals.user.role).then((data) => {
+    return res.json(data);
+  });
 });
 
 router.post("/sensor/delete/", function (req, res) {
-  SensorsController.deleteSensor(req.body).then((data) => res.json(data));
+  SensorsController.deleteSensor(req.body).then((data) => {
+    return res.json(data);
+  });
 });
 
 module.exports = router;
