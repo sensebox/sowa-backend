@@ -21,32 +21,6 @@ const FeatureList: FeatureItem[] = [
   },
 ];
 
-// function Feature({Img, description}: FeatureItem) {
-//   return (
-//     <div className={clsx('col col--7')}>
-//       <div className="text--center">
-//         <img src={Img}  />
-//       </div>
-//       <div className="text--center padding-horiz--md">
-//         <p>{description}</p>
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default function HomepageFeatures(): JSX.Element {
-//   return (
-//     <section className={styles.features}>
-//       <div className="container" style={{display:'flex', justifyContent:'center', alignItems:'center'}}>
-//         <div className="row">
-//           {FeatureList.map((props, idx) => (
-//             <Feature key={idx} {...props} />
-//           ))}
-//         </div>
-//       </div>
-//     </section>
-//   );
-// }
 
 export default function HomepageFeatures(): JSX.Element {
   return (
