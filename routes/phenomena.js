@@ -1,9 +1,10 @@
 var express = require('express');
 var router = express.Router();
-//var bodyParser = require("body-parser");
+
 var Filter = require('../middleware/filter');
 
 const PhenomenaController = require('../controllers/phenomena-controller');
+
 /* GET users listing. */
 router.get('/', function (req, res, next) {
   res.send('respond with a resource');
@@ -36,27 +37,6 @@ router.get('/phenomenon/:iri', function (req, res) {
         res.json(data)
       }
     })
-});
-
-// router.get('/phenomenonDEPRECATED/:iri', function (req, res) {
-//   console.log(req);
-//   PhenomenaController.getPhenomenonDEPRECATED(req.params.iri)
-//     .then(data => res.json(data))
-// });
-
-// router.post('/phenomenon/update/', function (req, res) {
-//   PhenomenaController.updatePhenomenon(req.body)
-//     .then(res.end("END"))
-// });
-
-router.get('/historic-phenomenon/:iri', function (req, res) {
-  PhenomenaController.getHistoricPhenomenon(req.params.iri)
-    .then(data => res.json(data))
-});
-
-router.get('/phenomenon-history/:iri', function (req, res) {
-  PhenomenaController.getPhenomenonHistory(req.params.iri)
-    .then(data => res.json(data))
 });
 
 router.post('/phenomenon/create/', function (req, res) {

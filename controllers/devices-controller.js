@@ -1,6 +1,3 @@
-const config = require("config");
-const Device = require("../models/Device");
-const Devices = require("../models/Devices");
 const helperFunctions = require('../helper/helperFunctions');
 const prisma = require("../lib/prisma");
 

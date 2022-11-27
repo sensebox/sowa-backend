@@ -1,6 +1,3 @@
-const SparqlClient = require('sparql-client-2');
-const SPARQL = SparqlClient.SPARQL;
-const config = require('config');
 const Domain = require('../models/Domain');
 const helperFunctions = require('../helper/helperFunctions');
 const prisma = require('../lib/prisma');
