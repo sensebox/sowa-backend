@@ -1,8 +1,6 @@
 var express = require("express");
 var router = express.Router();
 
-var Filter = require("../middleware/filter");
-
 const PhenomenaController = require("../controllers/phenomena-controller");
 
 /* GET users listing. */
@@ -18,15 +16,8 @@ router.get("/all", async function (req, res) {
 });
 
 router.get("/phenomenon/:iri", function (req, res) {
-  PhenomenaController.getPhenomenon(req.params.iri).then((data) => {
-    if (req.query.lang) {
-      data = Filter.filterData(data, req.query.lang);
-    }
-    if (req.query.format === "json") {
-      res.json(PhenomenaController.convertPhenomenonToJson(data));
-    } else {
+  PhenomenaController.getPhenomenon(req.params.iri, req.query.lang).then((data) => {
       return res.json(data);
-    }
   });
 });
 

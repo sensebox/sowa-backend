@@ -1,7 +1,6 @@
-const config = require('config');
-
 const Sensor = require('../models/Sensor');
 const Sensors = require('../models/Sensors');
+
 const helperFunctions = require('../helper/helperFunctions');
 
 const prisma = require('../lib/prisma');

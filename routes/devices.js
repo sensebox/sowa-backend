@@ -8,8 +8,6 @@ router.get("/", function (req, res, next) {
   res.send("respond with a resource");
 });
 
-const prisma = require("../lib/prisma");
-
 /* ---------- All device funtions: -----------------*/
 router.get("/all", async function (req, res) {
   DevicesController.getDevices(req.query.language).then((data) => {
