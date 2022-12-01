@@ -61,7 +61,7 @@ model Phenomenon {
   description   Translation?    @relation("descriptionPhenomenon", fields: [descriptionId], references: [id])
   markdown      Translation?    @relation("markdownPhenomenon", fields: [markdownId], references: [id])
   validation    Boolean         @default(false)
-  domains       Domain[]        @relation(references: [id])
+  domains       Domain[]        
   rov           RangeOfValues[]
   Element       Element[]
   labelId       Int?            @unique

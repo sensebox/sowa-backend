@@ -1,0 +1,441 @@
+openapi: 3.1.0
+info:
+  title: units
+  version: 1.0.0
+
+servers:
+  - url: https://api.sensors.wiki
+    description: Main (production) server
+
+paths:
+  #####################
+  # unit operations #
+  #####################
+
+  # get all units
+  /units/all:
+    get:
+      summary: Get all units
+      description: Retrieves all units that are registered
+      tags:
+        - units
+      operationId: get-all-units
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id: 
+                      type: integer
+                      description: the id of the unit
+                    slug:
+                      type: string
+                      description: the slug of the uunit
+                    name:
+                      type: string
+                      description: the name of the unit
+                    notation:
+                      type: string
+                      description: the notation of the unit
+
+
+  # get unit by iri
+  /units/unit/{iri}:
+    get:
+      parameters:
+      - name: iri
+        in: path
+        required: true
+        schema:
+          type: integer or string
+      summary: Get a single unit
+      tags:
+        - units
+      operationId: get-single-unit
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id: 
+                    type: integer
+                    description: the id of the unit
+                  slug:
+                    type: string
+                    description: the slug of the unit
+                  name:
+                    type: string
+                    description: the name of the unit
+                  notation:
+                    type: string
+                    description: the notation of the unit
+                  description: 
+                    type: object
+                    properties:
+                      item:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            languageCode:
+                              type: string
+                              description: |
+                                languageCode for the language of the description. e.g. `en`, `de`,...
+                            text:
+                              type: string
+                              description: |
+                                the description text
+                            translationId:
+                              type: integer
+                              description: |
+                                unique identifier of the translation item
+                  rov:
+                    type: array
+                    description: |
+                      all range of values that have the given unit
+                    items:
+                      type: object
+                      properties:
+                        id: 
+                          type: integer
+                          description: the id of the sensor
+                        min:
+                          type: integer
+                          description: |
+                            minimal value of the range
+                        max:
+                          type: integer
+                          description: |
+                            maximum value of the range 
+                        unit:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              description: the id of the unit
+                            slug:
+                              type: integer
+                              description: the slug of the unit
+                            name:
+                              type: string
+                              description: the name of the unit
+                            notation:
+                              type: string
+                              description: the notation of the unit
+                            validation:
+                              type: boolean
+                              description: |
+                                boolean that is true if the information is validated by an admin
+                            descriptionId:
+                              type: integer
+                              description: |
+                                the descriptionId of the units description
+                  Element:
+                    type: array
+                    description: |
+                      all sensor elements which measure phenomena in the retrieved unit
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: the id of the sensor element
+                        accuracy:
+                          type: float
+                          description: the accuracy of the measured phenomenon
+                        accuracyUnit:
+                          type: object
+                          description: |
+                            the unit the sensor element measures its phenomenon in:
+                          properties:
+                            id:
+                              type: integer
+                              description: the id of the unit
+                            slug:
+                              type: integer
+                              description: the slug of the unit
+                            name:
+                              type: string
+                              description: the name of the unit
+                            notation:
+                              type: string
+                              description: the notation of the unit
+                            validation:
+                              type: boolean
+                              description: |
+                                boolean that is true if the information is validated by an admin
+                            descriptionId:
+                              type: integer
+                              description: |
+                                the descriptionId of the units description
+                        phenomena:
+                          type: object
+                          description: the phenomenon that is measured by the sensor Element
+                          properties:
+                            id: 
+                              type: integer
+                              description: the id of the phenomenon
+                            slug:
+                              type: string
+                              description: the slug of the phenomenon
+                            label:
+                              type: object
+                              properties:
+                                item:
+                                  type: array
+                                  items:
+                                    type: object
+                                    properties:
+                                      languageCode:
+                                        type: string
+                                        description: |
+                                          languageCode for the language of the label. e.g. `en`, `de`,...
+                                      text:
+                                        type: string
+                                        description: |
+                                          the label text
+                                      translationId:
+                                        type: integer
+                                        description: |
+                                          unique identifier of the translation item
+                        sensor:
+                          type: object
+                          description: the sensor that holds the sensor Element
+                          properties:
+                            id: 
+                              type: integer
+                              description: the id of the sensor
+                            slug:
+                              type: string
+                              description: the slug of the sensor
+                            label:
+                              type: object
+                              properties:
+                                item:
+                                  type: array
+                                  items:
+                                    type: object
+                                    properties:
+                                      languageCode:
+                                        type: string
+                                        description: |
+                                          languageCode for the language of the label. e.g. `en`, `de`,...
+                                      text:
+                                        type: string
+                                        description: |
+                                          the label text
+                                      translationId:
+                                        type: integer
+                                        description: |
+                                          unique identifier of the translation item
+
+
+  # create a unit
+  /units/unit/create:
+    post:
+      summary: Create a new unit
+      description: Creates a new unit from the information given in the requestBody
+      tags:
+        - units
+      operationId: create-new-unit
+      parameters:
+        - in: header
+          name: Authorization
+          schema:
+            type: string
+          required: true
+          description: |
+            Token retrieved from the opensensemap API LogIn
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: |
+                unit object that should be created
+              properties:
+                name:
+                  type: string
+                  description: |
+                    name of the unit
+                notation:
+                  type: string
+                  description: |
+                    notation of the unit
+                description:
+                  type: object
+                  properties:
+                    text:
+                      type: string
+                      description: |
+                        the description text
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                description: |
+                  plain unit object
+                properties:
+                  id:
+                    type: integer
+                    description: the id of the created unit
+                  slug:
+                    type: string
+                    description: the slug of the created unit
+                  name:
+                    type: string
+                    description: |
+                      name of the unit
+                  notation:
+                    type: string
+                    description: |
+                      notation of the unit
+                  validation:
+                    type: boolean
+                    description: |
+                      boolean that is true if the information is validated by an admin
+                  descriptionId:
+                    type: integer
+                    description: the id of the created translation item
+
+
+  # edit a unit
+  /units/unit/edit:
+    post:
+      summary: Edit a unit
+      description: Edits a specific unit by the information given in the requestBody
+      tags:
+        - units
+      operationId: edit-unit
+      parameters:
+        - in: header
+          name: Authorization
+          schema:
+            type: string
+          required: true
+          description: |
+            Token retrieved from the opensensemap API LogIn
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: |
+                unit object that should be edited
+              properties:
+                id:
+                  type: integer
+                  description: |
+                    the id of the unit to edit
+                description:
+                  type: object
+                  properties:
+                    translationId:
+                      type: integer
+                      description: |
+                        the translationId of the description item to edit
+                    text:
+                      type: string
+                      description: |
+                        the description text to edit
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                description: |
+                  plain unit object
+                properties:
+                  id:
+                    type: integer
+                    description: the id of the created unit
+                  slug:
+                    type: string
+                    description: the slug of the created unit
+                  name:
+                    type: string
+                    description: |
+                      name of the unit
+                  notation:
+                    type: string
+                    description: |
+                      notation of the unit
+                  validation:
+                    type: boolean
+                    description: |
+                      boolean that is true if the information is validated by an admin
+                  descriptionId:
+                    type: integer
+                    description: the id of the created translation item
+
+  # delete a unit
+  /units/unit/delete:
+    post:
+      summary: Delete a unit
+      description: Delete a specific unit by its id
+      tags:
+        - units
+      operationId: delete-unit
+      parameters:
+        - in: header
+          name: Authorization
+          schema:
+            type: string
+          required: true
+          description: |
+            Token retrieved from the opensensemap API LogIn
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: |
+                unit object that should be delted
+              properties:
+                id:
+                  type: integer
+                  description: |
+                    the id of the unit to delete
+                sensorElement:
+                  type: array
+                  description: |
+                    array with the sensorElements connected to the unit to delete
+                  items:
+                    type: object
+                    properties:
+                      sensorElementId:
+                        type: integer
+                        description: |
+                          the id of the sensorElement to delete the unit from
+                translationIds:
+                  type: array
+                  description: |
+                    array with all the ids of the translationItems to be deleted, that belong to the unit
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  info:
+                    type: string
+                    description: |
+                      info text that indicates if the deleting of the unit was successfull

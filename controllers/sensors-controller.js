@@ -1,7 +1,6 @@
-const config = require('config');
-
 const Sensor = require('../models/Sensor');
 const Sensors = require('../models/Sensors');
+
 const helperFunctions = require('../helper/helperFunctions');
 
 const prisma = require('../lib/prisma');
@@ -149,8 +148,8 @@ module.exports.editSensor = async function (sensorForm, role) {
   //////////// Labels ////////////
   // delete, update or create labels
   for (const label of sensorForm.deletedLabels) {
-    console.log(label.translationId)
-    console.log(label.lang)
+    // console.log(label.translationId)
+    // console.log(label.lang)
     const deleteLabel = await prisma.translationItem.deleteMany({
       where: {
         translationId: label.translationId,
@@ -217,8 +216,8 @@ module.exports.editSensor = async function (sensorForm, role) {
   /////////// Devices //////////////
   // delete, update or create devices for editing
   for (const device of sensorForm.deletedDevices) {
-    console.log(device.device)
-    console.log(device.exists)
+    // console.log(device.device)
+    // console.log(device.exists)
     if (device.exists === true) {
       const disconnectDevice = await prisma.sensor.update({
         where: {
@@ -257,7 +256,7 @@ module.exports.editSensor = async function (sensorForm, role) {
   ////////// Phenomena/ SensorElements //////////////
   // delete, update or create sensorElements/phenomena for editing
   for (const sensorElement of sensorForm.deletedSensorElements) {
-    console.log(sensorElement)
+    // console.log(sensorElement)
     const deleteSensorElement = await prisma.element.delete({
       where: {
         id: sensorElement.sensorElementId
@@ -266,7 +265,7 @@ module.exports.editSensor = async function (sensorForm, role) {
   }
 
   for (const sensorElement of sensorForm.sensorElement) {
-    console.log(sensorElement)
+    // console.log(sensorElement)
     if (sensorElement.sensorElementId !== null) {
       const updateSensorElement = await prisma.element.update({
         where: {
@@ -290,6 +289,16 @@ module.exports.editSensor = async function (sensorForm, role) {
       })
     }
   }
+
+  /////////// Edited sensor ////////////
+  // retrive edited sensor with edited attributes from database 
+  const editedSensor = await prisma.sensor.findUnique({
+    where: {
+      id: sensorForm.id,
+    }
+  })
+
+  return editedSensor;
 }
 
 module.exports.deleteSensor = async function (sensorForm, role) {
@@ -343,6 +352,8 @@ module.exports.deleteSensor = async function (sensorForm, role) {
       id: sensorForm.id,
     }
   })
+
+  return {info: "Sensor successfully deleted"};
 }
 
 
@@ -393,7 +404,7 @@ module.exports.createNewSensor = async function (sensorForm, role) {
     price: sensorForm.price,
     image: sensorForm.image,
     manufacturer: sensorForm.manufacturer,
-    lifePeriod: sensorForm.lifePeriod,
+    lifePeriod: sensorForm.lifeperiod,
     datasheet: sensorForm.datasheet,
     validation: sensorForm.validation,
     devices: {

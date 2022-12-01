@@ -1,0 +1,93 @@
+openapi: 3.1.0
+info:
+  title: phenomena
+  version: 1.0.0
+
+servers:
+  - url: https://api.opensensemap.org/
+    description: Main (production) server
+
+paths:
+  # create a unit
+  /users/sign-in:
+    post:
+      summary: Sign in to opensensemapAPI
+      description: Signs in to opensensemapAPI to retrieve the token needed for using POST-routes.
+      tags:
+        - opensensemap
+      operationId: sign-in-opensensemap
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: |
+                sign in object, that contains e-mail and password
+              properties:
+                email:
+                  type: string
+                  description: |
+                    e-mail adress of the user
+                password:
+                  type: string
+                  description: |
+                    password of the user
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                description: |
+                  sign in response object
+                properties:
+                  code:
+                    type: integer
+                    description: the id of the created unit
+                  message:
+                    type: string
+                    description: the slug of the created unit
+                  data:
+                    type: object
+                    properties:
+                      user:
+                        type: object
+                        properties:
+                          name:
+                            type: string
+                            description: |
+                              name of the user
+                          email:
+                            type: string
+                            description: |
+                              e-mail adress of the user
+                          role:
+                            type: string
+                            description: |
+                              role of the user
+                          language:
+                            type: string
+                            description: |
+                              spoken language of the user, e.g. "de_DE" or "en_EN"
+                          boxes:
+                            type: array
+                            description: |
+                              array that contains all ids of the boxes that the user registered on the opensensemap
+                            items:
+                              type: string
+                              description: |
+                                id of a box the user registered, e.g. "61361f3dcddbdb001c270946" 
+                          emailIsConfirmed:
+                            type: boolean
+                            description: |
+                              boolean that indicates if the users email adress is confirmed 
+                  token:
+                    type: string
+                    description: |
+                      the web token, that you need for the POST routes
+                  refreshToken:
+                    type: string
+                    description: |
+                      refreshToken from your logIn

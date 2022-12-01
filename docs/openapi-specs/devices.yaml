@@ -1,0 +1,719 @@
+openapi: 3.1.0
+info:
+  title: devices
+  version: 1.0.0
+
+servers:
+  - url: https://api.sensors.wiki
+    description: Main (production) server
+
+paths:
+  #####################
+  # device operations #
+  #####################
+
+  # get all devices
+  /devices/all:
+    get:
+      summary: Get all devices
+      description: Retrieves all devices that are registered
+      tags:
+        - devices
+      operationId: get-all-devices
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id: 
+                      type: integer
+                      description: the id of the device
+                    slug:
+                      type: string
+                      description: the slug of the device
+                    label:
+                      type: object
+                      properties:
+                        item:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              languageCode:
+                                type: string
+                                description: |
+                                  languageCode for the language of the label. e.g. `en`, `de`,...
+                              text:
+                                type: string
+                                description: |
+                                  the label text
+                              translationId:
+                                type: integer
+                                description: |
+                                  unique identifier of the translation item
+                    description: 
+                      type: object
+                      properties:
+                        item:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              languageCode:
+                                type: string
+                                description: |
+                                  languageCode for the language of the description. e.g. `en`, `de`,...
+                              text:
+                                type: string
+                                description: |
+                                  the description text
+                              translationId:
+                                type: integer
+                                description: |
+                                  unique identifier of the translation item
+                    markdown:
+                      type: object
+                      properties:
+                        item:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              languageCode:
+                                type: string
+                                description: |
+                                  languageCode for the language of the markdown text. e.g. `en`, `de`,...
+                              text:
+                                type: string
+                                description: |
+                                  the markdown text
+                              translationId:
+                                type: integer
+                                description: |
+                                  unique identifier of the translation item
+                    sensors:
+                      type: array
+                      description: |
+                        all sensors that are compatible with the retrieved device
+                      items:
+                        type: object
+                        properties:
+                          id: 
+                            type: integer
+                            description: the id of the sensor
+                          slug:
+                            type: string
+                            description: the slug of the device
+                          manufacturer:
+                            type: string
+                            description: |
+                              the name of the manufacturer of the sensor e.g. `Bosch`, `Truebener GmbH` etc.
+                          lifePeriod:
+                            type: integer
+                            description: |
+                                the estimated life period of the sensor in days
+                          price:
+                            type: integer
+                            description: |
+                              the price of the sensor
+                          validation:
+                            type: boolean
+                            description: |
+                              boolean that is true if the information is validated by an admin
+                          image:
+                            type: string
+                            description: |
+                              the filename of the sensors image that can be accessed via /images/uploads/{filename}
+                          datasheet:
+                            type: string
+                            description: |
+                              a link to the datasheet of the retrieved sensor
+                          labelId:
+                            type: integer
+                            description: |
+                              unique identifier of the label
+                          descriptionId:
+                            type: integer
+                            description: |
+                              unique identifier of the description
+                    image:
+                      type: string
+                      description: |
+                        the filename of the device's image that can be accessed via /images/uploads/{filename}
+                    validation:
+                      type: boolean
+                      description: |
+                        boolean that is true if the information is validated by an admin
+
+  # get device by iri
+  /devices/device/{iri}:
+    get:
+      parameters:
+      - name: iri
+        in: path
+        required: true
+        schema:
+          type: integer or string
+      summary: Get a single device
+      description: Retrieves a single device
+      tags:
+        - device
+      operationId: get-single-device
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id: 
+                    type: integer
+                    description: the id of the device
+                  slug:
+                    type: string
+                    description: the slug of the device
+                  label:
+                    type: object
+                    properties:
+                      item:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            languageCode:
+                              type: string
+                              description: |
+                                languageCode for the language of the label. e.g. `en`, `de`,...
+                            text:
+                              type: string
+                              description: |
+                                the label text
+                            translationId:
+                              type: integer
+                              description: |
+                                unique identifier of the translation item
+                  description: 
+                    type: object
+                    properties:
+                      item:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            languageCode:
+                              type: string
+                              description: |
+                                languageCode for the language of the description. e.g. `en`, `de`,...
+                            text:
+                              type: string
+                              description: |
+                                the description text
+                            translationId:
+                              type: integer
+                              description: |
+                                unique identifier of the translation item
+                  markdown:
+                    type: object
+                    properties:
+                      item:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            languageCode:
+                              type: string
+                              description: |
+                                languageCode for the language of the markdown text. e.g. `en`, `de`,...
+                            text:
+                              type: string
+                              description: |
+                                the markdown text
+                            translationId:
+                              type: integer
+                              description: |
+                                unique identifier of the translation item
+                  contact:
+                    type: string
+                    description: |
+                      contact information for device support
+                  website:
+                    type: string
+                    description: |
+                      link to a website with more information about the device
+                  sensors:
+                    type: array
+                    description: |
+                      all sensors that are compatible with the retrieved device
+                    items:
+                      type: object
+                      properties:
+                        id: 
+                          type: integer
+                          description: the id of the sensor
+                        slug:
+                          type: string
+                          description: the slug of the device
+                        label:
+                          type: object
+                          properties:
+                            item:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  languageCode:
+                                    type: string
+                                    description: |
+                                      languageCode for the language of the label. e.g. `en`, `de`,...
+                                  text:
+                                    type: string
+                                    description: |
+                                      the label text
+                                  translationId:
+                                    type: integer
+                                    description: |
+                                      unique identifier of the translation item
+                        validation:
+                          type: boolean
+                          description: |
+                            boolean that is true if the information is validated by an admin
+                  validation:
+                    type: boolean
+                    description: |
+                      boolean that is true if the information is validated by an admin     
+
+
+  # get all sensors of a device
+  /devices/device/{iri}/sensors:
+    get:
+      parameters:
+      - name: iri
+        in: path
+        required: true
+        schema:
+          type: integer or string
+      summary: Get all sensors of a device
+      description: Retrieves all sensors of a single device
+      tags:
+        - deviceSensors
+      operationId: get-device-sensors
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id: 
+                      type: integer
+                      description: the id of the sensor
+                    slug:
+                      type: string
+                      description: the slug of the sensor
+                    label:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: |
+                            the id of the translationItems that contain the label
+                    description:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: |
+                            the id of the translationItems that contain the description
+                    elements:
+                      type: array
+                      items:
+                        type: object
+                        description: |
+                          the sensorElements of the sensor (phenomena that can be measured with the accuracy and Unit)
+                        properties:
+                          id:
+                            type: integer
+                            description: |
+                              id of the sensorElement
+                          accuracy:
+                            type: number
+                            description: |
+                              the accuracy with which the phenomenon is measured
+                          sensorId:
+                            type: integer
+                            description: |
+                              id of the sensor the sensor Element belongs to
+                          phenomenonId:
+                            type: integer
+                            description: |
+                              the id of the measured phenomenon
+                          unitId:
+                            type: integer
+                            description: |
+                              the id of the unit of the measured phenomenon
+
+  
+  # create a device
+  /devices/device/create:
+    post:
+      summary: Create a new device
+      description: Creates a new device from the information given in the requestBody
+      tags:
+        - devices
+      operationId: create-new-device
+      parameters:
+        - in: header
+          name: Authorization
+          schema:
+            type: string
+          required: true
+          description: |
+            Token retrieved from the opensensemap API LogIn
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: |
+                device object that should be created
+              properties:
+                label:
+                  type: array
+                  description: |
+                    array with label objects in different languages specified for the device
+                  items:
+                    type: object
+                    properties:
+                      value:
+                        type: string
+                        description: |
+                          the label text itself
+                      lang:
+                        type: string
+                        description: |
+                          languageCode for the language of the lebel. e.g. `en`, `de`,...
+                description:
+                  type: object
+                  properties:
+                    text:
+                      type: string
+                      description: |
+                        the description text
+                markdown:
+                  type: object
+                  properties:
+                    text:
+                      type: string
+                      description: |
+                        the markdown text
+                sensor:
+                  type: array
+                  description: |
+                    array with the sensors to connect to the device
+                  items:
+                    type: object
+                    properties:
+                      sensor:
+                        type: integer
+                        description: |
+                          the id of the sensor to connect
+                website:
+                  type: string
+                  nullable: true
+                  description: |
+                    a url that leads to the website of the device; 'null' if currently not specified
+                contact:
+                  type: string
+                  nullable: true
+                  description: |
+                    contact information to get help/support on the devices functionality; 'null' if currently not specified
+                image:
+                  type: string
+                  nullable: true
+                  description: |
+                    the name of the belonging image of the device so that it can be retrieved from the source; 'null' if currently not specified
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                description: |
+                  plain device object
+                properties:
+                  id:
+                    type: integer
+                    description: the id of the created device
+                  slug:
+                    type: string
+                    description: the slug of the created device
+                  website:
+                    type: string
+                    description: |
+                      a url that leads to the website of the device; 'null' if currently not specified
+                  contact:
+                    type: string
+                    description: |
+                      contact information to get help/support on the devices functionality; 'null' if currently not specified
+                  image:
+                    type: string
+                    description: |
+                      the name of the belonging image of the device so that it can be retrieved from the source; 'null' if currently not specified
+                  validation:
+                    type: boolean
+                    description: |
+                      boolean that is true if the information is validated by an admin
+                  labelId:
+                    type: integer
+                    description: the id of the created translation item
+                  descriptionId:
+                    type: integer
+                    description: the id of the created translation item
+                  markdownId:
+                    type: integer
+                    description: the id of the created translation item
+
+
+  # edit a device
+  /devices/device/edit:
+    post:
+      summary: Edit a device
+      description: Edits a specific device by the information given in the requestBody
+      tags:
+        - devices
+      operationId: edit-device
+      parameters:
+        - in: header
+          name: Authorization
+          schema:
+            type: string
+          required: true
+          description: |
+            Token retrieved from the opensensemap API LogIn
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: |
+                device object that should be edited
+              properties:
+                id:
+                  type: integer
+                  description: |
+                    the id of the device to edit
+                description:
+                  type: object
+                  properties:
+                    translationId:
+                      type: integer
+                      description: |
+                        the translationId of the description item to edit
+                    text:
+                      type: string
+                      description: |
+                        the description text to edit
+                markdown:
+                  type: object
+                  properties:
+                    translationId:
+                      type: integer
+                      description: |
+                        the translationId of the markdown item to edit
+                    text:
+                      type: string
+                      description: |
+                        the markdown text to edit
+                label:
+                  type: array
+                  description: |
+                    array with label objects in different languages specified for the sensor to be edited
+                  items:
+                    type: object
+                    properties:
+                      translationId:
+                        type: integer
+                        description: |
+                          the translationId of the label to be edited, 'null' if it is a newly created label
+                      value:
+                        type: string
+                        description: |
+                          the label text itself
+                      lang:
+                        type: string
+                        description: |
+                          languageCode for the language of the markdown text. e.g. `en`, `de`,...
+                deletedLabels:
+                  type: array
+                  description: |
+                    array containing all the label to be deleted from the sensor
+                  items:
+                    type: object
+                    properties:
+                      translationId:
+                        type: integer
+                        description: |
+                          the translationId of the label to be deleted
+                      value:
+                        type: string
+                        description: |
+                          the label text itself
+                      lang:
+                        type: string
+                        description: |
+                          languageCode for the language of the markdown text. e.g. `en`, `de`,...
+                sensor:
+                  type: array
+                  description: |
+                    array with the sensors connected to the device
+                  items:
+                    type: object
+                    properties:
+                      sensor:
+                        type: integer
+                        description: |
+                          the id of the sensor to connect
+                      exists:
+                        type: boolean
+                        description: |
+                          'true' if it is an existing sensor connection, 'false' if it is a new sensor connection
+                deletedSensors:
+                  type: array
+                  description: |
+                    array with the sensors to be disconnected from the device
+                  items:
+                    type: object
+                    properties:
+                      sensor:
+                        type: integer
+                        description: |
+                          the id of the sensor to disconnect
+                      exists:
+                        type: boolean
+                        description: |
+                          'true' if it is an existing sensor connection, 'false' if it is a new sensor connection
+                website:
+                  type: string
+                  nullable: true
+                  description: |
+                    a url that leads to the website of the device; 'null' if currently not specified
+                contact:
+                  type: string
+                  nullable: true
+                  description: |
+                    contact information to get help/support on the devices functionality; 'null' if currently not specified
+                image:
+                  type: string
+                  nullable: true
+                  description: |
+                    the name of the belonging image of the device so that it can be retrieved from the source; 'null' if currently not specified
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                description: |
+                  plain device object
+                properties:
+                  id:
+                    type: integer
+                    description: the id of the created device
+                  slug:
+                    type: string
+                    description: the slug of the created device
+                  website:
+                    type: string
+                    description: |
+                      a url that leads to the website of the device; 'null' if currently not specified
+                  contact:
+                    type: string
+                    description: |
+                      contact information to get help/support on the devices functionality; 'null' if currently not specified
+                  image:
+                    type: string
+                    description: |
+                      the name of the belonging image of the device so that it can be retrieved from the source; 'null' if currently not specified
+                  validation:
+                    type: boolean
+                    description: |
+                      boolean that is true if the information is validated by an admin
+                  labelId:
+                    type: integer
+                    description: the id of the created translation item
+                  descriptionId:
+                    type: integer
+                    description: the id of the created translation item
+                  markdownId:
+                    type: integer
+                    description: the id of the created translation item
+
+  # delete a device
+  /devices/device/delete:
+    post:
+      summary: Delete a device
+      description: Delete a specific device by its id
+      tags:
+        - devices
+      operationId: delete-device
+      parameters:
+        - in: header
+          name: Authorization
+          schema:
+            type: string
+          required: true
+          description: |
+            Token retrieved from the opensensemap API LogIn
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: |
+                device object that should be delted
+              properties:
+                id:
+                  type: integer
+                  description: |
+                    the id of the device to delete
+                sensor:
+                  type: array
+                  description: |
+                    array with the sensors connected to the device to delete
+                  items:
+                    type: object
+                    properties:
+                      sensor:
+                        type: integer
+                        description: |
+                          the id of the sensor to disconnect
+                translationIds:
+                  type: array
+                  description: |
+                    array with all the translationIds to be deleted, that belong to the device
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  info:
+                    type: string
+                    description: |
+                      info text that indicates if the deleting of the device was successfull

@@ -1,7 +1,8 @@
-const config = require("config");
 const Device = require("../models/Device");
 const Devices = require("../models/Devices");
+
 const helperFunctions = require('../helper/helperFunctions');
+
 const prisma = require("../lib/prisma");
 
 /* ---------- All device funtions: -----------------*/
@@ -21,8 +22,6 @@ module.exports.getDevices = async function (lang) {
     select: {
       id: true,
       slug: true,
-      markdown: true,
-      image: true,
       label: {
         select: {
           item: languageFilter,
@@ -33,7 +32,13 @@ module.exports.getDevices = async function (lang) {
           item: languageFilter,
         },
       },
+      markdown: {
+        select: {
+          item: languageFilter,
+        },
+      },
       sensors: true,
+      image: true,
       validation: true,
     },
   });
@@ -98,13 +103,14 @@ module.exports.getDevice = async function (iri, lang) {
 };
 
 // get sensors of device
-module.exports.getSensorsOfDevice = async function (deviceId) {
+module.exports.getSensorsOfDevice = async function (iri) {
+
+  let where = (isNaN(parseInt(iri))) ? { slug: iri } : { id: parseInt(iri) };
+
   const result = await prisma.sensor.findMany({
     where: {
       devices: {
-        some: {
-          id: deviceId,
-        },
+        some: where,
       },
     }, 
     select: {
@@ -248,6 +254,16 @@ module.exports.editDevice = async function (deviceForm, role) {
       });
     }
   };
+
+  /////////// Edited device ////////////
+  // retrive edited device with edited attributes from database 
+  const editedDevice = await prisma.device.findUnique({
+    where: {
+      id: deviceForm.id,
+    }
+  })
+
+  return editedDevice;
 };
 
 module.exports.deleteDevice = async function (deviceForm, role) {
@@ -294,6 +310,8 @@ module.exports.deleteDevice = async function (deviceForm, role) {
       id: deviceForm.id,
     },
   });
+
+  return {info: "Device successfully deleted"};
 };
 
 
@@ -311,7 +329,7 @@ module.exports.createNewDevice = async function (deviceForm, role) {
   if (deviceForm.sensor) {
     sensorIds = deviceForm.sensor.map(sensor => { return { "id": sensor.sensor } });
   }
-  console.log("SENSORIDS", sensorIds)
+  // console.log("SENSORIDS", sensorIds)
 
 
   // map and create labels
