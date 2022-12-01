@@ -3,7 +3,13 @@ FROM node:16-alpine as build
 ENV NODE_ENV=production
 
 RUN apk --no-cache --virtual .build add build-base python3 git
-
+RUN apk --update --no-cache add \
+    libc6-compat \
+    automake \
+    autoconf \
+    build-base \
+    zlib \
+    zlib-dev
 WORKDIR /usr/src/app
 
 # copy in main package.json and yarn.lock
