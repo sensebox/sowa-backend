@@ -1,60 +1,42 @@
-var express = require('express');
+var express = require("express");
 var router = express.Router();
-//var bodyParser = require("body-parser");
-var Filter = require('../middleware/filter');
 
-const DomainsController = require('../controllers/domains-controller');
-const AuthController = require('../controllers/auth-controller');
+const DomainsController = require("../controllers/domains-controller");
+
 /* GET users listing. */
-router.get('/', function (req, res, next) {
-  res.send('respond with a resource');
+router.get("/", function (req, res, next) {
+  res.send("respond with a resource");
 });
 
-
 /* ---------- All domain funtions: -----------------*/
-router.get('/all', function (req, res) {
-  DomainsController.getDomains(req.query.language).then(data => {
+router.get("/all", function (req, res) {
+  DomainsController.getDomains(req.query.language).then((data) => {
     return res.json(data);
   });
 });
 
-router.get('/domain/:iri', function (req, res) {
-  DomainsController.getDomain(req.params.iri, req.query.lang).then(data => {
+router.get("/domain/:iri", function (req, res) {
+  DomainsController.getDomain(req.params.iri, req.query.lang).then((data) => {
     return res.json(data);
-  })
+  });
 });
 
-router.get('/historic-domain/:iri', function (req, res) {
-  console.log(req.params.iri);
-  DomainsController.getHistoricDomain(req.params.iri)
-    .then(data => res.json(data))
+router.post("/domain/create/", function (req, res) {
+  DomainsController.createNewDomain(req.body, res.locals.user.role).then((data) => {
+    return res.json(data);
+  });
 });
 
-router.get('/domain-history/:iri', function (req, res) {
-  console.log(req.params.iri);
-  DomainsController.getDomainHistory(req.params.iri)
-    .then(data => res.json(data))
+router.post("/domain/edit/", function (req, res) {
+  DomainsController.editDomain(req.body, res.locals.user.role).then((data) => {
+    return res.json(data);
+  });
 });
 
-router.post('/domain/create/', function (req, res) {
-  // LOCALS contains the user now including the role
-  DomainsController.createNewDomain(req.body, res.locals.user.role)
-    .then(data => res.json(data))
+router.post("/domain/delete/", function (req, res) {
+  DomainsController.deleteDomain(req.body, res.locals.user.role).then((data) => {
+    return res.json(data);
+  });
 });
-
-router.post('/domain/edit/', function (req, res) {
-  // LOCALS contains the user now including the role
-  // console.dir(req.body);
-  DomainsController.editDomain(req.body, res.locals.user.role)
-    .then(data => res.json(data))
-  // DomainsController.createHistoryDomain(req.body, res.locals.user)
-});
-
-router.post('/domain/delete/', function (req, res) {
-  // console.log(req.body);
-  DomainsController.deleteDomain(req.body, res.locals.user.role)
-    .then(data => res.json(data))
-});
-
 
 module.exports = router;

@@ -1,5 +1,3 @@
-const config = require('config');
-const { phenomenon } = require('../lib/prisma');
 const helperFunctions = require('../helper/helperFunctions');
 
 const prisma = require('../lib/prisma');
