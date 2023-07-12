@@ -172,7 +172,6 @@ module.exports.createNewPhenomenon = async function (phenomenonForm, role) {
   let phenomenonSlug;
   for (const label of phenomenonForm.label) {
     if (label.lang == "en") {
-      console.log(label.value);
       phenomenonSlug = await helperFunctions.slugifyModified(label.value);
     }
   }
@@ -210,8 +209,6 @@ module.exports.editPhenomenon = async function (phenomenonForm, role) {
     phenomenonForm.validation = false;
   }
 
-  console.log(phenomenonForm);
-
   /////////// Current phenomenon ////////////
   // retrive current phenomeonon with current attributes from database
   const phenomenon = await prisma.phenomenon.findUnique({
@@ -223,8 +220,6 @@ module.exports.editPhenomenon = async function (phenomenonForm, role) {
   //////////// Labels ////////////
   // delete, update or create labels
   for (const label of phenomenonForm.deletedLabels) {
-    console.log(label.translationId);
-    console.log(label.lang);
     const deleteLabel = await prisma.translationItem.deleteMany({
       where: {
         translationId: label.translationId,
@@ -284,8 +279,6 @@ module.exports.editPhenomenon = async function (phenomenonForm, role) {
   /////////// Domains //////////////
   // delete, update or create domains
   for (const domain of phenomenonForm.deletedDomains) {
-    console.log(domain.domain);
-    console.log(domain.exists);
     const disconnectDomain = await prisma.domain.update({
       where: {
         id: domain.domain,
@@ -320,7 +313,6 @@ module.exports.editPhenomenon = async function (phenomenonForm, role) {
   ////////// Units //////////////
   // delete, update or create range of values (units) for editing
   for (const unit of phenomenonForm.deletedUnits) {
-    console.log(unit);
     const deleteUnit = await prisma.rangeOfValues.delete({
       where: {
         id: unit.rovId,
@@ -329,7 +321,6 @@ module.exports.editPhenomenon = async function (phenomenonForm, role) {
   }
 
   for (const unit of phenomenonForm.unit) {
-    console.log(unit);
     if (unit.rovId !== null) {
       const updateUnit = await prisma.rangeOfValues.update({
         where: {
@@ -370,7 +361,6 @@ module.exports.deletePhenomenon = async function (phenomenonForm, role) {
     phenomenonForm.validation = false;
   }
 
-  console.log(phenomenonForm);
 
   const deleteElements = await prisma.element.deleteMany({
     where: {

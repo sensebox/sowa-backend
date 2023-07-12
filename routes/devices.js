@@ -22,7 +22,7 @@ router.get("/device/:iri", async function (req, res) {
 });
 
 router.get("/device/:iri/sensors", function (req, res) {
-  DevicesController.getSensorsOfDevice(req.params.iri).then((data) => {
+  DevicesController.getSensorsOfDevice(req.params.iri, req.query.lang).then((data) => {
     return res.json(data);
   });
 });

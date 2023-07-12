@@ -36,6 +36,8 @@ module.exports.getSensors = async function (lang) {
       lifePeriod: true,
       manufacturer: true,
       validation: true,
+      elements: true,
+      image: true
     },
   });
 
