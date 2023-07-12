@@ -280,43 +280,43 @@ paths:
                     label:
                       type: object
                       properties:
-                      item:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            languageCode:
-                              type: string
-                              description: |
-                                languageCode for the language of the label. e.g. `en`, `de`,...
-                            text:
-                              type: string
-                              description: |
-                                the label text
-                            translationId:
-                              type: integer
-                              description: |
-                                unique identifier of the translation item
+                        item:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              languageCode:
+                                type: string
+                                description: |
+                                  languageCode for the language of the label. e.g. `en`, `de`,...
+                              text:
+                                type: string
+                                description: |
+                                  the label text
+                              translationId:
+                                type: integer
+                                description: |
+                                  unique identifier of the translation item
                     description:
                       type: object
                       properties:
-                      item:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            languageCode:
-                              type: string
-                              description: |
-                                languageCode for the language of the description. e.g. `en`, `de`,...
-                            text:
-                              type: string
-                              description: |
-                                the description text
-                            translationId:
-                              type: integer
-                              description: |
-                                unique identifier of the translation item
+                        item:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              languageCode:
+                                type: string
+                                description: |
+                                  languageCode for the language of the description. e.g. `en`, `de`,...
+                              text:
+                                type: string
+                                description: |
+                                  the description text
+                              translationId:
+                                type: integer
+                                description: |
+                                  unique identifier of the translation item
                     elements:
                       type: array
                       items:
