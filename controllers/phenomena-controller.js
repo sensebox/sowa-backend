@@ -38,6 +38,14 @@ module.exports.getPhenomena = async function (lang) {
         },
       },
       validation: true,
+      rov: {
+        select: {
+          id: true,
+          min: true,
+          max: true,
+          unit: true,
+        },
+      },
     },
   });
 

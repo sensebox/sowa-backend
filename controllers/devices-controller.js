@@ -37,7 +37,6 @@ module.exports.getDevices = async function (lang) {
           item: languageFilter,
         },
       },
-      sensors: true,
       image: true,
       validation: true,
     },
