@@ -13,7 +13,7 @@ paths:
   ######################
   
   # get all sensors
-  /sensors/all:
+  /sensors:
     get:
       summary: Get all sensors
       description: Retrieves all sensors that are registered for the available devices
@@ -92,9 +92,40 @@ paths:
                       type: boolean
                       description: |
                         boolean that is true if the information is validated by an admin
+                    elements:
+                      type: array
+                      items:
+                        type: object
+                        description: |
+                          the sensorElements of the sensor (phenomena that can be measured with the accuracy and Unit)
+                        properties:
+                          id:
+                            type: integer
+                            description: |
+                              id of the sensorElement
+                          accuracy:
+                            type: number
+                            description: |
+                              the accuracy with which the phenomenon is measured
+                          sensorId:
+                            type: integer
+                            description: |
+                              id of the sensor the sensor Element belongs to
+                          phenomenonId:
+                            type: integer
+                            description: |
+                              the id of the measured phenomenon
+                          unitId:
+                            type: integer
+                            description: |
+                              the id of the unit of the measured phenomenon
+                    image:
+                      type: string
+                      description: |
+                        the filename of the sensor's image that can be accessed via /images/uploads/{filename}
 
   # get sensor by iri
-  /sensors/sensor/{iri}:
+  /sensors/{iri}:
     get:
       parameters:
       - name: iri
@@ -324,7 +355,7 @@ paths:
 
   
   # create a sensor
-  /sensors/sensor/create:
+  /sensors/create:
     post:
       summary: Create a new sensor
       description: Creates a new sensor from the information given in the requestBody
@@ -476,7 +507,7 @@ paths:
 
 
   # edit a sensor
-  /sensors/sensor/edit:
+  /sensors/edit:
     post:
       summary: Edit a sensor
       description: Edits a specific sensor by the information given in the requestBody
@@ -693,7 +724,7 @@ paths:
                     description: the id of the created translation item
 
   # delete a phenomenon
-  /sensors/sensor/delete:
+  /sensors/delete:
     post:
       summary: Delete a sensor
       description: Delete a specific sensor by its id

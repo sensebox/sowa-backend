@@ -13,7 +13,7 @@ paths:
   #####################
 
   # get all units
-  /units/all:
+  /units:
     get:
       summary: Get all units
       description: Retrieves all units that are registered
@@ -45,7 +45,7 @@ paths:
 
 
   # get unit by iri
-  /units/unit/{iri}:
+  /units/{iri}:
     get:
       parameters:
       - name: iri
@@ -239,7 +239,7 @@ paths:
 
 
   # create a unit
-  /units/unit/create:
+  /units/create:
     post:
       summary: Create a new unit
       description: Creates a new unit from the information given in the requestBody
@@ -312,7 +312,7 @@ paths:
 
 
   # edit a unit
-  /units/unit/edit:
+  /units/edit:
     post:
       summary: Edit a unit
       description: Edits a specific unit by the information given in the requestBody
@@ -384,7 +384,7 @@ paths:
                     description: the id of the created translation item
 
   # delete a unit
-  /units/unit/delete:
+  /units/delete:
     post:
       summary: Delete a unit
       description: Delete a specific unit by its id

@@ -13,7 +13,7 @@ paths:
   #####################
 
   # get all domains
-  /domains/all:
+  /domains:
     get:
       summary: Get all domains
       description: Retrieves all domains that are registered
@@ -112,7 +112,7 @@ paths:
 
 
   # get domain by its iri
-  /domains/domain/{iri}:
+  /domains/{iri}:
     get:
       parameters:
       - name: iri
@@ -222,7 +222,7 @@ paths:
 
 
   # create a domain
-  /domain/domain/create:
+  /domains/create:
     post:
       summary: Create a new domain
       description: Creates a new domain from the information given in the requestBody
@@ -308,7 +308,7 @@ paths:
 
 
   # edit a domain
-  /domains/domain/edit:
+  /domains/edit:
     post:
       summary: Edit a domain
       description: Edits a specific domain by the information given in the requestBody
@@ -443,7 +443,7 @@ paths:
                     description: the id of the created translation item
 
   # delete a domain
-  /domains/domain/delete:
+  /domains/delete:
     post:
       summary: Delete a domain
       description: Delete a specific domain by its id

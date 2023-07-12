@@ -13,7 +13,7 @@ paths:
   #####################
 
   # get all devices
-  /devices/all:
+  /devices:
     get:
       summary: Get all devices
       description: Retrieves all devices that are registered
@@ -30,7 +30,7 @@ paths:
                 items:
                   type: object
                   properties:
-                    id: 
+                    id:
                       type: integer
                       description: the id of the device
                     slug:
@@ -56,7 +56,7 @@ paths:
                                 type: integer
                                 description: |
                                   unique identifier of the translation item
-                    description: 
+                    description:
                       type: object
                       properties:
                         item:
@@ -96,51 +96,6 @@ paths:
                                 type: integer
                                 description: |
                                   unique identifier of the translation item
-                    sensors:
-                      type: array
-                      description: |
-                        all sensors that are compatible with the retrieved device
-                      items:
-                        type: object
-                        properties:
-                          id: 
-                            type: integer
-                            description: the id of the sensor
-                          slug:
-                            type: string
-                            description: the slug of the device
-                          manufacturer:
-                            type: string
-                            description: |
-                              the name of the manufacturer of the sensor e.g. `Bosch`, `Truebener GmbH` etc.
-                          lifePeriod:
-                            type: integer
-                            description: |
-                                the estimated life period of the sensor in days
-                          price:
-                            type: integer
-                            description: |
-                              the price of the sensor
-                          validation:
-                            type: boolean
-                            description: |
-                              boolean that is true if the information is validated by an admin
-                          image:
-                            type: string
-                            description: |
-                              the filename of the sensors image that can be accessed via /images/uploads/{filename}
-                          datasheet:
-                            type: string
-                            description: |
-                              a link to the datasheet of the retrieved sensor
-                          labelId:
-                            type: integer
-                            description: |
-                              unique identifier of the label
-                          descriptionId:
-                            type: integer
-                            description: |
-                              unique identifier of the description
                     image:
                       type: string
                       description: |
@@ -151,14 +106,14 @@ paths:
                         boolean that is true if the information is validated by an admin
 
   # get device by iri
-  /devices/device/{iri}:
+  /devices/{iri}:
     get:
       parameters:
-      - name: iri
-        in: path
-        required: true
-        schema:
-          type: integer or string
+        - name: iri
+          in: path
+          required: true
+          schema:
+            type: integer or string
       summary: Get a single device
       description: Retrieves a single device
       tags:
@@ -172,7 +127,7 @@ paths:
               schema:
                 type: object
                 properties:
-                  id: 
+                  id:
                     type: integer
                     description: the id of the device
                   slug:
@@ -198,7 +153,7 @@ paths:
                               type: integer
                               description: |
                                 unique identifier of the translation item
-                  description: 
+                  description:
                     type: object
                     properties:
                       item:
@@ -246,6 +201,10 @@ paths:
                     type: string
                     description: |
                       link to a website with more information about the device
+                  image:
+                    type: string
+                    description: |
+                      the filename of the device's image that can be accessed via /images/uploads/{filename}
                   sensors:
                     type: array
                     description: |
@@ -253,7 +212,7 @@ paths:
                     items:
                       type: object
                       properties:
-                        id: 
+                        id:
                           type: integer
                           description: the id of the sensor
                         slug:
@@ -286,18 +245,17 @@ paths:
                   validation:
                     type: boolean
                     description: |
-                      boolean that is true if the information is validated by an admin     
-
+                      boolean that is true if the information is validated by an admin
 
   # get all sensors of a device
-  /devices/device/{iri}/sensors:
+  /devices/{iri}/sensors:
     get:
       parameters:
-      - name: iri
-        in: path
-        required: true
-        schema:
-          type: integer or string
+        - name: iri
+          in: path
+          required: true
+          schema:
+            type: integer or string
       summary: Get all sensors of a device
       description: Retrieves all sensors of a single device
       tags:
@@ -313,7 +271,7 @@ paths:
                 items:
                   type: object
                   properties:
-                    id: 
+                    id:
                       type: integer
                       description: the id of the sensor
                     slug:
@@ -322,17 +280,43 @@ paths:
                     label:
                       type: object
                       properties:
-                        id:
-                          type: integer
-                          description: |
-                            the id of the translationItems that contain the label
+                        item:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              languageCode:
+                                type: string
+                                description: |
+                                  languageCode for the language of the label. e.g. `en`, `de`,...
+                              text:
+                                type: string
+                                description: |
+                                  the label text
+                              translationId:
+                                type: integer
+                                description: |
+                                  unique identifier of the translation item
                     description:
                       type: object
                       properties:
-                        id:
-                          type: integer
-                          description: |
-                            the id of the translationItems that contain the description
+                        item:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              languageCode:
+                                type: string
+                                description: |
+                                  languageCode for the language of the description. e.g. `en`, `de`,...
+                              text:
+                                type: string
+                                description: |
+                                  the description text
+                              translationId:
+                                type: integer
+                                description: |
+                                  unique identifier of the translation item
                     elements:
                       type: array
                       items:
@@ -360,10 +344,13 @@ paths:
                             type: integer
                             description: |
                               the id of the unit of the measured phenomenon
+                    image:
+                      type: string
+                      description: |
+                        the filename of the sensor's image that can be accessed via /images/uploads/{filename}
 
-  
   # create a device
-  /devices/device/create:
+  /devices/create:
     post:
       summary: Create a new device
       description: Creates a new device from the information given in the requestBody
@@ -484,9 +471,8 @@ paths:
                     type: integer
                     description: the id of the created translation item
 
-
   # edit a device
-  /devices/device/edit:
+  /devices/edit:
     post:
       summary: Edit a device
       description: Edits a specific device by the information given in the requestBody
@@ -662,7 +648,7 @@ paths:
                     description: the id of the created translation item
 
   # delete a device
-  /devices/device/delete:
+  /devices/delete:
     post:
       summary: Delete a device
       description: Delete a specific device by its id
