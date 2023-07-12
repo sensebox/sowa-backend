@@ -13,7 +13,7 @@ paths:
   ########################
   
   # get all phenomena
-  /phenomena/all:
+  /phenomena:
     get:
       summary: Get all phenomena
       description: Retrieves all phenomena that can be measured with the registered sensors
@@ -100,9 +100,55 @@ paths:
                       type: boolean
                       description: |
                         boolean that is true if the information is validated by an admin
+                    rov:
+                      type: array
+                      description: |
+                        range of values that are connected to the phenomena
+                      items:
+                        type: object
+                        properties:
+                          id: 
+                            type: integer
+                            description: |
+                              the id of the rov:
+                          min:
+                            type: integer
+                            description: |
+                              the minmum of the value range
+                          max:
+                            type: integer
+                            description: |
+                              the maximum of the value range
+                          unit:
+                            type: object
+                            description: |
+                              the unit of the associated value range
+                            properties:
+                              id: 
+                                type: integer
+                                description: the id of the unit
+                              slug:
+                                type: string
+                                description: the slug of the unit
+                              name:
+                                type: string
+                                description: |
+                                  the name of the unit
+                              notation:
+                                type: string
+                                description: |
+                                  the notation of the unit
+                              validation:
+                                type: boolean
+                                description: |
+                                  boolean that is true if the information is validated by an admin
+                              descriptionId:
+                                type: integer
+                                description: |
+                                  the id of the description that belongs to the unit
 
   # get phenomena by slug
-  /phenomena/phenomenon/{iri}:
+  /phenomena/{iri}:
     get:
       parameters:
       - name: iri
@@ -278,7 +324,7 @@ paths:
                                 the id of the description that belongs to the unit
 
   # create a phenomenon
-  /phenomena/phenomenon/create:
+  /phenomena/create:
     post:
       summary: Create a new phenomenon
       description: Creates a new phenomenon from the information given in the requestBody
@@ -393,7 +439,7 @@ paths:
 
 
   # edit a phenomenon
-  /phenomena/phenomenon/edit:
+  /phenomena/edit:
     post:
       summary: Edit a phenomenon
       description: Edits a specific phenomenon by the information given in the requestBody
@@ -591,7 +637,7 @@ paths:
                     description: the id of the translation item
 
   # delete a phenomenon
-  /phenomena/phenomenon/delete:
+  /phenomena/delete:
     post:
       summary: Delete a phenomenon
       description: Delete a specific phenomenon by its id
