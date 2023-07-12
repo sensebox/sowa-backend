@@ -7,21 +7,30 @@
     "devstart": "nodemon ./bin/www"
   },
   "dependencies": {
+    "@prisma/client": "^4.11.0",
     "body-parser": "^1.19.0",
     "config": "^3.3.1",
     "cookie-parser": "~1.4.3",
     "cors": "^2.8.5",
     "debug": "~2.6.9",
+    "docusaurus": "^1.14.7",
+    "docusaurus-plugin-openapi-docs": "^1.2.2",
+    "docusaurus-theme-openapi-docs": "^1.2.2",
     "dotenv": "^10.0.0",
     "express": "^4.16.4",
     "fs": "0.0.1-security",
     "http-errors": "~1.6.2",
     "morgan": "~1.9.0",
     "multer": "^1.4.2",
-    "pug": "^2.0.3",
+    "pug": "^3.0.2",
+    "slugify": "^1.6.5",
     "sparql-client-2": "^0.6.3"
   },
   "devDependencies": {
-    "nodemon": "^1.19.4"
+    "nodemon": "^2.0.16",
+    "prisma": "^4.11.0"
+  },
+  "prisma": {
+    "seed": "node prisma/seed.js"
   }
 }

@@ -1,0 +1,969 @@
+[{
+    "languageCode": "de",
+    "text": "senseBox:home",
+    "translationId" : 1
+},{
+    "languageCode": "en",
+    "text": "senseBox:home",
+    "translationId" : 1
+},{
+    "languageCode": "de",
+    "text": "Die senseBox:home ist ein Toolkit für Umweltmessungen.",
+    "translationId" : 2
+},{
+    "languageCode": "en",
+    "text": "The sensebox:home is a kit for environmental sensing.",
+    "translationId" : 2
+},{
+    "languageCode": "de",
+    "text": "",
+    "translationId" : 3
+},{
+    "languageCode": "en",
+    "text": "",
+    "translationId" : 3
+},{
+    "languageCode": "de",
+    "text": "senseBox:edu",
+    "translationId" : 4
+},{
+    "languageCode": "en",
+    "text": "senseBox:edu",
+    "translationId" : 4
+ },{
+    "languageCode": "de",
+    "text": "Die senseBox:edu ist ein Toolkit für Umweltmessungen.",
+    "translationId" : 5
+},{
+    "languageCode": "en",
+    "text": "The senseBox:edu is a kit for environmental sensing.",
+    "translationId" : 5
+},{
+    "languageCode": "de",
+    "text": "",
+    "translationId" : 6
+},{
+    "languageCode": "en",
+    "text": "",
+    "translationId" : 6
+},{
+    "languageCode": "de",
+    "text": "LuftdatenInfo Gerät",
+    "translationId" : 7
+},{
+    "languageCode": "en",
+    "text": "AirdataInfo Device",
+    "translationId" : 7
+},{
+    "languageCode": "de",
+    "text": "Gerät zur Messung der Lufqualität.",
+    "translationId" : 8
+},{
+    "languageCode": "en",
+    "text": "Device to measure air quality.",
+    "translationId" : 8
+},{
+    "languageCode": "de",
+    "text": "BME680",
+    "translationId" : 9
+},{
+    "languageCode": "en",
+    "text": "BME680",
+    "translationId" : 9
+},{
+    "languageCode": "de",
+    "text": "Der BME680 ist ein Gassensor, der hochlineare und hochgenaue Gas-, Druck-, Feuchte- und Temperatursensoren integriert.",
+    "translationId" : 10
+},{
+    "languageCode": "en",
+    "text": "The BME680 is a gas sensor that integrates high-linearity and high-accuracy gas, pressure, humidity and temperature sensors.",
+    "translationId" : 10
+},{
+    "languageCode": "de",
+    "text": "BMP280",
+    "translationId" : 11
+},{
+    "languageCode": "en",
+    "text": "BMP280",
+    "translationId" : 11
+},{
+    "languageCode": "de",
+    "text": "Der barometrische Drucksensor BMP280 von Bosch Sensortec ist ein absoluter Drucksensor, der speziell für mobile Anwendungen entwickelt wurde. Er kann auch die Lufttemperatur messen.",
+    "translationId" : 12
+},{
+    "languageCode": "en",
+    "text": "Bosch Sensortec barometric pressure Sensor BMP280 is an absolute barometric pressure sensor especially designed for mobile applications. Also able to measure air temperature.",
+    "translationId" : 12
+},{
+    "languageCode": "de",
+    "text": "HDC1080",
+    "translationId" : 13
+},{
+    "languageCode": "en",
+    "text": "HDC1080",
+    "translationId" : 13
+},{
+    "languageCode": "de",
+    "text": "Der Sensor HDC1080 von Texas Instruments ist ein digitaler Feuchtigkeitssensor. Er misst die relative Luftfeuchtigkeit und die Temperatur.",
+    "translationId" : 14
+},{
+    "languageCode": "en",
+    "text": "The Texas Instruments' HDC1080 sensor is a digital humidity sensor. It measures relative humidity and and temperature.",
+    "translationId" : 14
+},{
+    "languageCode": "de",
+    "text": "SCD30",
+    "translationId" : 15
+},{
+    "languageCode": "en",
+    "text": "SCD30",
+    "translationId" : 15
+},{
+    "languageCode": "de",
+    "text": "Der SCD30 von Sensirion ist ein hochwertiger, auf nicht-dispersivem Infrarot (NDIR) basierender CO₂-Sensor, der 400 bis 10000ppm mit einer Genauigkeit von ±(30ppm+3%) erfassen kann.",
+    "translationId" : 16
+},{
+    "languageCode": "en",
+    "text": "The SCD30 from Sensirion is a high quality non-dispersive infrared (NDIR) based CO₂ sensor capable of detecting 400 to 10000ppm with an accuracy of ±(30ppm+3%).",
+    "translationId" : 16
+},{
+    "languageCode": "de",
+    "text": "SMT50",
+    "translationId" : 17
+},{
+    "languageCode": "en",
+    "text": "SMT50",
+    "translationId" : 17
+},{
+    "languageCode": "de",
+    "text": "Der SMT50 wird von TRUEBNER entwickelt und hergestellt. Er ist ein FDR-Bodenfeuchtesensor. Das Gehäuse und das Kabel sind wasserdicht.",
+    "translationId" : 18
+},{
+    "languageCode": "en",
+    "text": "The SMT50 is designed and manufactured by TRUEBNER. It is a FDR soil moisture sensor. The casing and cable is water sealed.",
+    "translationId" : 18
+},{
+    "languageCode": "de",
+    "text": "TSL4531",
+    "translationId" : 19
+},{
+    "languageCode": "en",
+    "text": "TSL4531",
+    "translationId" : 19
+},{
+    "languageCode": "de",
+    "text": "Der AMS TSL4531 Lichtsensor ist ein Umgebungslichtsensor. Er erkennt also die Helligkeit des Umgebungslichts.",
+    "translationId" : 20
+},{
+    "languageCode": "en",
+    "text": "The AMS TSL4531 light sensor is an ambient light sensor. Therefore, it detects the brightness of ambient light.",
+    "translationId" : 20
+},{
+    "languageCode": "de",
+    "text": "VEML6070V2",
+    "translationId" : 21
+},{
+    "languageCode": "en",
+    "text": "VEML6070V2",
+    "translationId" : 21
+},{
+    "languageCode": "de",
+    "text": "Der VEML6070 ist ein fortschrittlicher Ultraviolett (UV)-Lichtsensor mitI2C-Protokollschnittstelle und wurde im CMOS-Verfahren entwickelt.",
+    "translationId" : 22
+},{
+    "languageCode": "en",
+    "text": "VEML6070 is an advanced ultraviolet (UV) light sensor withI2C protocol interface and designed by the CMOS process.",
+    "translationId" : 22
+},{
+    "languageCode": "de",
+    "text": "Barometrischer Druck",
+    "translationId" : 23
+},{
+    "languageCode": "en",
+    "text": "Barometric pressure",
+    "translationId" : 23
+},{
+    "languageCode": "de",
+    "text": "Der barometrische Druck ist der Druck in der Atmosphäre der Erde. Er wird auch als atmosphärischer Druck bezeichnet.",
+    "translationId" : 24
+},{
+    "languageCode": "en",
+    "text": "Barometric pressure is the pressure within the atmosphere of the Earth. It is also called atmospheric pressure.",
+    "translationId" : 24
+},{
+    "languageCode": "de",
+    "text": "",
+    "translationId" : 25
+},{
+    "languageCode": "en",
+    "text": "",
+    "translationId" : 25
+},{
+    "languageCode": "de",
+    "text": "Relative Luftfeuchte",
+    "translationId" : 26
+},{
+    "languageCode": "en",
+    "text": "Relative humidity",
+    "translationId" : 26
+},{
+    "languageCode": "de",
+    "text": "Die relative Luftfeuchtigkeit (RH) ist das Verhältnis zwischen dem Partialdruck von Wasserdampf und dem Gleichgewichtsdampfdruck von Wasser bei einer bestimmten Temperatur. (Quelle: Wikipedia)",
+    "translationId" : 27
+},{
+    "languageCode": "en",
+    "text": "Relative humidity (RH) is the ratio of the partial pressure of water vapor to the equilibrium vapor pressure of water at a given temperature. (Source: Wikipedia)",
+    "translationId" : 27
+},{
+    "languageCode": "de",
+    "text": "",
+    "translationId" : 28
+},{
+    "languageCode": "en",
+    "text": "",
+    "translationId" : 28
+},{
+    "languageCode": "de",
+    "text": "Temperatur",
+    "translationId" : 29
+},{
+    "languageCode": "en",
+    "text": "Temperature",
+    "translationId" : 29
+},{
+    "languageCode": "de",
+    "text": "Beschreibt die Wärme eines Mediums.",
+    "translationId" : 30
+},{
+    "languageCode": "en",
+    "text": "Describes the warmness of a medium.",
+    "translationId" : 30
+},{
+    "languageCode": "de",
+    "text": "",
+    "translationId" : 31
+},{
+    "languageCode": "en",
+    "text": "",
+    "translationId" : 31
+},{
+    "languageCode": "de",
+    "text": "CO2",
+    "translationId" : 32
+},{
+    "languageCode": "en",
+    "text": "CO2",
+    "translationId" : 32
+},{
+    "languageCode": "de",
+    "text": "Kohlendioxid (CO2) wird in parts-per-per-million (ppm) gemessen.",
+    "translationId" : 33
+},{
+    "languageCode": "en",
+    "text": "Carbon dioxide (CO2) is measured in parts-per-million (ppm).",
+    "translationId" : 33
+},{
+    "languageCode": "de",
+    "text": "test",
+    "translationId" : 34
+},{
+    "languageCode": "en",
+    "text": "test",
+    "translationId" : 34
+},{
+    "languageCode": "de",
+    "text": "Bodenfeuchte",
+    "translationId" : 35
+},{
+    "languageCode": "en",
+    "text": "Soil moisture",
+    "translationId" : 35
+},{
+    "languageCode": "de",
+    "text": "Bodenfeuchtesensoren messen den volumetrischen Wassergehalt im Boden.",
+    "translationId" : 36
+},{
+    "languageCode": "en",
+    "text": "Soil moisture sensors measure the volumetric water content in soil.",
+    "translationId" : 36
+},{
+    "languageCode": "de",
+    "text": "",
+    "translationId" : 37
+},{
+    "languageCode": "en",
+    "text": "",
+    "translationId" : 37
+},{
+    "languageCode": "de",
+    "text": "Umgebungslicht",
+    "translationId" : 38
+},{
+    "languageCode": "en",
+    "text": "Ambient light",
+    "translationId" : 38
+},{
+    "languageCode": "de",
+    "text": "Die Intensität des Umgebungslichts entspricht der Reaktion des menschlichen Auges auf Licht unter verschiedenen Lichtverhältnissen.",
+    "translationId" : 39
+},{
+    "languageCode": "en",
+    "text": "Ambient light intensity matches the human eye's response to light under a variety of lighting conditions.",
+    "translationId" : 39
+},{
+    "languageCode": "de",
+    "text": "",
+    "translationId" : 40
+},{
+    "languageCode": "en",
+    "text": "",
+    "translationId" : 40
+},{
+    "languageCode": "de",
+    "text": "Ultraviolett A Licht",
+    "translationId" : 41
+},{
+    "languageCode": "en",
+    "text": "Ultraviolet A light",
+    "translationId" : 41
+},{
+    "languageCode": "de",
+    "text": "Ultraviolettes Licht mit einer Wellenlänge zwischen 315 und 380 nm.",
+    "translationId" : 42
+},{
+    "languageCode": "en",
+    "text": "Ultraviolet light with wavelength between 315 and 380 nm.",
+    "translationId" : 42
+},{
+    "languageCode": "de",
+    "text": "",
+    "translationId" : 43
+},{
+    "languageCode": "en",
+    "text": "",
+    "translationId" : 43
+},{
+    "languageCode": "de",
+    "text": "Luftqualität",
+    "translationId" : 44
+},{
+    "languageCode": "en",
+    "text": "Air quality",
+    "translationId" : 44
+},{
+    "languageCode": "de",
+    "text": "Phänomene, die mit der Qualität der Luft zusammenhängen. Zum Beispiel können sie uns sagen, aktualisieren Luftverschmutzung Ebene.",
+    "translationId" : 45
+},{
+    "languageCode": "en",
+    "text": "Phenomenona that are related to the quality of air. For instance, they can tell us update air pollution level.",
+    "translationId" : 45
+},{
+    "languageCode": "de",
+    "text": "Klimaphänomen",
+    "translationId" : 46
+},{
+    "languageCode": "en",
+    "text": "Climate phenomena",
+    "translationId" : 46
+},{
+    "languageCode": "de",
+    "text": "Phänomene, die mit dem Klima und/oder klimatischen Veränderungen zusammenhängen.",
+    "translationId" : 47
+},{
+    "languageCode": "en",
+    "text": "Phenomenona that are related to climate and/or climatic changes.",
+    "translationId" : 47
+},{
+    "languageCode": "de",
+    "text": "Bodenphänomene",
+    "translationId" : 48
+},{
+    "languageCode": "en",
+    "text": "Ground phenomena",
+    "translationId" : 48
+},{
+    "languageCode": "de",
+    "text": "Phänomene, die im Boden gemessen werden können.",
+    "translationId" : 49
+},{
+    "languageCode": "en",
+    "text": "Phenomena that can be measured in the ground.",
+    "translationId" : 49
+},{
+    "languageCode": "de",
+    "text": "BME280",
+    "translationId" : 50
+},{
+    "languageCode": "en",
+    "text": "BME280",
+    "translationId" : 50
+},{
+    "languageCode": "de",
+    "text": "Feuchtigkeit",
+    "translationId" : 51
+},{
+    "languageCode": "en",
+    "text": "Humidity",
+    "translationId" : 51
+},{
+    "languageCode": "de",
+    "text": "BMP180",
+    "translationId" : 52
+},{
+    "languageCode": "en",
+    "text": "BMP180",
+    "translationId" : 52
+},{
+    "languageCode": "de",
+    "text": "Der BMP180 ist die nächste Generation von Sensoren von Bosch und ersetzt den BMP085.",
+    "translationId" : 53
+},{
+    "languageCode": "en",
+    "text": "The BMP180 is the next-generation of sensors from Bosch, and replaces the BMP085.",
+    "translationId" : 53
+},{
+    "languageCode": "de",
+    "text": "DHT22",
+    "translationId" : 54
+},{
+    "languageCode": "en",
+    "text": "DHT22",
+    "translationId" : 54
+},{
+    "languageCode": "de",
+    "text": "Digitaler Sensor zur Messung von Temperatur und Luftfeuchtigkeit. Besonders geeignet für Raspberry und Arduino.",
+    "translationId" : 55
+},{
+    "languageCode": "en",
+    "text": "Digital sensor for measuring temperature and humidity. Particularly suitable for Raspberry and Arduino.",
+    "translationId" : 55
+},{
+    "languageCode": "de",
+    "text": "DS18B20",
+    "translationId" : 56
+},{
+    "languageCode": "en",
+    "text": "DS18B20",
+    "translationId" : 56
+},{
+    "languageCode": "de",
+    "text": "Das Digitalthermometer DS18B20 bietet 9-Bit- bis 12-Bit-Celsius-Temperaturmessungen und verfügt über eine Alarmfunktion mit nichtflüchtigen, vom Benutzer programmierbaren oberen und unteren Auslösepunkten. Das DS18B20 kommuniziert über einen 1-Wire-Bus, der per Definition nur eine Datenleitung (und Masse) für die Kommunikation mit einem zentralen Mikroprozessor benötigt. Darüber hinaus kann der DS18B20 direkt über die Datenleitung mit Strom versorgt werden ('parasite power'), so dass eine externe Stromversorgung nicht erforderlich ist.",
+    "translationId" : 57
+},{
+    "languageCode": "en",
+    "text": "The DS18B20 digital thermometer provides 9-bit to 12-bit Celsius temperature measurements and has an alarm function with nonvolatile user-programmable upper and lower trigger points. The DS18B20 communicates over a 1-Wire bus that by definition requires only one data line (and ground) for communication with a central microprocessor. In addition, the DS18B20 can derive power directly from the data line (“parasite power”), eliminating the need for an external power supply.",
+    "translationId" : 57
+},{
+    "languageCode": "de",
+    "text": "DS18S20",
+    "translationId" : 58
+},{
+    "languageCode": "en",
+    "text": "DS18S20",
+    "translationId" : 58
+},{
+    "languageCode": "de",
+    "text": "Temperatur",
+    "translationId" : 59
+},{
+    "languageCode": "en",
+    "text": "Temperature",
+    "translationId" : 59
+},{
+    "languageCode": "de",
+    "text": "HPM",
+    "translationId" : 60
+},{
+    "languageCode": "en",
+    "text": "HPM",
+    "translationId" : 60
+},{
+    "languageCode": "de",
+    "text": "Luftqualität",
+    "translationId" : 61
+},{
+    "languageCode": "en",
+    "text": "Air quality",
+    "translationId" : 61
+},{
+    "languageCode": "de",
+    "text": "HTU21D",
+    "translationId" : 62
+},{
+    "languageCode": "en",
+    "text": "HTU21D",
+    "translationId" : 62
+},{
+    "languageCode": "de",
+    "text": "Feuchtigkeitssensor",
+    "translationId" : 63
+},{
+    "languageCode": "en",
+    "text": "Humidity sensor",
+    "translationId" : 63
+},{
+    "languageCode": "de",
+    "text": " NEO-6M",
+    "translationId" : 64
+},{
+    "languageCode": "en",
+    "text": " NEO-6M",
+    "translationId" : 64
+},{
+    "languageCode": "de",
+    "text": "GPS",
+    "translationId" : 65
+},{
+    "languageCode": "en",
+    "text": "GPS",
+    "translationId" : 65
+},{
+    "languageCode": "de",
+    "text": "NO2-A43F",
+    "translationId" : 66
+},{
+    "languageCode": "en",
+    "text": "NO2-A43F",
+    "translationId" : 66
+},{
+    "languageCode": "de",
+    "text": "Gassensor",
+    "translationId" : 67
+},{
+    "languageCode": "en",
+    "text": "Gas sensor",
+    "translationId" : 67
+},{
+    "languageCode": "de",
+    "text": "PMS1003",
+    "translationId" : 68
+},{
+    "languageCode": "en",
+    "text": "PMS1003",
+    "translationId" : 68
+},{
+    "languageCode": "de",
+    "text": "Der PMS 1003 Sensor ist ein neuer laserbasierter Luftqualitätssensor, der von plantower (chinesischer Name: 攀藤 (pānténg)) entwickelt wurde und in zahlreichen Geräten zur Messung der Luftqualität eingesetzt wird.",
+    "translationId" : 69
+},{
+    "languageCode": "en",
+    "text": "The PMS 1003 sensor is a recent laser based air quality sensor developped by plantower (chinese name: 攀藤 (pānténg)) and used inside a numerous number of air quality sensing devices.",
+    "translationId" : 69
+},{
+    "languageCode": "de",
+    "text": "PMS3003",
+    "translationId" : 70
+},{
+    "languageCode": "en",
+    "text": "PMS3003",
+    "translationId" :70
+},{
+    "languageCode": "de",
+    "text": "Luftqualitätssensor",
+    "translationId" : 71
+},{
+    "languageCode": "en",
+    "text": "Air quality sensor",
+    "translationId" : 71
+},{
+    "languageCode": "de",
+    "text": "PMS5003",
+    "translationId" : 72
+},{
+    "languageCode": "en",
+    "text": "PMS5003",
+    "translationId" : 72
+},{
+    "languageCode": "de",
+    "text": "TODO",
+    "translationId" : 73
+},{
+    "languageCode": "en",
+    "text": "TODO",
+    "translationId" : 73
+},{
+    "languageCode": "de",
+    "text": "PMS6003",
+    "translationId" : 74
+},{
+    "languageCode": "en",
+    "text": "PMS6003",
+    "translationId" : 74
+},{
+    "languageCode": "de",
+    "text": "Luftqualität",
+    "translationId" : 75
+},{
+    "languageCode": "en",
+    "text": "Air quality",
+    "translationId" : 75
+},{
+    "languageCode": "de",
+    "text": "PMS7003",
+    "translationId" : 76
+},{
+    "languageCode": "en",
+    "text": "PMS7003",
+    "translationId" : 76
+},{
+    "languageCode": "de",
+    "text": "Der Sensor nutzt das Prinzip der Laser-Streuung. Es bedeutet, dass das Laserlicht auf die Partikel in der Luft und machen die Streuung, während das Sammeln von Streulicht in einem bestimmten Winkel, was in Streulichtintensität mit der Zeit Kurve.",
+    "translationId" : 77
+},{
+    "languageCode": "en",
+    "text": "The sensor uses the principle of laser scattering. It means that the laser light on the particles in the air and making the scattering, while collecting scattered light at a particular angle , resulting in scattered light intensity with time curve.",
+    "translationId" : 77
+},{
+    "languageCode": "de",
+    "text": "PPD42NS",
+    "translationId" : 78
+},{
+    "languageCode": "en",
+    "text": "PPD42NS",
+    "translationId" : 78
+},{
+    "languageCode": "de",
+    "text": "Luftqualität",
+    "translationId" : 79
+},{
+    "languageCode": "en",
+    "text": "Air quality",
+    "translationId" : 79
+},{
+    "languageCode": "de",
+    "text": " SBM-19",
+    "translationId" : 80
+},{
+    "languageCode": "en",
+    "text": " SBM-19",
+    "translationId" : 80
+},{
+    "languageCode": "de",
+    "text": "Strahlung",
+    "translationId" : 81
+},{
+    "languageCode": "en",
+    "text": "Radiation",
+    "translationId" : 81
+},{
+    "languageCode": "de",
+    "text": " SBM-20",
+    "translationId" : 82
+},{
+    "languageCode": "en",
+    "text": " SBM-20",
+    "translationId" : 82
+},{
+    "languageCode": "de",
+    "text": "Strahlung",
+    "translationId" : 83
+},{
+    "languageCode": "en",
+    "text": "Radiation",
+    "translationId" : 83
+},{
+    "languageCode": "de",
+    "text": "SDS011",
+    "translationId" : 84
+},{
+    "languageCode": "en",
+    "text": "SDS011",
+    "translationId" : 84
+},{
+    "languageCode": "de",
+    "text": "Partikelsensor",
+    "translationId" : 85
+},{
+    "languageCode": "en",
+    "text": " Particular matter sensor",
+    "translationId" : 85
+},{
+    "languageCode": "de",
+    "text": "SDS021",
+    "translationId" : 86
+},{
+    "languageCode": "en",
+    "text": "SDS021",
+    "translationId" : 86
+},{
+    "languageCode": "de",
+    "text": "Luftqualität",
+    "translationId" : 87
+},{
+    "languageCode": "en",
+    "text": "Air quality",
+    "translationId" : 87
+},{
+    "languageCode": "de",
+    "text": "SHT10",
+    "translationId" : 88
+},{
+    "languageCode": "en",
+    "text": "SHT10",
+    "translationId" : 88
+},{
+    "languageCode": "de",
+    "text": "Feuchtigkeit",
+    "translationId" : 89
+},{
+    "languageCode": "en",
+    "text": "Humidity",
+    "translationId" : 89
+},{
+    "languageCode": "de",
+    "text": "SHT11",
+    "translationId" : 90
+},{
+    "languageCode": "en",
+    "text": "SHT11",
+    "translationId" : 90
+},{
+    "languageCode": "de",
+    "text": "Feuchtigkeit",
+    "translationId" : 91
+},{
+    "languageCode": "en",
+    "text": "Humidity",
+    "translationId" : 91
+},{
+    "languageCode": "de",
+    "text": "SHT15",
+    "translationId" : 92
+},{
+    "languageCode": "en",
+    "text": "SHT15",
+    "translationId" : 92
+},{
+    "languageCode": "de",
+    "text": "Feuchtigkeit",
+    "translationId" : 93
+},{
+    "languageCode": "en",
+    "text": "Humidity",
+    "translationId" : 93
+},{
+    "languageCode": "de",
+    "text": "SHT30",
+    "translationId" : 94
+},{
+    "languageCode": "en",
+    "text": "SHT30",
+    "translationId" : 94
+},{
+    "languageCode": "de",
+    "text": "Feuchtigkeit",
+    "translationId" : 95
+},{
+    "languageCode": "en",
+    "text": "Humidity",
+    "translationId" : 95
+},{
+    "languageCode": "de",
+    "text": "SHT31",
+    "translationId" : 96
+},{
+    "languageCode": "en",
+    "text": "SHT31",
+    "translationId" : 96
+},{
+    "languageCode": "de",
+    "text": "Temperatur- und Feuchtigkeitssensor",
+    "translationId" : 97
+},{
+    "languageCode": "en",
+    "text": "Temperature and humidity sensor",
+    "translationId" : 97
+},{
+    "languageCode": "de",
+    "text": "SHT35",
+    "translationId" : 98
+},{
+    "languageCode": "en",
+    "text": "SHT35",
+    "translationId" : 98
+},{
+    "languageCode": "de",
+    "text": "Feuchtigkeit",
+    "translationId" : 99
+},{
+    "languageCode": "en",
+    "text": "Humidity",
+    "translationId" : 99
+},{
+    "languageCode": "de",
+    "text": "SHT85",
+    "translationId" : 100
+},{
+    "languageCode": "en",
+    "text": "SHT85",
+    "translationId" : 100
+},{
+    "languageCode": "de",
+    "text": "Der digitale Feuchtesensor SHT85 ist der klassenbeste Feuchtesensor von Sensirion mit einem Stiftstecker für einfache Integration und Austausch.",
+    "translationId" : 101
+},{
+    "languageCode": "en",
+    "text": "The digital humidity sensor SHT85 is Sensirion's best-in-class humidity sensor with a pin-type connector for easy integration and replacement.",
+    "translationId" : 101
+},{
+    "languageCode": "de",
+    "text": "SPS30",
+    "translationId" : 102
+},{
+    "languageCode": "en",
+    "text": "SPS30",
+    "translationId" : 102
+},{
+    "languageCode": "de",
+    "text": "Partikelsensor",
+    "translationId" : 103
+},{
+    "languageCode": "en",
+    "text": "Particulate matter sensor",
+    "translationId" : 103
+},{
+    "languageCode": "de",
+    "text": "Feuchtigkeit",
+    "translationId" : 104
+},{
+    "languageCode": "en",
+    "text": "Humidity",
+    "translationId" : 104
+},{
+    "languageCode": "de",
+    "text": "Eine Größe, die die Menge an Wasserdampf in der Atmosphäre oder in einem Gas angibt.",
+    "translationId" : 105
+},{
+    "languageCode": "en",
+    "text": "A quantity representing the amount of water vapour in the atmosphere or in a gas.",
+    "translationId" : 105
+},{
+    "languageCode": "de",
+    "text": "",
+    "translationId" : 106
+},{
+    "languageCode": "en",
+    "text": "",
+    "translationId" : 106
+},{
+    "languageCode": "de",
+    "text": "PM2.5",
+    "translationId" : 107
+},{
+    "languageCode": "en",
+    "text": "PM2.5",
+    "translationId" : 107
+},{
+    "languageCode": "de",
+    "text": "",
+    "translationId" : 108
+},{
+    "languageCode": "en",
+    "text": "",
+    "translationId" : 108
+},{
+    "languageCode": "de",
+    "text": "",
+    "translationId" : 109
+},{
+    "languageCode": "en",
+    "text": "",
+    "translationId" : 109
+},{
+    "languageCode": "de",
+    "text": "PM10-Konzentration",
+    "translationId" : 110
+},{
+    "languageCode": "en",
+    "text": "PM10 concentration",
+    "translationId" : 110
+},{
+    "languageCode": "de",
+    "text": "Die Konzentration von Partikeln in der Luft.",
+    "translationId" : 111
+},{
+    "languageCode": "en",
+    "text": "The concentration of particles in the air.",
+    "translationId" : 111
+},{
+    "languageCode": "de",
+    "text": "",
+    "translationId" : 112
+},{
+    "languageCode": "en",
+    "text": "",
+    "translationId" : 112
+},{
+    "languageCode": "de",
+    "text": "",
+    "translationId" : 113
+},{
+    "languageCode": "en",
+    "text": "",
+    "translationId" : 113
+},{
+    "languageCode": "de",
+    "text": "deTest",
+    "translationId" : 114
+},{
+    "languageCode": "en",
+    "text": "enTest",
+    "translationId" : 114
+},{
+    "languageCode": "de",
+    "text": "",
+    "translationId" : 115
+},{
+    "languageCode": "en",
+    "text": "",
+    "translationId" : 115
+},{
+    "languageCode": "de",
+    "text": "",
+    "translationId" : 116
+},{
+    "languageCode": "en",
+    "text": "",
+    "translationId" : 116
+},{
+    "languageCode": "de",
+    "text": "",
+    "translationId" : 117
+},{
+    "languageCode": "en",
+    "text": "",
+    "translationId" : 117
+},{
+    "languageCode": "de",
+    "text": "",
+    "translationId" : 118
+},{
+    "languageCode": "en",
+    "text": "",
+    "translationId" : 118
+},{
+    "languageCode": "de",
+    "text": "",
+    "translationId" : 119
+},{
+    "languageCode": "en",
+    "text": "",
+    "translationId" : 119
+},{
+    "languageCode": "de",
+    "text": "",
+    "translationId" : 120
+},{
+    "languageCode": "en",
+    "text": "",
+    "translationId" : 120
+},{
+    "languageCode": "de",
+    "text": "",
+    "translationId" : 121
+},{
+    "languageCode": "en",
+    "text": "",
+    "translationId" : 121
+}]

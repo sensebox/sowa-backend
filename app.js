@@ -6,11 +6,12 @@ var logger = require('morgan');
 var bodyParser = require("body-parser");
 
 var indexRouter = require('./routes/index');
-var queriesRouter = require('./routes/queries');
+// var queriesRouter = require('./routes/queries');
 var sensorsRouter = require('./routes/sensors');
 var phenomenaRouter = require('./routes/phenomena');
 var devicesRouter = require('./routes/devices');
 var domainsRouter = require('./routes/domains');
+var unitsRouter = require('./routes/units');
 var imageRouter = require('./routes/image');
 var AuthController = require('./controllers/auth-controller');
 var cors = require('cors')
@@ -50,11 +51,12 @@ app.post('*', AuthController.isAuthenticated, function (req, res, next) {
 });
 
 app.use('/', indexRouter);
-app.use('/queries', queriesRouter);
+// app.use('/queries', queriesRouter);
 app.use('/sensors', sensorsRouter);
 app.use('/phenomena', phenomenaRouter);
 app.use('/devices', devicesRouter);
 app.use('/domains', domainsRouter);
+app.use('/units', unitsRouter);
 app.use('/image', imageRouter);
 app.use(express.static('owl'));
 
